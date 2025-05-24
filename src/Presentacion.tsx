@@ -140,280 +140,327 @@ const icons = {
 };
 
 // =======================================================================
-// DIAPOSITIVA 1: PORTADA INTERACTIVA VISUAL
+// DIAPOSITIVA 1: PORTADA CON FOOTER MEJORADO
 // =======================================================================
 const Diapositiva1 = () => {
   const [mousePos, setMousePos] = useState({ x: 50, y: 50 });
-  const [isHovering, setIsHovering] = useState(false);
-  const [pulseCount, setPulseCount] = useState(0);
-  const titleRef = useRef<HTMLDivElement>(null);
+  const [particles, setParticles] = useState<Array<{id: number, x: number, y: number, letter: string}>>([]);
+  const [showElements, setShowElements] = useState({
+    logo: false,
+    title: false,
+    subtitle: false,
+    info: false
+  });
 
-  // Seguimiento del mouse para efectos interactivos
+  // Elementos que aparecen y desaparecen en la parte inferior
+  const bottomElements = [
+    { text: '¿', x: 10, delay: 0, color: colors.azulOscuro },
+    { text: '¡', x: 15, delay: 0.4, color: colors.verdeTurquesa },
+    { text: 'ñ', x: 20, delay: 0.8, color: colors.lila },
+    { text: 'á', x: 25, delay: 1.2, color: colors.azulOscuro },
+    { text: 'MCER', x: 30, delay: 1.6, color: colors.verdeTurquesa },
+    { text: 'B2', x: 35, delay: 2.0, color: colors.lila },
+    { text: 'é', x: 40, delay: 2.4, color: colors.azulOscuro },
+    { text: 'í', x: 45, delay: 2.8, color: colors.verdeTurquesa },
+    { text: 'DELE', x: 50, delay: 3.2, color: colors.lila },
+    { text: 'ó', x: 55, delay: 3.6, color: colors.azulOscuro },
+    { text: 'A1→C2', x: 60, delay: 4.0, color: colors.verdeTurquesa },
+    { text: 'ú', x: 65, delay: 4.4, color: colors.lila },
+    { text: '✓', x: 70, delay: 4.8, color: colors.azulOscuro },
+    { text: '¡Olé!', x: 75, delay: 5.2, color: colors.verdeTurquesa },
+    { text: '✗', x: 80, delay: 5.6, color: colors.lila },
+    { text: '¿?¡!', x: 85, delay: 6.0, color: colors.azulOscuro },
+  ];
+
+  // Seguimiento del mouse - crear partículas solo en zona inferior
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       const x = (e.clientX / window.innerWidth) * 100;
       const y = (e.clientY / window.innerHeight) * 100;
       setMousePos({ x, y });
+      
+      // Crear partículas SOLO si el mouse está en el 30% inferior de la pantalla
+      if (y > 70 && Math.random() > 0.94) {
+        const letters = ['a', 'e', 'i', 'o', 'u', 'ñ', '¿', '?', '¡', '!'];
+        const newParticle = {
+          id: Date.now() + Math.random(),
+          x: e.clientX,
+          y: e.clientY,
+          letter: letters[Math.floor(Math.random() * letters.length)]
+        };
+        setParticles(prev => [...prev.slice(-15), newParticle]);
+      }
     };
-
+    
     window.addEventListener('mousemove', handleMouseMove);
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
-  // Efecto de pulso automático
+  // Limpiar partículas antiguas cada 3 segundos
   useEffect(() => {
     const interval = setInterval(() => {
-      setPulseCount(prev => prev + 1);
+      setParticles(prev => prev.filter(p => Date.now() - p.id < 3000));
     }, 3000);
     return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    const timers = [
+      setTimeout(() => setShowElements(prev => ({...prev, logo: true})), 300),
+      setTimeout(() => setShowElements(prev => ({...prev, title: true})), 600),
+      setTimeout(() => setShowElements(prev => ({...prev, subtitle: true})), 900),
+      setTimeout(() => setShowElements(prev => ({...prev, info: true})), 1200),
+    ];
+    return () => timers.forEach(clearTimeout);
   }, []);
 
   return (
     <div 
       className="min-h-screen relative overflow-hidden"
       style={{ 
-        background: `radial-gradient(circle at ${mousePos.x}% ${mousePos.y}%, ${colors.verdeClaro} 0%, ${colors.verdeTurquesa} 40%, ${colors.lila} 100%)`
+        background: `linear-gradient(135deg, ${colors.verdeClaro} 0%, #E8E0F0 50%, ${colors.lila}80 100%)`
       }}
     >
-      {/* Círculos flotantes interactivos */}
-      <motion.div
-        className="absolute top-20 left-20 w-64 h-64 rounded-full opacity-30"
-        animate={{
-          x: mousePos.x * 0.5,
-          y: mousePos.y * 0.5,
+      {/* Efecto de gradiente interactivo */}
+      <div 
+        className="absolute inset-0 opacity-30"
+        style={{
+          background: `radial-gradient(circle at ${mousePos.x}% ${mousePos.y}%, ${colors.verdeTurquesa}20 0%, transparent 60%)`,
+          transition: 'background 0.5s ease'
         }}
-        transition={{ type: "spring", damping: 50 }}
-        style={{ backgroundColor: colors.lila }}
-      />
-      
-      <motion.div
-        className="absolute bottom-20 right-20 w-96 h-96 rounded-full opacity-20"
-        animate={{
-          x: -mousePos.x * 0.3,
-          y: -mousePos.y * 0.3,
-        }}
-        transition={{ type: "spring", damping: 50 }}
-        style={{ backgroundColor: colors.verdeClaro }}
       />
 
-      <motion.div
-        className="absolute top-1/2 left-1/2 w-48 h-48 rounded-full opacity-25"
-        animate={{
-          scale: [1, 1.5, 1],
-          rotate: [0, 180, 360],
-        }}
-        transition={{ duration: 10, repeat: Infinity }}
-        style={{ backgroundColor: colors.verdeTurquesa }}
-      />
-
-      <div className="relative z-10 h-screen flex flex-col p-12">
-        
-        {/* Header con logo */}
-        <motion.div
-          initial={{ opacity: 0, y: -30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="flex justify-between items-start"
-        >
-          {/* Logo Hablandis */}
-          <div className="bg-white/90 backdrop-blur-md rounded-xl p-5 shadow-2xl">
-            <img 
-              src="/Hablandis_Kit de marca_Logo + tagline-04_Negro.svg" 
-              alt="Hablandis Centro Internacional de Idiomas" 
-              className="h-16"
-            />
-          </div>
-
-          {/* Elementos decorativos animados */}
+      {/* Zona de partículas - SOLO EN LA PARTE INFERIOR */}
+      <div className="absolute bottom-0 left-0 right-0 h-1/3 pointer-events-none">
+        {particles.map(particle => (
           <motion.div
+            key={particle.id}
+            initial={{ scale: 0, x: particle.x, y: 0, rotate: 0 }}
             animate={{ 
-              rotate: [0, 360],
-              scale: [1, 1.2, 1]
+              scale: [0, 1.8, 0], 
+              y: -150,
+              x: particle.x + (Math.random() - 0.5) * 100,
+              rotate: 540
             }}
-            transition={{ duration: 20, repeat: Infinity }}
-            className="text-4xl"
-            style={{ color: colors.amarillo }}
+            transition={{ duration: 3 }}
+            className="absolute text-2xl font-bold"
+            style={{ 
+              color: colors.lila,
+              bottom: window.innerHeight - particle.y,
+              left: particle.x - 15,
+              textShadow: '0 3px 6px rgba(0,0,0,0.1)',
+              fontFamily: 'Aglet Mono, monospace'
+            }}
           >
-            ✨
+            {particle.letter}
           </motion.div>
+        ))}
+      </div>
+
+      {/* Todos los elementos de abajo con animación uniforme */}
+      <div className="absolute bottom-16 left-0 right-0 h-20 pointer-events-none">
+        {bottomElements.map((elem, index) => (
+          <motion.div
+            key={index}
+            className="absolute font-bold"
+            initial={{ opacity: 0, scale: 0 }}
+            animate={{ 
+              opacity: [0, 0.6, 0.6, 0],
+              scale: [0, 1.3, 1.3, 0],
+              y: [0, -180, -200, -300]
+            }}
+            transition={{ 
+              duration: 6,
+              repeat: Infinity,
+              delay: elem.delay,
+              repeatDelay: 3,
+              ease: "easeInOut"
+            }}
+            style={{ 
+              left: `${elem.x}%`,
+              bottom: '0px',
+              color: elem.color + 'CC',
+              fontSize: elem.text.length > 2 ? '28px' : '48px',
+              fontFamily: 'Aglet Mono, monospace',
+              fontWeight: elem.text.length > 2 ? 600 : 'bold',
+              textShadow: '0 4px 8px rgba(0,0,0,0.15)',
+              filter: 'brightness(1.1)'
+            }}
+          >
+            {elem.text}
+          </motion.div>
+        ))}
+      </div>
+
+      <div className="relative z-10 h-screen flex flex-col p-8">
+        
+        {/* Logo ENORME */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.5 }}
+          animate={{ 
+            opacity: showElements.logo ? 1 : 0, 
+            scale: showElements.logo ? 1 : 0.5
+          }}
+          transition={{ duration: 1, type: "spring" }}
+          className="absolute top-0 left-0"
+        >
+          <img 
+            src="/hablandis.png" 
+            alt="Hablandis" 
+            className="h-96"
+            style={{ 
+              filter: 'drop-shadow(0 10px 20px rgba(0,0,0,0.1))',
+              maxWidth: '500px'
+            }}
+            onError={(e) => {
+              const img = e.target as HTMLImageElement;
+              img.style.display = 'none';
+              img.parentElement!.innerHTML = `
+                <div style="padding: 30px;">
+                  <div style="font-family: 'Aglet Mono', monospace; color: ${colors.azulOscuro}; font-size: 96px; font-weight: 900;">
+                    Hablandis
+                  </div>
+                  <div style="font-family: 'Raleway', sans-serif; color: ${colors.verdeTurquesa}; font-size: 24px; margin-top: 10px;">
+                    Centro Internacional de Idiomas
+                  </div>
+                </div>
+              `;
+            }}
+          />
         </motion.div>
 
         {/* Contenido central */}
         <div className="flex-1 flex items-center justify-center">
-          <div className="text-center">
+          <div className="text-center max-w-6xl">
             
-            {/* Título EVALIA con efecto 3D */}
+            {/* EVALIA sin círculo de fondo */}
             <motion.div
-              ref={titleRef}
-              initial={{ opacity: 0, scale: 0.5 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 1, type: "spring" }}
-              onMouseEnter={() => setIsHovering(true)}
-              onMouseLeave={() => setIsHovering(false)}
-              className="relative cursor-pointer mb-8"
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ 
+                opacity: showElements.title ? 1 : 0, 
+                y: showElements.title ? 0 : 50 
+              }}
+              transition={{ duration: 1, type: "spring", stiffness: 100 }}
+              className="mb-12"
             >
-              <motion.h1 
-                animate={{
-                  rotateY: isHovering ? 15 : 0,
-                  scale: isHovering ? 1.1 : 1,
-                }}
-                transition={{ type: "spring" }}
-                className="text-8xl font-bold"
+              <h1 
                 style={{ 
                   fontFamily: 'Aglet Mono, monospace',
-                  color: colors.blanco,
-                  textShadow: `
-                    0 2px 10px rgba(0,0,0,0.3),
-                    0 5px 20px ${colors.verdeTurquesa}80,
-                    0 10px 40px ${colors.lila}60
-                  `,
-                  transform: 'perspective(1000px)',
-                  transformStyle: 'preserve-3d'
+                  fontSize: '120px',
+                  fontWeight: 900,
+                  letterSpacing: '8px',
+                  color: colors.azulOscuro,
+                  textShadow: '0 8px 40px rgba(0,0,0,0.1)'
                 }}
               >
                 EVALIA
-              </motion.h1>
-
-              {/* Efecto de pulso alrededor del título */}
-              <motion.div
-                key={pulseCount}
-                initial={{ scale: 0.8, opacity: 1 }}
-                animate={{ scale: 2, opacity: 0 }}
-                transition={{ duration: 2 }}
-                className="absolute inset-0 rounded-full"
-                style={{ 
-                  border: `2px solid ${colors.amarillo}`,
-                  pointerEvents: 'none'
-                }}
-              />
+              </h1>
             </motion.div>
 
-            {/* Subtítulo animado */}
-            <motion.h2
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5 }}
-              className="text-3xl mb-12"
-              style={{ 
-                fontFamily: 'Raleway, sans-serif',
-                color: colors.blanco,
-                textShadow: '0 2px 10px rgba(0,0,0,0.3)'
-              }}
-            >
-              Mejorando la experiencia de evaluación
-              <br />
-              <span style={{ color: colors.amarillo }}>con IA generativa</span>
-            </motion.h2>
-
-            {/* Elementos interactivos flotantes */}
-            <div className="relative h-32 mb-12">
-              {['📚', '🤖', '✨', '🎯', '💡'].map((emoji, index) => (
-                <motion.div
-                  key={index}
-                  className="absolute text-4xl cursor-pointer"
-                  initial={{ 
-                    x: (index - 2) * 100,
-                    y: 0,
-                    opacity: 0
-                  }}
-                  animate={{ 
-                    y: [0, -20, 0],
-                    opacity: 1,
-                    rotate: [0, 10, -10, 0]
-                  }}
-                  transition={{ 
-                    delay: 0.8 + index * 0.1,
-                    duration: 3,
-                    repeat: Infinity,
-                    repeatDelay: index * 0.5
-                  }}
-                  whileHover={{ scale: 1.5, rotate: 360 }}
-                  style={{ left: '50%', marginLeft: (index - 2) * 100 }}
-                >
-                  {emoji}
-                </motion.div>
-              ))}
-            </div>
-
-            {/* Información del ponente con diseño moderno */}
+            {/* Subtítulo */}
             <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 1 }}
-              className="inline-block"
+              initial={{ opacity: 0 }}
+              animate={{ 
+                opacity: showElements.subtitle ? 1 : 0
+              }}
+              transition={{ delay: 0.3, duration: 0.8 }}
+            >
+              <h2 
+                className="mb-4"
+                style={{ 
+                  fontFamily: 'Raleway, sans-serif',
+                  fontSize: '42px',
+                  fontWeight: 400,
+                  color: colors.azulOscuro,
+                  letterSpacing: '1px'
+                }}
+              >
+                Mejorando la experiencia de evaluación
+              </h2>
+              <p 
+                style={{ 
+                  fontFamily: 'Raleway, sans-serif',
+                  fontSize: '42px',
+                  fontWeight: 500,
+                  color: colors.verdeTurquesa,
+                  textShadow: '0 4px 20px rgba(0,0,0,0.1)',
+                  letterSpacing: '2px'
+                }}
+              >
+                con IA generativa
+              </p>
+            </motion.div>
+
+            {/* Información del ponente */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ 
+                opacity: showElements.info ? 1 : 0,
+                scale: showElements.info ? 1 : 0.9
+              }}
+              transition={{ delay: 0.6, type: "spring" }}
+              className="mt-20"
             >
               <div 
-                className="bg-white/10 backdrop-blur-md rounded-2xl p-8 border"
-                style={{ borderColor: `${colors.amarillo}40` }}
+                className="inline-block rounded-3xl px-20 py-10"
+                style={{ 
+                  backgroundColor: colors.blanco + '70',
+                  backdropFilter: 'blur(30px)',
+                  boxShadow: '0 20px 60px rgba(0,0,0,0.08)'
+                }}
               >
-                <p className="text-lg mb-3" style={{ color: colors.verdeClaro }}>
-                  Taller impartido por:
-                </p>
-                <p className="text-3xl font-bold mb-2" style={{ 
+                <p style={{ 
                   fontFamily: 'Aglet Mono, monospace',
-                  color: colors.blanco 
+                  fontSize: '36px',
+                  fontWeight: 800,
+                  color: colors.azulOscuro,
+                  marginBottom: '12px'
                 }}>
                   Armando Cruz Crespillo
                 </p>
-                <p className="text-lg" style={{ 
+                <p style={{ 
                   fontFamily: 'Raleway, sans-serif',
-                  color: colors.amarillo 
+                  fontSize: '22px',
+                  fontWeight: 400,
+                  color: colors.verdeTurquesa,
+                  marginBottom: '20px'
                 }}>
-                  Director de Innovación - Hablandis
-                  <br />
-                  CTO - Emc2
+                  Director de Innovación - Hablandis | CTO - Emc2
                 </p>
+                <div className="text-center" 
+                     style={{ 
+                       fontFamily: 'Raleway, sans-serif',
+                       fontSize: '18px',
+                       color: colors.grisOscuro 
+                     }}>
+                  <span>26 de mayo de 2025</span>
+                </div>
               </div>
-            </motion.div>
-
-            {/* Fecha con animación */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 1.5 }}
-              className="mt-8 flex items-center justify-center gap-8"
-              style={{ color: colors.blanco }}
-            >
-              <motion.span 
-                animate={{ x: [-5, 5, -5] }}
-                transition={{ duration: 2, repeat: Infinity }}
-                className="flex items-center gap-2"
-              >
-                📅 26 de mayo de 2025
-              </motion.span>
-              <motion.span 
-                animate={{ x: [5, -5, 5] }}
-                transition={{ duration: 2, repeat: Infinity }}
-                className="flex items-center gap-2"
-              >
-                📍 Varsovia, Polonia
-              </motion.span>
             </motion.div>
           </div>
         </div>
 
-        {/* Footer minimalista */}
-        <motion.div
+        {/* Footer con Copyright - NUEVO DISEÑO */}
+        <motion.div 
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 2 }}
-          className="text-center text-sm"
-          style={{ color: colors.blanco + '80' }}
-        >
-          © 2025 Hablandis - www.hablandis.com
-        </motion.div>
-
-        {/* Indicador de interactividad */}
-        <motion.div
-          animate={{ 
-            scale: [1, 1.2, 1],
-            opacity: [0.5, 1, 0.5]
+          transition={{ delay: 1.5 }}
+          className="absolute bottom-0 left-0 right-0 py-4 text-center"
+          style={{ 
+            backgroundColor: colors.blanco + '40',
+            backdropFilter: 'blur(10px)',
+            borderTop: `1px solid ${colors.azulOscuro}20`
           }}
-          transition={{ duration: 2, repeat: Infinity }}
-          className="absolute bottom-8 right-8 text-white/60 text-sm flex items-center gap-2"
         >
-          <span>Mueve el ratón</span>
-          <span className="text-2xl">👆</span>
+          <p style={{ 
+            fontFamily: 'Raleway, sans-serif',
+            fontSize: '14px',
+            color: colors.azulOscuro,
+            letterSpacing: '0.5px',
+            fontWeight: 500
+          }}>
+            © 2025 Hablandis Centro Internacional de Idiomas - Todos los derechos reservados
+          </p>
         </motion.div>
       </div>
     </div>
@@ -421,6 +468,352 @@ const Diapositiva1 = () => {
 };
 // =======================================================================
 // FIN DIAPOSITIVA 1
+// =======================================================================
+
+// =======================================================================
+// DIAPOSITIVA 2: CANCIÓN "ELLA LLEGÓ" - KARAOKE INTERACTIVO
+// =======================================================================
+const Diapositiva2 = () => {
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [showAnalysis, setShowAnalysis] = useState(false);
+  const [selectedSection, setSelectedSection] = useState<string | null>(null);
+  const audioRef = useRef<HTMLAudioElement>(null);
+
+  // Timestamps para sincronización (ajustar según el audio real)
+  const lyrics = [
+    { time: 0, text: "[Intro - Hablado con música suave]", type: "intro" },
+    { time: 2, text: "Son las tres de la mañana...", type: "spoken" },
+    { time: 4, text: "El café ya está frío...", type: "spoken" },
+    { time: 6, text: "Y todavía me quedan 47 exámenes...", type: "spoken" },
+    { time: 10, text: "[Verso 1]", type: "section" },
+    { time: 12, text: "Mi vida es un plato de sopa fría", type: "verse" },
+    { time: 15, text: "Corrigiendo hasta que salga el día", type: "verse" },
+    { time: 18, text: "El subjuntivo me persigue en mis sueños", type: "verse" },
+    { time: 21, text: "\"Ser y estar\" son ya mis dueños", type: "verse" },
+    { time: 24, text: "Las tildes bailan la macarena", type: "verse" },
+    { time: 27, text: "En cada examen veo la misma pena", type: "verse" },
+    { time: 30, text: "\"Yo soy en el baño\" escribió María", type: "verse" },
+    { time: 33, text: "\"Ayer yo he ido\" - ¡qué melodía!", type: "verse" },
+    { time: 37, text: "[Verso 2]", type: "section" },
+    { time: 39, text: "Test de nivel, comprensión lectora", type: "verse" },
+    { time: 42, text: "Expresión escrita que me deteriora", type: "verse" },
+    { time: 45, text: "\"Mi perro está muy bueno\" leo atónito", type: "verse" },
+    { time: 48, text: "\"Es muy frío hoy\" - error sintomático", type: "verse" },
+    { time: 51, text: "Evaluar no es solo gramática", type: "verse" },
+    { time: 54, text: "Competencias, contexto, pragmática", type: "verse" },
+    { time: 57, text: "¿Diagnóstica o formativa?", type: "verse" },
+    { time: 60, text: "Mi cabeza ya no es productiva", type: "verse" },
+    { time: 64, text: "[Estribillo] 🎉", type: "section" },
+    { time: 66, text: "¡ELLA LLEGÓ! Como pizza a domicilio", type: "chorus" },
+    { time: 69, text: "¡ELLA LLEGÓ! Mi salvación con brillo", type: "chorus" },
+    { time: 72, text: "Comprende cada nivel del MCER", type: "chorus" },
+    { time: 75, text: "¡Analiza todo en un dos por tres!", type: "chorus" },
+    { time: 78, text: "¡ELLA LLEGÓ! Con su magia digital", type: "chorus" },
+    { time: 81, text: "¡ELLA LLEGÓ! Es algo sensacional", type: "chorus" },
+    { time: 84, text: "Evalúa competencias integradas", type: "chorus" },
+    { time: 87, text: "¡Adiós a las noches desveladas!", type: "chorus" },
+    { time: 91, text: "[Verso 3]", type: "section" },
+    { time: 93, text: "\"Voy a coger el autobús\" dice Roberto", type: "verse" },
+    { time: 96, text: "(No sabe que en América es desacierto)", type: "verse" },
+    { time: 99, text: "\"Llévame este libro\" escribe Juan", type: "verse" },
+    { time: 102, text: "(Traer y llevar siempre confundirán)", type: "verse" },
+    { time: 105, text: "ELLA detecta patrones por lengua materna", type: "verse" },
+    { time: 108, text: "ELLA sabe si es polaco o si es de Berna", type: "verse" },
+    { time: 111, text: "Retroalimenta con pedagogía", type: "verse" },
+    { time: 114, text: "¡Por fin llegó la tecnología!", type: "verse" }
+  ];
+
+  // Secciones para análisis post-canción
+  const sections = {
+    vida: {
+      title: "La vida del profesor",
+      icon: "📚",
+      content: [
+        "• Son las 3 AM corrigiendo exámenes",
+        "• El café frío como compañero",
+        "• 47 exámenes por revisar",
+        "• Evaluación manual repetitiva",
+        "• Agotamiento mental y físico"
+      ],
+      color: colors.azulOscuro
+    },
+    errores: {
+      title: "Errores que se presentan",
+      icon: "❌",
+      content: [
+        "• \"Yo soy en el baño\" (ser/estar)",
+        "• \"Mi perro está muy bueno\" (contexto)",
+        "• \"Es muy frío hoy\" (hacer/estar)",
+        "• \"Voy a coger el autobús\" (variantes)",
+        "• Confusión traer/llevar"
+      ],
+      color: colors.amarillo
+    },
+    esperamos: {
+      title: "Lo que esperamos",
+      icon: "✨",
+      content: [
+        "• Análisis automático instantáneo",
+        "• Detección de patrones por L1",
+        "• Evaluación de competencias integradas",
+        "• Retroalimentación pedagógica",
+        "• ¡Adiós noches desveladas!"
+      ],
+      color: colors.verdeTurquesa
+    }
+  };
+
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    const updateTime = () => setCurrentTime(audio.currentTime);
+    const updateDuration = () => setDuration(audio.duration);
+    const handleEnded = () => {
+      setIsPlaying(false);
+      setTimeout(() => setShowAnalysis(true), 1000);
+    };
+
+    audio.addEventListener('timeupdate', updateTime);
+    audio.addEventListener('loadedmetadata', updateDuration);
+    audio.addEventListener('ended', handleEnded);
+
+    return () => {
+      audio.removeEventListener('timeupdate', updateTime);
+      audio.removeEventListener('loadedmetadata', updateDuration);
+      audio.removeEventListener('ended', handleEnded);
+    };
+  }, []);
+
+  const togglePlay = () => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    if (isPlaying) {
+      audio.pause();
+    } else {
+      audio.play();
+      setShowAnalysis(false);
+      setSelectedSection(null);
+    }
+    setIsPlaying(!isPlaying);
+  };
+
+  const getCurrentLyricIndex = () => {
+    for (let i = lyrics.length - 1; i >= 0; i--) {
+      if (currentTime >= lyrics[i].time) {
+        return i;
+      }
+    }
+    return -1;
+  };
+
+  const formatTime = (time: number) => {
+    const minutes = Math.floor(time / 60);
+    const seconds = Math.floor(time % 60);
+    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+  };
+
+  const currentLyricIndex = getCurrentLyricIndex();
+
+  return (
+    <div className="min-h-screen relative p-12 flex flex-col" style={{ backgroundColor: colors.azulOscuro }}>
+      {/* Logo Hablandis */}
+      <div className="absolute top-8 right-8 opacity-90">
+        <div className="text-white font-light" style={{ fontFamily: 'Aglet Mono, monospace' }}>
+          <div className="text-3xl tracking-wider">Hablandis</div>
+          <div className="text-xs tracking-wide mt-1 opacity-80">Centro Internacional de Idiomas</div>
+        </div>
+      </div>
+
+      {/* Contenido Principal */}
+      <div className="flex-1 flex flex-col items-center justify-center max-w-6xl mx-auto w-full">
+        {!showAnalysis ? (
+          <>
+            {/* Título */}
+            <motion.h1 
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="text-5xl font-bold text-center mb-12"
+              style={{ color: colors.amarillo, fontFamily: 'Aglet Mono, monospace' }}
+            >
+              🎵 ELLA LLEGÓ 🎵
+            </motion.h1>
+
+            {/* Reproductor de Audio */}
+            <audio ref={audioRef} src="/ella llegó.mp3" />
+            
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 mb-8 w-full max-w-2xl"
+            >
+              {/* Controles del reproductor */}
+              <div className="flex items-center justify-center space-x-6 mb-6">
+                <button
+                  onClick={togglePlay}
+                  className="w-20 h-20 rounded-full flex items-center justify-center transition-all transform hover:scale-110"
+                  style={{ backgroundColor: colors.amarillo }}
+                >
+                  <span className="text-4xl text-gray-900">
+                    {isPlaying ? '⏸️' : '▶️'}
+                  </span>
+                </button>
+              </div>
+
+              {/* Barra de progreso */}
+              <div className="mb-4">
+                <div className="h-2 bg-white/20 rounded-full overflow-hidden">
+                  <motion.div 
+                    className="h-full"
+                    style={{ 
+                      backgroundColor: colors.amarillo,
+                      width: `${(currentTime / duration) * 100}%`
+                    }}
+                  />
+                </div>
+                <div className="flex justify-between text-white/70 text-sm mt-2">
+                  <span>{formatTime(currentTime)}</span>
+                  <span>{formatTime(duration)}</span>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Área de Karaoke */}
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.5 }}
+              className="bg-black/30 backdrop-blur-lg rounded-2xl p-8 w-full max-w-4xl max-h-96 overflow-y-auto"
+            >
+              <div className="space-y-3">
+                {lyrics.map((line, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0.3 }}
+                    animate={{ 
+                      opacity: index <= currentLyricIndex ? 1 : 0.3,
+                      scale: index === currentLyricIndex ? 1.05 : 1,
+                      x: index === currentLyricIndex ? 10 : 0
+                    }}
+                    transition={{ duration: 0.3 }}
+                    className={`text-lg leading-relaxed ${
+                      line.type === 'section' ? 'font-bold mt-6 mb-2' : ''
+                    } ${
+                      line.type === 'intro' || line.type === 'spoken' ? 'italic' : ''
+                    } ${
+                      line.type === 'chorus' ? 'text-xl font-semibold' : ''
+                    }`}
+                    style={{ 
+                      color: index <= currentLyricIndex 
+                        ? (line.type === 'chorus' ? colors.amarillo : 'white')
+                        : 'rgba(255,255,255,0.4)',
+                      fontFamily: line.type === 'section' ? 'Aglet Mono, monospace' : 'Raleway, sans-serif'
+                    }}
+                  >
+                    {line.text}
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+          </>
+        ) : (
+          /* Análisis Post-Canción */
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="w-full"
+          >
+            <h2 
+              className="text-4xl font-bold text-center mb-12"
+              style={{ color: colors.amarillo, fontFamily: 'Aglet Mono, monospace' }}
+            >
+              Analicemos la canción 🎭
+            </h2>
+
+            {/* Botones de secciones */}
+            <div className="grid grid-cols-3 gap-6 mb-8">
+              {Object.entries(sections).map(([key, section]) => (
+                <motion.button
+                  key={key}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => setSelectedSection(key)}
+                  className="bg-white/10 backdrop-blur-lg rounded-xl p-6 text-center transition-all"
+                  style={{
+                    borderColor: selectedSection === key ? section.color : 'transparent',
+                    borderWidth: 3
+                  }}
+                >
+                  <div className="text-5xl mb-3">{section.icon}</div>
+                  <h3 className="text-xl font-semibold text-white" style={{ fontFamily: 'Aglet Mono, monospace' }}>
+                    {section.title}
+                  </h3>
+                </motion.button>
+              ))}
+            </div>
+
+            {/* Contenido de la sección seleccionada */}
+            {selectedSection && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="bg-white/10 backdrop-blur-lg rounded-2xl p-8"
+              >
+                <h3 
+                  className="text-2xl font-bold mb-6"
+                  style={{ color: sections[selectedSection as keyof typeof sections].color }}
+                >
+                  {sections[selectedSection as keyof typeof sections].title}
+                </h3>
+                <ul className="space-y-3 text-white text-lg">
+                  {sections[selectedSection as keyof typeof sections].content.map((item, index) => (
+                    <motion.li
+                      key={index}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: index * 0.1 }}
+                      style={{ fontFamily: 'Raleway, sans-serif' }}
+                    >
+                      {item}
+                    </motion.li>
+                  ))}
+                </ul>
+              </motion.div>
+            )}
+
+            {/* Botón para volver a escuchar */}
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => {
+                setShowAnalysis(false);
+                setSelectedSection(null);
+                setCurrentTime(0);
+                if (audioRef.current) {
+                  audioRef.current.currentTime = 0;
+                }
+              }}
+              className="mt-8 mx-auto block px-8 py-3 rounded-full text-gray-900 font-semibold transition-all"
+              style={{ backgroundColor: colors.amarillo }}
+            >
+              🎵 Escuchar de nuevo
+            </motion.button>
+          </motion.div>
+        )}
+      </div>
+
+      {/* Footer */}
+      <div className="text-center text-white/60 text-sm mt-8">
+        © 2024 Hablandis. Todos los derechos reservados.
+      </div>
+    </div>
+  );
+};
+// =======================================================================
+// FIN DIAPOSITIVA 2
 // =======================================================================
 
 // =======================================================================
