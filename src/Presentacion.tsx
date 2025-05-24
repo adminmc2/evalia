@@ -471,7 +471,7 @@ const Diapositiva1 = () => {
 // =======================================================================
 
 // =======================================================================
-// DIAPOSITIVA 2: CANCIÓN "ELLA LLEGÓ" - KARAOKE INTERACTIVO
+// DIAPOSITIVA 2: CANCIÓN "ELLA LLEGÓ" - KARAOKE INTERACTIVO (CON DEBUG)
 // =======================================================================
 const Diapositiva2 = () => {
   const [isPlaying, setIsPlaying] = useState(false);
@@ -479,6 +479,8 @@ const Diapositiva2 = () => {
   const [duration, setDuration] = useState(0);
   const [showAnalysis, setShowAnalysis] = useState(false);
   const [selectedSection, setSelectedSection] = useState<string | null>(null);
+  const [audioError, setAudioError] = useState(false);
+  const [audioStatus, setAudioStatus] = useState('not-loaded');
   const audioRef = useRef<HTMLAudioElement>(null);
 
   // Timestamps para sincronización (ajustar según el audio real)
@@ -567,7 +569,13 @@ const Diapositiva2 = () => {
 
   useEffect(() => {
     const audio = audioRef.current;
-    if (!audio) return;
+    if (!audio) {
+      console.log("Audio ref is null");
+      return;
+    }
+
+    console.log("Audio element:", audio);
+    console.log("Audio src:", audio.src);
 
     const updateTime = () => setCurrentTime(audio.currentTime);
     const updateDuration = () => setDuration(audio.duration);
@@ -575,26 +583,115 @@ const Diapositiva2 = () => {
       setIsPlaying(false);
       setTimeout(() => setShowAnalysis(true), 1000);
     };
+    
+    const handleError = (e: Event) => {
+      console.error("Audio error event:", e);
+      const audioElement = e.target as HTMLAudioElement;
+      console.error("Error code:", audioElement.error?.code);
+      console.error("Error message:", audioElement.error?.message);
+      
+      // Códigos de error MediaError
+      if (audioElement.error) {
+        switch(audioElement.error.code) {
+          case 1:
+            console.error("MEDIA_ERR_ABORTED - El usuario abortó la descarga");
+            break;
+          case 2:
+            console.error("MEDIA_ERR_NETWORK - Error de red");
+            break;
+          case 3:
+            console.error("MEDIA_ERR_DECODE - Error al decodificar");
+            break;
+          case 4:
+            console.error("MEDIA_ERR_SRC_NOT_SUPPORTED - Formato no soportado o archivo no encontrado");
+            break;
+        }
+      }
+      setAudioError(true);
+      setAudioStatus('error');
+    };
+    
+    const handleLoadStart = () => {
+      console.log("Audio load started");
+      setAudioStatus('loading');
+    };
+    
+    const handleCanPlay = () => {
+      console.log("Audio can play");
+      setAudioStatus('ready');
+    };
+    
+    const handleLoadedData = () => {
+      console.log("Audio loaded data");
+      console.log("Duration:", audio.duration);
+    };
+
+    const handleLoadedMetadata = () => {
+      console.log("Audio metadata loaded");
+      console.log("Duration from metadata:", audio.duration);
+      setDuration(audio.duration);
+    };
+
+    const handleProgress = () => {
+      console.log("Audio loading progress");
+      if (audio.buffered.length > 0) {
+        console.log("Buffered:", audio.buffered.end(0));
+      }
+    };
 
     audio.addEventListener('timeupdate', updateTime);
-    audio.addEventListener('loadedmetadata', updateDuration);
+    audio.addEventListener('loadedmetadata', handleLoadedMetadata);
     audio.addEventListener('ended', handleEnded);
+    audio.addEventListener('error', handleError);
+    audio.addEventListener('loadstart', handleLoadStart);
+    audio.addEventListener('canplay', handleCanPlay);
+    audio.addEventListener('loadeddata', handleLoadedData);
+    audio.addEventListener('progress', handleProgress);
+
+    // Intentar cargar el audio
+    console.log("Attempting to load audio...");
+    audio.load();
 
     return () => {
       audio.removeEventListener('timeupdate', updateTime);
-      audio.removeEventListener('loadedmetadata', updateDuration);
+      audio.removeEventListener('loadedmetadata', handleLoadedMetadata);
       audio.removeEventListener('ended', handleEnded);
+      audio.removeEventListener('error', handleError);
+      audio.removeEventListener('loadstart', handleLoadStart);
+      audio.removeEventListener('canplay', handleCanPlay);
+      audio.removeEventListener('loadeddata', handleLoadedData);
+      audio.removeEventListener('progress', handleProgress);
     };
   }, []);
 
   const togglePlay = () => {
     const audio = audioRef.current;
-    if (!audio) return;
+    if (!audio) {
+      console.error("No audio ref when trying to play");
+      return;
+    }
+
+    console.log("Toggle play - current state:", isPlaying);
+    console.log("Audio paused:", audio.paused);
+    console.log("Audio ready state:", audio.readyState);
+    console.log("Audio network state:", audio.networkState);
+    console.log("Current src:", audio.src);
 
     if (isPlaying) {
+      console.log("Pausing audio...");
       audio.pause();
     } else {
-      audio.play();
+      console.log("Attempting to play audio...");
+      audio.play()
+        .then(() => {
+          console.log("Audio playing successfully");
+        })
+        .catch(err => {
+          console.error("Error playing audio:", err);
+          console.error("Error name:", err.name);
+          console.error("Error message:", err.message);
+          setAudioError(true);
+        });
       setShowAnalysis(false);
       setSelectedSection(null);
     }
@@ -619,14 +716,40 @@ const Diapositiva2 = () => {
   const currentLyricIndex = getCurrentLyricIndex();
 
   return (
-    <div className="min-h-screen relative p-12 flex flex-col" style={{ backgroundColor: colors.azulOscuro }}>
-      {/* Logo Hablandis */}
-      <div className="absolute top-8 right-8 opacity-90">
-        <div className="text-white font-light" style={{ fontFamily: 'Aglet Mono, monospace' }}>
-          <div className="text-3xl tracking-wider">Hablandis</div>
-          <div className="text-xs tracking-wide mt-1 opacity-80">Centro Internacional de Idiomas</div>
-        </div>
-      </div>
+    <div 
+      className="min-h-screen relative p-12 flex flex-col"
+      style={{ 
+        background: `linear-gradient(135deg, ${colors.lila}20 0%, ${colors.verdeClaro}30 50%, ${colors.verdeTurquesa}20 100%)`
+      }}
+    >
+      {/* Logo Hablandis - mismo estilo que diapositiva 1 */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.5 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.5 }}
+        className="absolute top-8 right-8"
+      >
+        <img 
+          src="/hablandis.png" 
+          alt="Hablandis" 
+          className="h-20"
+          style={{ filter: 'drop-shadow(0 4px 6px rgba(0,0,0,0.1))' }}
+          onError={(e) => {
+            const img = e.target as HTMLImageElement;
+            img.style.display = 'none';
+            img.parentElement!.innerHTML = `
+              <div style="text-align: right;">
+                <div style="font-family: 'Aglet Mono', monospace; color: ${colors.azulOscuro}; font-size: 24px; font-weight: 700;">
+                  Hablandis
+                </div>
+                <div style="font-family: 'Raleway', sans-serif; color: ${colors.verdeTurquesa}; font-size: 11px; margin-top: 2px;">
+                  Centro Internacional de Idiomas
+                </div>
+              </div>
+            `;
+          }}
+        />
+      </motion.div>
 
       {/* Contenido Principal */}
       <div className="flex-1 flex flex-col items-center justify-center max-w-6xl mx-auto w-full">
@@ -636,20 +759,43 @@ const Diapositiva2 = () => {
             <motion.h1 
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="text-5xl font-bold text-center mb-12"
-              style={{ color: colors.amarillo, fontFamily: 'Aglet Mono, monospace' }}
+              className="text-5xl font-bold text-center mb-4"
+              style={{ color: colors.azulOscuro, fontFamily: 'Aglet Mono, monospace' }}
             >
               🎵 ELLA LLEGÓ 🎵
             </motion.h1>
 
-            {/* Reproductor de Audio */}
-            <audio ref={audioRef} src="/ella llegó.mp3" />
+            {/* Estado del audio para debugging */}
+            <div className="text-center mb-4 text-sm" style={{ color: colors.grisOscuro }}>
+              Estado del audio: {audioStatus}
+            </div>
+
+            {/* Reproductor de Audio - probar diferentes paths */}
+            <audio 
+              ref={audioRef} 
+              src="/ella llego.mp3"
+              preload="auto"
+              onError={(e) => console.error("Audio element error event:", e)}
+            />
             
             <motion.div 
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 mb-8 w-full max-w-2xl"
+              className="rounded-2xl p-8 mb-8 w-full max-w-2xl"
+              style={{
+                backgroundColor: colors.blanco + '90',
+                boxShadow: '0 10px 30px rgba(0,0,0,0.1)'
+              }}
             >
+              {/* Mensaje de error si el audio no carga */}
+              {audioError && (
+                <div className="text-red-600 text-center mb-4 p-4 bg-red-50 rounded-lg">
+                  <p className="font-semibold">Error al cargar el audio</p>
+                  <p className="text-sm mt-2">Verifica que el archivo existe en /public/ella llego.mp3</p>
+                  <p className="text-xs mt-1">Revisa la consola del navegador para más detalles</p>
+                </div>
+              )}
+
               {/* Controles del reproductor */}
               <div className="flex items-center justify-center space-x-6 mb-6">
                 <button
@@ -665,19 +811,25 @@ const Diapositiva2 = () => {
 
               {/* Barra de progreso */}
               <div className="mb-4">
-                <div className="h-2 bg-white/20 rounded-full overflow-hidden">
+                <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
                   <motion.div 
                     className="h-full"
                     style={{ 
-                      backgroundColor: colors.amarillo,
-                      width: `${(currentTime / duration) * 100}%`
+                      backgroundColor: colors.verdeTurquesa,
+                      width: `${duration ? (currentTime / duration) * 100 : 0}%`
                     }}
                   />
                 </div>
-                <div className="flex justify-between text-white/70 text-sm mt-2">
+                <div className="flex justify-between text-gray-600 text-sm mt-2">
                   <span>{formatTime(currentTime)}</span>
-                  <span>{formatTime(duration)}</span>
+                  <span>{formatTime(duration || 0)}</span>
                 </div>
+              </div>
+
+              {/* Info adicional para debugging */}
+              <div className="text-xs text-gray-500 text-center mt-4">
+                <p>Ready State: {audioRef.current?.readyState || 'N/A'}</p>
+                <p>Network State: {audioRef.current?.networkState || 'N/A'}</p>
               </div>
             </motion.div>
 
@@ -686,7 +838,11 @@ const Diapositiva2 = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.5 }}
-              className="bg-black/30 backdrop-blur-lg rounded-2xl p-8 w-full max-w-4xl max-h-96 overflow-y-auto"
+              className="rounded-2xl p-8 w-full max-w-4xl max-h-96 overflow-y-auto"
+              style={{
+                backgroundColor: colors.blanco + '80',
+                boxShadow: '0 10px 30px rgba(0,0,0,0.1)'
+              }}
             >
               <div className="space-y-3">
                 {lyrics.map((line, index) => (
@@ -708,8 +864,8 @@ const Diapositiva2 = () => {
                     }`}
                     style={{ 
                       color: index <= currentLyricIndex 
-                        ? (line.type === 'chorus' ? colors.amarillo : 'white')
-                        : 'rgba(255,255,255,0.4)',
+                        ? (line.type === 'chorus' ? colors.verdeTurquesa : colors.azulOscuro)
+                        : colors.grisOscuro + '60',
                       fontFamily: line.type === 'section' ? 'Aglet Mono, monospace' : 'Raleway, sans-serif'
                     }}
                   >
@@ -718,6 +874,27 @@ const Diapositiva2 = () => {
                 ))}
               </div>
             </motion.div>
+
+            {/* Botón de prueba con audio online */}
+            <motion.button
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 1 }}
+              onClick={() => {
+                if (audioRef.current) {
+                  audioRef.current.src = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3";
+                  audioRef.current.load();
+                  console.log("Switched to online audio source for testing");
+                }
+              }}
+              className="mt-4 px-4 py-2 text-sm rounded-lg"
+              style={{ 
+                backgroundColor: colors.grisOscuro + '20',
+                color: colors.grisOscuro
+              }}
+            >
+              Probar con audio de prueba online
+            </motion.button>
           </>
         ) : (
           /* Análisis Post-Canción */
@@ -728,7 +905,7 @@ const Diapositiva2 = () => {
           >
             <h2 
               className="text-4xl font-bold text-center mb-12"
-              style={{ color: colors.amarillo, fontFamily: 'Aglet Mono, monospace' }}
+              style={{ color: colors.azulOscuro, fontFamily: 'Aglet Mono, monospace' }}
             >
               Analicemos la canción 🎭
             </h2>
@@ -740,15 +917,20 @@ const Diapositiva2 = () => {
                   key={key}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  onClick={() => setSelectedSection(key)}
-                  className="bg-white/10 backdrop-blur-lg rounded-xl p-6 text-center transition-all"
+                  onClick={() => setSelectedSection(selectedSection === key ? null : key)}
+                  className="backdrop-blur-lg rounded-xl p-6 text-center transition-all"
                   style={{
+                    backgroundColor: selectedSection === key ? section.color + '20' : colors.blanco + '80',
                     borderColor: selectedSection === key ? section.color : 'transparent',
-                    borderWidth: 3
+                    borderWidth: 3,
+                    boxShadow: '0 10px 30px rgba(0,0,0,0.1)'
                   }}
                 >
                   <div className="text-5xl mb-3">{section.icon}</div>
-                  <h3 className="text-xl font-semibold text-white" style={{ fontFamily: 'Aglet Mono, monospace' }}>
+                  <h3 className="text-xl font-semibold" style={{ 
+                    color: colors.azulOscuro,
+                    fontFamily: 'Aglet Mono, monospace' 
+                  }}>
                     {section.title}
                   </h3>
                 </motion.button>
@@ -760,22 +942,32 @@ const Diapositiva2 = () => {
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="bg-white/10 backdrop-blur-lg rounded-2xl p-8"
+                className="backdrop-blur-lg rounded-2xl p-8"
+                style={{
+                  backgroundColor: colors.blanco + '90',
+                  boxShadow: '0 10px 30px rgba(0,0,0,0.1)'
+                }}
               >
                 <h3 
                   className="text-2xl font-bold mb-6"
-                  style={{ color: sections[selectedSection as keyof typeof sections].color }}
+                  style={{ 
+                    color: sections[selectedSection as keyof typeof sections].color,
+                    fontFamily: 'Aglet Mono, monospace'
+                  }}
                 >
                   {sections[selectedSection as keyof typeof sections].title}
                 </h3>
-                <ul className="space-y-3 text-white text-lg">
+                <ul className="space-y-3 text-lg">
                   {sections[selectedSection as keyof typeof sections].content.map((item, index) => (
                     <motion.li
                       key={index}
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: index * 0.1 }}
-                      style={{ fontFamily: 'Raleway, sans-serif' }}
+                      style={{ 
+                        fontFamily: 'Raleway, sans-serif',
+                        color: colors.grisOscuro
+                      }}
                     >
                       {item}
                     </motion.li>
@@ -792,12 +984,16 @@ const Diapositiva2 = () => {
                 setShowAnalysis(false);
                 setSelectedSection(null);
                 setCurrentTime(0);
+                setIsPlaying(false);
                 if (audioRef.current) {
                   audioRef.current.currentTime = 0;
                 }
               }}
-              className="mt-8 mx-auto block px-8 py-3 rounded-full text-gray-900 font-semibold transition-all"
-              style={{ backgroundColor: colors.amarillo }}
+              className="mt-8 mx-auto block px-8 py-3 rounded-full text-white font-semibold transition-all"
+              style={{ 
+                backgroundColor: colors.verdeTurquesa,
+                fontFamily: 'Raleway, sans-serif'
+              }}
             >
               🎵 Escuchar de nuevo
             </motion.button>
@@ -805,10 +1001,28 @@ const Diapositiva2 = () => {
         )}
       </div>
 
-      {/* Footer */}
-      <div className="text-center text-white/60 text-sm mt-8">
-        © 2024 Hablandis. Todos los derechos reservados.
-      </div>
+      {/* Footer con Copyright - mismo estilo que diapositiva 1 */}
+      <motion.div 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1 }}
+        className="absolute bottom-0 left-0 right-0 py-4 text-center"
+        style={{ 
+          backgroundColor: colors.blanco + '40',
+          backdropFilter: 'blur(10px)',
+          borderTop: `1px solid ${colors.azulOscuro}20`
+        }}
+      >
+        <p style={{ 
+          fontFamily: 'Raleway, sans-serif',
+          fontSize: '14px',
+          color: colors.azulOscuro,
+          letterSpacing: '0.5px',
+          fontWeight: 500
+        }}>
+          © 2025 Hablandis Centro Internacional de Idiomas - Todos los derechos reservados
+        </p>
+      </motion.div>
     </div>
   );
 };
