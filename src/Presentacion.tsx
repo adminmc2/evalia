@@ -1,10 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  LineChart, Line, BarChart, Bar, RadarChart, PolarGrid, PolarAngleAxis, 
-  PolarRadiusAxis, Radar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, 
-  ResponsiveContainer, PieChart, Pie, Cell 
-} from 'recharts';
 
 // Paleta de colores corporativa Hablandis + EVALIA
 const colors = {
@@ -32,53 +27,6 @@ const colors = {
   degradadoAzul: 'linear-gradient(135deg, #12055F 0%, #1a0a7a 100%)',
   degradadoVerde: 'linear-gradient(135deg, #007567 0%, #00a090 100%)',
   degradadoLila: 'linear-gradient(135deg, #B9ABE4 0%, #d4c7f0 100%)',
-};
-
-// Tipos de datos para EVALIA
-interface EvaluationResult {
-  level: string;
-  confidence: number;
-  competencies: {
-    grammar: number;
-    vocabulary: number;
-    fluency: number;
-    cultural: number;
-    register: number;
-  };
-  l1Insights?: string[];
-  recommendations?: string[];
-}
-
-interface StudentJourney {
-  name: string;
-  l1: string;
-  initialLevel: string;
-  finalLevel: string;
-  weekInHablandis?: number;
-  improvements: string[];
-}
-
-// Datos de ejemplo para demos interactivas
-const mockEvaluationData: EvaluationResult = {
-  level: 'B1.2',
-  confidence: 0.87,
-  competencies: {
-    grammar: 75,
-    vocabulary: 82,
-    fluency: 68,
-    cultural: 71,
-    register: 65
-  },
-  l1Insights: [
-    'Tendencia a evitar el subjuntivo',
-    'Calco sintáctico del polaco en orden de palabras',
-    'Excelente comprensión de aspectos formales'
-  ],
-  recommendations: [
-    'Práctica intensiva de subjuntivo en contextos reales',
-    'Inmersión para mejorar fluidez y registro coloquial',
-    'Exposición a variantes dialectales del español'
-  ]
 };
 
 // Configuración de animaciones reutilizables
@@ -115,29 +63,6 @@ const animations = {
   }
 };
 
-// Iconos SVG personalizados para la presentación
-const icons = {
-  ai: (
-    <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
-      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-    </svg>
-  ),
-  plane: (
-    <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
-      <path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/>
-    </svg>
-  ),
-  target: (
-    <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
-      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm0 10c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z"/>
-    </svg>
-  ),
-  rocket: (
-    <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
-      <path d="M12 2.5c1.5 0 2.7 1.2 2.7 2.7 0 .4-.1.7-.2 1L22 12l-3.3 2.5c.2.5.3 1 .3 1.5 0 2.5-2 4.5-4.5 4.5S10 18.5 10 16c0-.5.1-1 .3-1.5L7 12l7.5-5.8c-.1-.3-.2-.6-.2-1 0-1.5 1.2-2.7 2.7-2.7z"/>
-    </svg>
-  )
-};
 
 /// =======================================================================
 // DIAPOSITIVA 1: PORTADA CON FOOTER MINIMALISTA
@@ -1298,17 +1223,17 @@ const Diapositiva3 = () => {
   );
 };
 
-// =======================================================================
-// DIAPOSITIVA 4: PRESENTAMOS A EVALIA - DISEÑO UNIFICADO
-// =======================================================================
-const Diapositiva4 = () => {
-  const [selectedTest, setSelectedTest] = useState<string | null>(null);
-  const [hoveredFeature, setHoveredFeature] = useState<string | null>(null);
-  const [showElements, setShowElements] = useState({
-    title: false,
-    cards: false,
-    info: false
-  });
+// ======================================================================= 
+// DIAPOSITIVA 4: PRESENTAMOS A EVALIA - DISEÑO UNIFICADO 
+// ======================================================================= 
+const Diapositiva4 = () => {   
+  const [selectedTest, setSelectedTest] = useState<string | null>(null);   
+  // Eliminada hoveredFeature que no se utilizaba
+  const [showElements, setShowElements] = useState({     
+    title: false,     
+    cards: false,     
+    info: false   
+  })
 
   // Colores del brandbook
   const slide4Colors = {
@@ -3107,8 +3032,8 @@ const Diapositiva7 = () => {
     }
   ];
 
-  const currentToolData = toolsData.find(t => t.id === selectedToolId);
-  const year = new Date().getFullYear();
+const currentToolData = toolsData.find(t => t.id === selectedToolId);
+// Eliminada la línea: const year = new Date().getFullYear();
 
   const handleWowCardClick = (toolId: string) => {
     setSelectedToolId(toolId);
@@ -3162,10 +3087,6 @@ const Diapositiva7 = () => {
       setActiveAudio({ cardKey, url });
     }
   };
-
-  // Placeholder para el contenido por defecto si las propiedades no existen
-  // Deberías definir una función defaultContent adecuada o manejar esto de otra forma
-  const defaultContent = () => <p>Contenido no disponible.</p>;
 
   return (
     <div
@@ -3678,8 +3599,6 @@ const Diapositiva8 = () => {
   const IconLinearTuneSliders = ({ className = "w-9 h-9" }: { className?: string }) => ( <svg className={className} strokeWidth="1.2" viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="4" y1="21" x2="4" y2="14"></line><line x1="4" y1="10" x2="4" y2="3"></line><line x1="12" y1="21" x2="12" y2="12"></line><line x1="12" y1="8" x2="12" y2="3"></line><line x1="20" y1="21" x2="20" y2="16"></line><line x1="20" y1="12" x2="20" y2="3"></line><line x1="1" y1="14" x2="7" y2="14"></line><line x1="9" y1="8" x2="15" y2="8"></line><line x1="17" y1="16" x2="23" y2="16"></line></svg> );
   const IconPencilSimple = ({ className = "w-6 h-6" }: { className?: string }) => ( <svg className={className} strokeWidth="1.5" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg> );
   const IconAISparkles = ({ className = "w-6 h-6" }: { className?: string }) => ( <svg className={className} strokeWidth="1.5" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 2L9 9l-7 3 7 3 3 7 3-7 7-3-7-3L12 2zM20 12l-2.828-2.828M6.828 6.828L4 4m0 16l2.828-2.828M20 4l-2.828 2.828"></path></svg> );
-
-  const HablandisLogo = ({ className }: { className?: string }) => ( <img src="/hablandis.png" alt="Hablandis Logo" className={className} style={{ filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.08))', height: '7rem', width: 'auto' }} onError={(e) => { const img = e.target as HTMLImageElement; const parent = img.parentElement; if (parent) { parent.style.display = 'inline-block';  parent.innerHTML = `<div style="font-family: 'Aglet Mono Light', monospace; color: ${colors.azulOscuro}; font-size: 4.5em; font-weight: 900; line-height: 1; padding: 0.1em 0;">Hablandis</div>`; } img.remove(); }} /> );
   const Highlight = ({ children, color } : { children: React.ReactNode, color: string }) => (  <mark style={{ backgroundColor: `${color}20`, padding: '0.08em 0.3em', borderRadius: '4px', color: 'inherit' }}>{children}</mark>  );
 
   const [selectedNodeId, setSelectedNodeId] = React.useState<string | null>(null);
@@ -4784,7 +4703,6 @@ const Diapositiva11 = () => {
   const IconDocumentText = ({ className = "w-7 h-7", style }: SvgIconProps) => ( <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className} style={style}><path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" /></svg>);
   const IconChatBubbleLeftRight = ({ className = "w-7 h-7", style }: SvgIconProps) => ( <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className} style={style}><path strokeLinecap="round" strokeLinejoin="round" d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3.697-3.697c-.02.002-.039.005-.058.007H9.486c-1.136 0-2.097-.847-2.193-1.98A18.75 18.75 0 016.75 12.25c0-1.136.847-2.097 1.98-2.193.34-.027.68-.052 1.02-.072V6.75A2.25 2.25 0 0112 4.5h3.879a2.25 2.25 0 012.121 1.608M12 6.75v2.25m0 0H8.25m3.75 0M12 11.25V9m0 2.25H8.25m3.75 0a2.25 2.25 0 012.25 2.25M15 11.25h2.25" /></svg>);
   const IconExternalLink = ({ className = "w-4 h-4 ml-1", style }: SvgIconProps) => ( <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className={className} style={style}><path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" /></svg>);
-  const IconAdjustmentsHorizontal = ({ className = "w-7 h-7", style }: SvgIconProps) => ( <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className} style={style}><path strokeLinecap="round" strokeLinejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75" /></svg>);
   const IconArrowsRightLeft = ({ className = "w-7 h-7", style }: SvgIconProps) => ( <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className} style={style}><path strokeLinecap="round" strokeLinejoin="round" d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h18M16.5 3L21 7.5m0 0L16.5 12M21 7.5H3" /></svg>);
 
   // --------------------------------------------------------------------
@@ -5448,19 +5366,6 @@ const TitleConfig = {
   weight: 'font-semibold',
   color: '#12055F',
   spacing: 'mb-4 md:mb-6'
-};
-const FooterConfig = {
-  position: 'absolute bottom-4 left-0 right-0',
-  padding: 'py-3',
-  background: '#FFFFFF70',
-  backdropFilter: 'backdrop-blur(10px)',
-  text: {
-    fontFamily: 'Raleway, sans-serif',
-    size: '13px',
-    color: '#12055F',
-    opacity: '0.8',
-    weight: '500'
-  }
 };
 
 const LogoHablandis = ({ className = "" }: { className?: string }) => (
