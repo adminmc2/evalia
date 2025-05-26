@@ -2001,6 +2001,36 @@ const Diapositiva5 = () => {
         background: `linear-gradient(135deg, ${slide5Colors.darkBlue}15 0%, ${slide5Colors.purple}25 50%, ${slide5Colors.yellow}15 100%)`
       }}
     >
+      {/* Logo Unificado */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.5 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.5 }}
+        className="absolute top-6 left-6 z-30"
+      >
+        <img 
+          src="/hablandis.png" 
+          alt="Hablandis" 
+          className="h-24 md:h-32"
+          style={{ filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.1))' }}
+          onError={(e) => {
+            const img = e.target as HTMLImageElement;
+            img.style.display = 'none';
+            img.parentElement!.innerHTML = `
+              <div>
+                <div style="font-family: 'Aglet Mono', monospace; color: ${slide5Colors.darkBlue}; font-size: 36px; font-weight: 700; line-height: 1;">
+                  Hablandis
+                </div>
+                <div style="font-family: 'Raleway', sans-serif; color: ${slide5Colors.turquoise}; font-size: 14px; margin-top: 2px;">
+                  Centro Internacional de Idiomas
+                </div>
+              </div>
+            `;
+          }}
+        />
+      </motion.div>
+
+      {/* Efectos de fondo */}
       <div 
         className="absolute top-20 right-20 w-96 h-96 rounded-full blur-3xl opacity-20 pointer-events-none"
         style={{ backgroundColor: slide5Colors.purple }}
@@ -2011,7 +2041,7 @@ const Diapositiva5 = () => {
       />
 
       <div className="relative z-10 h-screen flex flex-col p-6">
-        
+        {/* Título y Subtítulo Unificados */}
         <motion.div 
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: showElements.title ? 1 : 0, y: showElements.title ? 0 : -20 }}
@@ -2019,21 +2049,19 @@ const Diapositiva5 = () => {
           className="text-center mb-6"
         >
           <h1 
-            className="text-5xl md:text-6xl font-light mb-3"
+            className="text-3xl md:text-4xl lg:text-5xl font-semibold mb-4 md:mb-6"
             style={{ 
               color: slide5Colors.darkBlue,
-              fontFamily: 'Aglet Mono, monospace',
-              letterSpacing: '2px'
+              fontFamily: 'Aglet Mono, monospace'
             }}
           >
             Construcción de Propuestas con IA
           </h1>
           <p 
-            className="text-xl md:text-2xl max-w-4xl mx-auto"
+            className="text-lg md:text-xl lg:text-2xl font-normal max-w-4xl mx-auto"
             style={{ 
               color: slide5Colors.turquoise, 
-              fontFamily: 'Raleway, sans-serif',
-              fontWeight: 500
+              fontFamily: 'Raleway, sans-serif'
             }}
           >
             Herramientas esenciales para crear contenido evaluativo multimedia
@@ -2245,27 +2273,16 @@ const Diapositiva5 = () => {
           </motion.div>
         </div>
 
-        <motion.div 
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1 }}
-          className="absolute bottom-0 left-0 right-0 py-3 flex items-center justify-center gap-3"
-          style={{ 
-            backgroundColor: slide5Colors.white + '90',
-            backdropFilter: 'blur(10px)',
-            borderTop: `1px solid ${slide5Colors.darkBlue}20`
-          }}
-        >
-          <p style={{ 
+        {/* Footer Minimalista */}
+        <div className="absolute bottom-2 left-0 right-0 text-center">
+          <p className="text-xs" style={{ 
             fontFamily: 'Raleway, sans-serif',
-            fontSize: '14px',
             color: slide5Colors.darkBlue,
-            letterSpacing: '0.5px',
-            fontWeight: 500
+            opacity: 0.6
           }}>
-            © {year} Hablandis Centro Internacional de Idiomas. Todos los derechos reservados.
+            © {year} Hablandis. Todos los derechos reservados.
           </p>
-        </motion.div>
+        </div>
       </div>
     </div>
   );
@@ -2275,13 +2292,64 @@ const Diapositiva5 = () => {
 // =======================================================================
 
 // =======================================================================
-// DIAPOSITIVA 6: BÚSQUEDA DE CONTENIDO CON IA (SIN FIGURAS, CON GRADIENTES)
+// DIAPOSITIVA 6: BÚSQUEDA DE CONTENIDO CON IA (SIN FOOTER)
 // =======================================================================
 const Diapositiva6 = () => {
   const [activeGoogleOperatorId, setActiveGoogleOperatorId] = useState<string | null>(null);
   const [activeChatGPTExampleId, setActiveChatGPTExampleId] = useState<string | null>(null);
   const [isTyping, setIsTyping] = useState(false);
   const [currentSearchText, setCurrentSearchText] = useState("");
+  
+  // Colores base del diseño unificado
+  const colors = {
+    azulOscuro: '#12055F',
+    verdeTurquesa: '#007567',
+    blanco: '#FFFFFF'
+  };
+
+  // Configuración de Títulos
+  const TitleConfig = {
+    fontFamily: 'Aglet Mono, monospace',
+    mainSize: 'text-3xl md:text-4xl lg:text-5xl',
+    weight: 'font-semibold',
+    color: colors.azulOscuro,
+    spacing: 'mb-4 md:mb-6'
+  };
+
+  // Configuración de Subtítulos
+  const SubtitleConfig = {
+    fontFamily: 'Raleway, sans-serif',
+    size: 'text-lg md:text-xl lg:text-2xl',
+    weight: 'font-normal',
+    color: colors.verdeTurquesa,
+    spacing: 'mb-2'
+  };
+
+  // Componente Título Principal Unificado
+  const MainTitle = ({ children, className = "" }: { children: React.ReactNode, className?: string }) => (
+    <h1 
+      className={`${TitleConfig.mainSize} ${TitleConfig.weight} ${TitleConfig.spacing} ${className}`}
+      style={{ 
+        fontFamily: TitleConfig.fontFamily,
+        color: TitleConfig.color
+      }}
+    >
+      {children}
+    </h1>
+  );
+
+  // Componente Subtítulo Unificado
+  const Subtitle = ({ children, className = "" }: { children: React.ReactNode, className?: string }) => (
+    <p 
+      className={`${SubtitleConfig.size} ${SubtitleConfig.weight} ${SubtitleConfig.spacing} ${className}`}
+      style={{ 
+        fontFamily: SubtitleConfig.fontFamily,
+        color: SubtitleConfig.color
+      }}
+    >
+      {children}
+    </p>
+  );
   
   // Colores del brandbook con énfasis en los no utilizados
   const d6Colors = {
@@ -2500,24 +2568,6 @@ const Diapositiva6 = () => {
     </div>
   );
 
-  const FooterD6 = () => (
-    <motion.div 
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.5, delay: 0.6 }}
-      className="w-full text-center py-1 px-4 shrink-0" 
-      style={{ 
-        backgroundColor: `${d6Colors.bgBase}E6`,
-        borderTop: `1px solid ${d6Colors.borderColor}`,
-        fontFamily: 'Raleway, sans-serif',
-        fontSize: '10px',
-        color: d6Colors.textBody,
-      }}
-    >
-      © {new Date().getFullYear()} Hablandis. Centro Internacional de Idiomas. Todos los derechos reservados.
-    </motion.div>
-  );
-
   const [showElementsD6, setShowElementsD6] = useState({
     title: false,
     columns: false,
@@ -2544,28 +2594,12 @@ const Diapositiva6 = () => {
         transition={{ duration: 0.6 }}
         className="text-center mb-4 relative z-10"
       >
-        <h1 
-          className="mb-1"
-          style={{
-            fontFamily: 'Aglet Mono, monospace',
-            fontSize: `calc(${baseFontSize} * 2.4)`,
-            fontWeight: 600,
-            color: d6Colors.textTitle,
-            lineHeight: 1.1,
-          }}
-        >
+        <MainTitle className="mb-1">
           ¿Cómo se construye una propuesta evaluativa con IA?
-        </h1>
-        <p 
-          className="text-lg"
-          style={{
-            fontFamily: 'Raleway, sans-serif',
-            fontWeight: 400,
-            color: d6Colors.textSubtitle,
-          }}
-        >
+        </MainTitle>
+        <Subtitle>
           La búsqueda de contenido y el uso de ChatGPT
-        </p>
+        </Subtitle>
       </motion.div>
 
       <motion.div 
@@ -2824,13 +2858,11 @@ const Diapositiva6 = () => {
           </motion.div>
         </div>
       </motion.div>
-      
-      <FooterD6 />
     </div>
   );
 };
 // =======================================================================
-// FIN DIAPOSITIVA 6 (SIN FIGURAS, CON GRADIENTES)
+// FIN DIAPOSITIVA 6 (SIN FOOTER)
 // =======================================================================
 
 // --- Definiciones de Iconos SVG (MODIFICADAS PARA ACEPTAR style) ---
@@ -2850,30 +2882,128 @@ const IconHeadphones = ({ className = "w-6 h-6", style }: { className?: string, 
 const IconVideo = ({ className = "w-6 h-6", style }: { className?: string, style?: React.CSSProperties }) => ( <svg className={className} style={style} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.5"><path strokeLinecap="round" d="M15.75 10.5l4.72-4.72a.75.75 0 011.28.53v11.38a.75.75 0 01-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 002.25-2.25v-9A2.25 2.25 0 0013.5 5.25h-9A2.25 2.25 0 002.25 7.5v9A2.25 2.25 0 004.5 18.75z" /></svg> );
 
 // =======================================================================
-// DIAPOSITIVA 7: IA PARA CREAR TEXTOS ORALES (Botón "Explorar" Funcional)
+// DIAPOSITIVA 7: IA PARA CREAR TEXTOS ORALES (CON DISEÑO UNIFICADO)
 // =======================================================================
 const Diapositiva7 = () => {
   const [viewState, setViewState] = useState<'wow' | 'tech_overview' | 'tool_detail'>('wow');
   const [selectedToolId, setSelectedToolId] = useState<string | null>(null);
   const [modalSource, setModalSource] = useState<'wow' | 'tech_overview' | null>(null);
+  // Nuevo estado para el reproductor de audio en línea
+  const [activeAudio, setActiveAudio] = useState<{ cardKey: string; url: string } | null>(null);
+
+  // Colores base del diseño unificado
+  const colors = {
+    azulOscuro: '#12055F',
+    verdeTurquesa: '#007567',
+    blanco: '#FFFFFF'
+  };
+
+  // Configuración de Logo
+  const LogoConfig = {
+    size: 'h-24 md:h-32',
+    position: 'absolute top-6 left-6 z-30',
+    fallbackFontSize: '36px md:48px',
+    shadow: 'drop-shadow(0 4px 8px rgba(0,0,0,0.1))'
+  };
+
+  // Configuración de Títulos
+  const TitleConfig = {
+    fontFamily: 'Aglet Mono, monospace', // Sin "Light"
+    mainSize: 'text-3xl md:text-4xl lg:text-5xl',
+    weight: 'font-semibold',
+    color: colors.azulOscuro,
+    spacing: 'mb-4 md:mb-6'
+  };
+
+  // Configuración de Subtítulos
+  const SubtitleConfig = {
+    fontFamily: 'Raleway, sans-serif',
+    size: 'text-lg md:text-xl lg:text-2xl',
+    weight: 'font-normal',
+    color: colors.verdeTurquesa,
+    spacing: 'mb-2'
+  };
+
+  // Configuración de Footer (SIN LÍNEA)
+  const FooterConfig = {
+    position: 'absolute bottom-4 left-0 right-0',
+    padding: 'py-3',
+    background: `${colors.blanco}70`,
+    backdropFilter: 'backdrop-blur(10px)',
+    text: {
+      fontFamily: 'Raleway, sans-serif',
+      size: '13px',
+      color: colors.azulOscuro,
+      opacity: '0.8',
+      weight: '500'
+    }
+  };
+
+  // Componente Logo Unificado
+  const LogoHablandis = ({ className = "" }: { className?: string }) => (
+    <img 
+      src="/hablandis.png" 
+      alt="Hablandis" 
+      className={`${LogoConfig.size} ${className}`}
+      style={{ filter: LogoConfig.shadow }}
+      onError={(e) => {
+        const img = e.target as HTMLImageElement;
+        img.style.display = 'none';
+        const parent = img.parentElement;
+        if (parent) {
+          parent.innerHTML = `
+            <div style="font-family: 'Aglet Mono', monospace; color: ${colors.azulOscuro}; font-size: ${LogoConfig.fallbackFontSize}; font-weight: 700; line-height: 1;">
+              Hablandis
+            </div>
+            <div style="font-family: 'Raleway', sans-serif; color: ${colors.verdeTurquesa}; font-size: 14px; margin-top: 2px;">
+              Centro Internacional de Idiomas
+            </div>
+          `;
+        }
+      }}
+    />
+  );
+
+  // Componente Título Principal Unificado
+  const MainTitle = ({ children, className = "" }: { children: React.ReactNode, className?: string }) => (
+    <h1 
+      className={`${TitleConfig.mainSize} ${TitleConfig.weight} ${TitleConfig.spacing} ${className}`}
+      style={{ 
+        fontFamily: TitleConfig.fontFamily,
+        color: TitleConfig.color
+      }}
+    >
+      {children}
+    </h1>
+  );
+
+  // Componente Subtítulo Unificado
+  const Subtitle = ({ children, className = "" }: { children: React.ReactNode, className?: string }) => (
+    <p 
+      className={`${SubtitleConfig.size} ${SubtitleConfig.weight} ${SubtitleConfig.spacing} ${className}`}
+      style={{ 
+        fontFamily: SubtitleConfig.fontFamily,
+        color: SubtitleConfig.color
+      }}
+    >
+      {children}
+    </p>
+  );
 
   const slide7Colors = {
-    lila: '#B9ABE4',          
-    verdeTurquesa: '#007567', 
-    amarillo: '#FFC846',       
-    azulOscuro: '#12055F',    
-    verdeClaro: '#C4D4A4',     
-    negro: '#1A202C',          
+    lila: '#B9ABE4',
+    verdeTurquesa: '#007567',
+    amarillo: '#FFC846',
+    azulOscuro: '#12055F',
+    verdeClaro: '#C4D4A4',
+    negro: '#1A202C',
     white: '#FFFFFF',
-    grayMedium: '#4A5568',    
-    grayLight: '#F3F4F6', 
-    // --- Añadidas para cubrir todos los colores referenciados en los errores ---
-    grisClaro: '#D1D5DB', // o el valor correcto
-    grisMedio: '#6B7280', // o el valor correcto
-    grisOscuro: '#374151', // o el valor correcto
-    exito: '#10B981', // o el valor correcto
-    // Faltaban 'error', 'advertencia', 'informacion', 'degradadoAzul', 'degradadoLila'
-    // los añado con placeholders, deberías poner los valores correctos
+    grayMedium: '#4A5568',
+    grayLight: '#F3F4F6',
+    grisClaro: '#D1D5DB',
+    grisMedio: '#6B7280',
+    grisOscuro: '#374151',
+    exito: '#10B981',
     error: '#EF4444',
     advertencia: '#F59E0B',
     informacion: '#3B82F6',
@@ -2881,100 +3011,99 @@ const Diapositiva7 = () => {
     degradadoLila: 'linear-gradient(to right, #8B5CF6, #6D28D9)',
   };
 
-
-  const toolsData = [ 
+  const toolsData = [
     {
-      id: 'textmagic', 
-      name: 'TextMagic TTS', 
-      url: 'https://www.textmagic.com/free-tools/text-to-speech/', 
+      id: 'textmagic',
+      name: 'TextMagic TTS',
+      url: 'https://www.textmagic.com/free-tools/text-to-speech/',
       displayText: 'textmagic.com',
       wow: {
-        beforeIcon: <IconTextMessage style={{color: slide7Colors.verdeTurquesa}} />, // CORREGIDO
+        beforeIcon: <IconTextMessage style={{color: slide7Colors.verdeTurquesa}} />,
         beforeText: "Texto Simple",
-        afterIcon: <IconAudioHighQuality style={{color: slide7Colors.amarillo}}/>, // CORREGIDO
+        afterIcon: <IconAudioHighQuality style={{color: slide7Colors.amarillo}}/>,
         afterText: "Voz Natural",
         benefit: "Convierte texto simple en audio claro y natural ¡al instante!",
         cta: "Probar TextMagic"
       },
-      icon: <IconMagicWand />, // Asumimos que IconMagicWand se actualizará para aceptar style si es necesario
+      icon: <IconMagicWand />,
       tutorial: [
         'Visita la página de TextMagic TTS a través del enlace proporcionado.',
         'En el área de texto principal, escribe o pega el contenido que deseas convertir a voz.',
         'Utiliza los menús desplegables para seleccionar el idioma (ej. "Spanish") y la voz que prefieras de las opciones disponibles.',
         'Ajusta los controles deslizantes de "Velocidad" (Speed) y "Tono" (Pitch) para personalizar la salida de audio.',
         'Presiona el botón "Convert to speech" o "Play". Podrás escuchar una vista previa y, usualmente, descargar el audio en formato MP3.'
-      ], 
-      features: ['Gratuito', 'Múltiples Idiomas', 'Varias Voces', 'Control Velocidad/Tono', 'Descarga MP3'], 
+      ],
+      features: ['Gratuito', 'Múltiples Idiomas', 'Varias Voces', 'Control Velocidad/Tono', 'Descarga MP3'],
       comparisons: [
         {
           title: "Comparación de Audio",
           original: {
             type: "audio",
             label: "Audio Humano Original",
-            url: "https://jumpshare.com/v/Ate7S9YfsMMLlDb9ISWU?b=ipLVT5b8jvL2EkkUdTFD"
+            url: "/magic_humano.mp3"
           },
           resultado: {
             type: "audio",
             label: "Audio Generado con TextMagic",
-            url: "https://jumpshare.com/v/hateZsRYBdP3MsjYFp9w?b=ipLVT5b8jvL2EkkUdTFD"
+            url: "/magic_2.mp3"
           }
         }
       ],
       colorAcento: slide7Colors.amarillo,
-      ejemplos: [ { tipo: 'audio', texto: 'Audio generado con TextMagic', url: '#' } ]
+      ejemplos: [ { tipo: 'audio', texto: 'Audio generado con TextMagic', url: '/magic_2.mp3' } ]
     },
     {
-      id: 'elevenlabs', 
-      name: 'ElevenLabs', 
-      url: 'https://elevenlabs.io/', 
+      id: 'elevenlabs',
+      name: 'ElevenLabs',
+      url: 'https://elevenlabs.io/',
       displayText: 'elevenlabs.io',
       wow: {
-        beforeIcon: <IconVideoOriginal style={{color: slide7Colors.verdeTurquesa}} />, // CORREGIDO
+        beforeIcon: <IconVideoOriginal style={{color: slide7Colors.verdeTurquesa}} />,
         beforeText: "Vídeo Estándar",
-        afterIcon: <IconAudioHighQuality style={{color: slide7Colors.lila}}/>, // CORREGIDO
+        afterIcon: <IconAudioHighQuality style={{color: slide7Colors.lila}}/>,
         afterText: "Voz Profesional IA",
         benefit: "Transforma cualquier voz en una narración de estudio con IA.",
         cta: "Probar ElevenLabs"
       },
-      icon: <IconElevenLabs />, // Asumimos que IconElevenLabs se actualizará para aceptar style si es necesario
+      icon: <IconElevenLabs />,
       tutorial: [
         'Crea una cuenta en ElevenLabs.io (pueden ofrecer un plan gratuito con limitaciones).',
         'Navega a "Speech Synthesis". Puedes elegir voces predefinidas de la "Voice Library" o usar voces que hayas clonado ("VoiceLab").',
         'Pega tu texto en el campo correspondiente. Selecciona la voz deseada.',
         'Ajusta los "Voice Settings": "Stability" (más bajo para más expresividad, más alto para monotonía) y "Clarity + Similarity Enhancement" (para mejorar la claridad).',
         'Haz clic en "Generate". Una vez procesado, podrás escuchar el audio y descargarlo.'
-      ], 
-      features: ['Voces Hiperrealistas', 'Clonación Vocal', 'Personalización Avanzada', 'API Disponible', 'Múltiples Idiomas'], 
+      ],
+      features: ['Voces Hiperrealistas', 'Clonación Vocal', 'Personalización Avanzada', 'API Disponible', 'Múltiples Idiomas'],
       comparisons: [
         {
           title: "Ejemplo 1: Voz de Anciano",
           original: {
-            type: "video",
+            type: "video", // Este sigue siendo video, se abrirá en nueva pestaña
             label: "Video Original: Old Man Speaking",
             url: "https://youtu.be/mhupEfL_j4I?si=CAhsKnXa8ykRQf-G&t=586"
           },
           resultado: {
             type: "audio",
             label: 'Resultado con voz "Thomas"',
-            url: "https://univmurcia-my.sharepoint.com/:u:/g/personal/evaristo_um_es/EWQtRbh6VJ9IrYhpSkRFRO4BtW3qwaEw5BghLROyivqWug?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJPbmVEcml2ZUZvckJ1c2luZXNzIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXciLCJyZWZlcnJhbFZpZXciOiJNeUZpbGVzTGlua0NvcHkifX0&e=SEotbe"
+            url: "/oldman_elevenlabs_thomas.mp3"
           }
         },
         {
           title: "Ejemplo 2: Voz en Español",
           original: {
-            type: "video",
+            type: "video", // Este sigue siendo video, se abrirá en nueva pestaña
             label: 'Video Original: Voz Joven',
             url: "https://www.youtube.com/watch?v=EbDy79f-RhY"
           },
           resultado: {
             type: "audio",
             label: 'Resultado con voz "Thomas"',
-            url: "https://univmurcia-my.sharepoint.com/:u:/g/personal/evaristo_um_es/ESMpKp-5zLBMtzriIleQ8kwBF-SO-U7IzAgg9q-VzvJG7w?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJPbmVEcml2ZUZvckJ1c2luZXNzIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXciLCJyZWZlcnJhbFZpZXciOiJNeUZpbGVzTGlua0NvcHkifX0&e=ajQe92"
+            url: "/chico_joven_voz_poco_sonora.mp3"
           }
         }
       ],
       colorAcento: slide7Colors.lila,
-      ejemplos: [ { tipo: 'video_resultado', texto: 'Escucha voz "Thomas" (ElevenLabs)', url: '#' } ]
+      ejemplos: [ { tipo: 'video_resultado', texto: 'Escucha voz "Thomas" (ElevenLabs)', url: '/oldman_elevenlabs_thomas.mp3' } ]
     }
   ];
 
@@ -2985,12 +3114,14 @@ const Diapositiva7 = () => {
     setSelectedToolId(toolId);
     setModalSource('wow');
     setViewState('tool_detail');
+    setActiveAudio(null); // Reset audio player when changing views
   };
 
   const handleTechOverviewClick = (toolId: string) => {
     setSelectedToolId(toolId);
     setModalSource('tech_overview');
     setViewState('tool_detail');
+    setActiveAudio(null); // Reset audio player
   };
 
   const handleExploreClick = () => {
@@ -3001,19 +3132,34 @@ const Diapositiva7 = () => {
     } else {
         setViewState('tech_overview');
     }
+    setActiveAudio(null); // Reset audio player
   };
-  
+
   const closeModal = () => {
     if (viewState === 'tool_detail') {
-        // CORRECCIÓN: Verificar si el elemento existe antes de intentar interactuar con él.
         const techOverviewSection = document.getElementById("tech-overview-section");
-        if (techOverviewSection) { // Asumiendo que quieres volver a tech_overview si existe
+        if (modalSource === 'wow') { // Si venimos de WOW, volvemos a WOW
+             setViewState('wow');
+        } else if (techOverviewSection) {
              setViewState('tech_overview');
         } else {
              setViewState('wow');
         }
         setSelectedToolId(null);
         setModalSource(null);
+        setActiveAudio(null); // Reset audio player when closing modal
+    }
+  };
+
+  const handlePlayAudio = (cardKey: string, url: string, type: 'audio' | 'video') => {
+    if (type === 'video') {
+      window.open(url, '_blank', 'noopener,noreferrer');
+      return;
+    }
+    if (activeAudio && activeAudio.cardKey === cardKey) {
+      setActiveAudio(null); // Si se hace clic en el mismo, lo detenemos/ocultamos
+    } else {
+      setActiveAudio({ cardKey, url });
     }
   };
 
@@ -3021,57 +3167,43 @@ const Diapositiva7 = () => {
   // Deberías definir una función defaultContent adecuada o manejar esto de otra forma
   const defaultContent = () => <p>Contenido no disponible.</p>;
 
-  // Placeholder para ejemplosAplicacion y currentExampleIndex
-  // Necesitarás definir estos basados en tu lógica de aplicación
-  // const ejemplosAplicacion: any[] = []; // Ejemplo: [{ content: () => <p>Ejemplo 1</p> }, { promptContent: () => <p>Prompt 2</p>, responseContent: () => <p>Response 2</p> }]
-  // const currentExampleIndex = 0;
-  // const activeTab = 'aplicacion'; // o 'conceptualizacion', etc.
-
   return (
-    <div 
+    <div
       className="min-h-screen relative overflow-hidden flex flex-col items-center justify-start p-6 md:p-8"
-      style={{ 
+      style={{
         background: `linear-gradient(160deg, ${slide7Colors.lila}0A 0%, ${slide7Colors.verdeTurquesa}1A 50%, ${slide7Colors.lila}0A 100%), ${slide7Colors.grayLight}`
       }}
     >
-      <motion.div 
-        className="absolute top-10 -left-20 w-72 h-72 opacity-20" 
+      {/* Logo Hablandis */}
+      <div className={LogoConfig.position}>
+        <LogoHablandis />
+      </div>
+
+      <motion.div
+        className="absolute top-10 -left-20 w-72 h-72 opacity-20"
         style={{background: slide7Colors.amarillo, clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)'}}
         animate={{ rotate: [0, 5, -5, 0], scale: [1, 1.02, 1] }}
         transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
       />
-      <motion.div 
-        className="absolute bottom-10 -right-20 w-80 h-80 opacity-15" 
+      <motion.div
+        className="absolute bottom-10 -right-20 w-80 h-80 opacity-15"
         style={{background: slide7Colors.verdeTurquesa, borderRadius: '30% 70% 70% 30% / 30% 30% 70% 70%'}}
         animate={{ x: [0, 10, -10, 0], y: [0, -10, 10, 0] }}
         transition={{ duration: 25, repeat: Infinity, ease: "easeInOut" }}
       />
 
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, y: -30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7, delay:0.1 }}
         className="text-center my-8 md:my-10 w-full max-w-4xl z-10"
       >
-        <h1 
-          className="text-4xl sm:text-5xl md:text-6xl font-light mb-3"
-          style={{ 
-            color: slide7Colors.azulOscuro,
-            fontFamily: 'Aglet Mono Light, monospace',
-            textShadow: `1px 1px 2px ${slide7Colors.lila}40`
-          }}
-        >
+        <MainTitle className="mb-3">
           ¡Voces que Asombran con IA!
-        </h1>
-        <p 
-          className="text-lg sm:text-xl"
-          style={{ 
-            color: slide7Colors.negro,
-            fontFamily: 'Raleway, sans-serif',
-          }}
-        >
+        </MainTitle>
+        <Subtitle>
           Experimenta la transformación de texto a voz y descubre su potencial.
-        </p>
+        </Subtitle>
       </motion.div>
 
     <div className="w-full max-w-5xl z-10 flex-1 flex flex-col items-center">
@@ -3082,12 +3214,10 @@ const Diapositiva7 = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
-                // CORRECCIÓN: Eliminando el style con 'sm:' (si este era el origen del error 3518)
-                // style={{...}} 
                 transition={{ duration: 0.5, delay: 0.2 }}
                 className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 w-full mb-6"
             >
-                {toolsData.map((tool) => (
+                {toolsData.map((tool, toolIndex) => (
                   <motion.div
                     key={tool.id + "-wow"}
                     className="bg-white/80 backdrop-blur-md rounded-2xl shadow-xl p-6 flex flex-col items-center text-center hover:shadow-2xl transition-shadow duration-300 transform hover:-translate-y-1"
@@ -3095,13 +3225,13 @@ const Diapositiva7 = () => {
                     variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
                     initial="hidden"
                     animate="visible"
-                    transition={{delay:0.1 * toolsData.indexOf(tool)}}
+                    transition={{delay:0.1 * toolIndex}} // Corrección: usar toolIndex
                   >
                     <div className="flex items-center justify-around w-full my-4 px-4">
                         <div className="flex flex-col items-center opacity-70">
                             {tool.wow.beforeIcon}
+                            <p className="text-xs mt-1" style={{color: slide7Colors.grayMedium, fontFamily: 'Raleway'}}>{tool.wow.beforeText}</p>
                         </div>
-                        {/* CORRECCIÓN error 3802: IconSparkles ahora acepta style */}
                         <IconSparkles className="w-10 h-10 mx-2 sm:mx-4 text-lg" style={{color: tool.colorAcento}} />
                         <div className="flex flex-col items-center">
                             {tool.wow.afterIcon}
@@ -3141,18 +3271,20 @@ const Diapositiva7 = () => {
                 </h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     {toolsData.map(tool => (
-                        <div key={tool.id + "-overview"} 
+                        <div key={tool.id + "-overview"}
                              className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow cursor-pointer"
                              style={{borderColor: tool.colorAcento, borderLeftWidth: '4px'}}
                              onClick={() => handleTechOverviewClick(tool.id)}
                         >
                             <div className="flex items-center gap-3 mb-2">
-                                {/* CORRECCIÓN error 3099: tool.icon es un elemento, cloneElement es correcto. Los iconos ahora aceptan style. */}
-                                <div style={{color: tool.colorAcento}}>{React.cloneElement(tool.icon as React.ReactElement, {className: "w-7 h-7"})}</div>
+                                <div style={{color: tool.colorAcento}}>
+                                  {/* MODIFICACIÓN 1: Corregido el error de 'className' */}
+                                  {React.cloneElement(tool.icon as React.ReactElement<{ className?: string }>, {className: "w-7 h-7"})}
+                                </div>
                                 <h3 className="text-lg font-semibold" style={{fontFamily: 'Raleway SemiBold', color: slide7Colors.azulOscuro}}>{tool.name}</h3>
                             </div>
                             <p className="text-xs mb-3" style={{fontFamily: 'Raleway', color: slide7Colors.grayMedium}}>{tool.wow.benefit}</p>
-                            <button 
+                            <button
                                 className="text-xs font-semibold py-1 px-3 rounded-md w-full"
                                 style={{backgroundColor: `${tool.colorAcento}30`, color: slide7Colors.azulOscuro, fontFamily: 'Raleway Medium'}}
                             >
@@ -3165,19 +3297,24 @@ const Diapositiva7 = () => {
         )}
       </AnimatePresence>
     </div>
-    
-    <motion.button
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: (viewState === 'wow' ? 0.6 : 0.2) }}
-        onClick={handleExploreClick}
-        className="z-20 my-4 font-semibold py-3 px-8 rounded-full text-md inline-flex items-center gap-2 shadow-lg hover:shadow-xl transition-all duration-300"
-        style={{
-            background: `linear-gradient(to right, ${slide7Colors.amarillo}, ${slide7Colors.lila})`,
-            color: slide7Colors.azulOscuro, 
-            fontFamily: 'Raleway SemiBold',
-        }}
-    >
+
+<motion.button
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.5, delay: (viewState === 'wow' ? 0.6 : 0.2) }}
+    onClick={handleExploreClick}
+    className="font-semibold py-3 px-8 rounded-full text-md inline-flex items-center gap-2 shadow-lg hover:shadow-xl transition-all duration-300"
+    style={{
+        background: `linear-gradient(to right, ${slide7Colors.amarillo}, ${slide7Colors.lila})`,
+        color: slide7Colors.azulOscuro,
+        fontFamily: 'Raleway SemiBold',
+        position: 'fixed',          // ← POSITION FIXED
+        bottom: '150px',            // ← AJUSTA ESTA DISTANCIA
+        left: '40%',
+        transform: 'translateX(-50%)',
+        zIndex: 20
+    }}
+>
         {viewState === 'wow' ? <IconChevronDown /> : <IconChevronUp />}
         {viewState === 'wow' ? "Explorar Herramientas a Fondo" : "Volver a la Demostración"}
     </motion.button>
@@ -3191,30 +3328,34 @@ const Diapositiva7 = () => {
             exit={{ opacity: 0, y: 30, scale: 0.95 }}
             transition={{ duration: 0.3, ease: "easeOut" }}
             className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center p-4 z-50"
-            onClick={closeModal} 
+            onClick={closeModal}
           >
-            <div 
+            <div
                 className="bg-white rounded-2xl shadow-2xl p-6 md:p-8 w-full max-w-3xl max-h-[90vh] flex flex-col overflow-hidden"
-                onClick={(e) => e.stopPropagation()} 
+                onClick={(e) => e.stopPropagation()}
             >
                 <div className="flex items-center justify-between mb-5 pb-4 border-b" style={{borderColor: `${currentToolData.colorAcento}50`}}>
                     <div className="flex items-center gap-3">
-                         {/* CORRECCIÓN error 3205 y 3236: Iconos ahora aceptan style. Asegurar que currentToolData.icon es un ReactElement */}
                         <div className="p-2 rounded-lg" style={{backgroundColor: `${currentToolData.colorAcento}20`}}>
-                            {React.cloneElement(currentToolData.icon as React.ReactElement, {style:{color: currentToolData.colorAcento}})}
+                            {/* MODIFICACIÓN 2: Corregido el error de 'style' y 'className' */}
+                            {React.cloneElement(
+                                currentToolData.icon as React.ReactElement<{ style?: React.CSSProperties, className?: string }>,
+                                {style:{color: currentToolData.colorAcento}, className: "w-6 h-6"}
+                            )}
                         </div>
                         <h2 className="text-2xl font-bold" style={{fontFamily: 'Aglet Mono Light, monospace', color: slide7Colors.azulOscuro}}>
                             {currentToolData.name}
                         </h2>
                     </div>
                     <button onClick={closeModal} className="p-1 rounded-full hover:bg-gray-200 transition-colors">
-                        <IconClose style={{color: slide7Colors.grayMedium}}/> {/* CORREGIDO */}
+                        <IconClose style={{color: slide7Colors.grayMedium}} className="w-6 h-6"/>
                     </button>
                 </div>
 
                 {modalSource === 'tech_overview' ? (
                     <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4 overflow-y-auto custom-scrollbar-minimal pr-2">
-                        <div className="space-y-3">
+                        {/* ... (contenido de tech_overview sin cambios) ... */}
+                         <div className="space-y-3">
                             <h3 className="text-lg font-semibold" style={{fontFamily: 'Raleway SemiBold', color: slide7Colors.azulOscuro}}>Tutorial Rápido:</h3>
                             {currentToolData.tutorial.map((step, index) => (
                                 <div key={`tut-modal-${index}`} className="flex items-start gap-3 p-2.5 rounded-lg text-sm" style={{ backgroundColor: `${currentToolData.colorAcento}10`, fontFamily: 'Raleway', color: slide7Colors.negro }}>
@@ -3236,10 +3377,10 @@ const Diapositiva7 = () => {
                             <div>
                                 <h3 className="text-lg font-semibold mb-2" style={{fontFamily: 'Raleway SemiBold', color: slide7Colors.azulOscuro}}>Ejemplos:</h3>
                                 {currentToolData.ejemplos.map((ej, idx) => (
-                                <a key={`ex-modal-${idx}`} href={ej.url} target="_blank" rel="noopener noreferrer" className="mb-1.5 bg-white p-2 rounded-md shadow-sm hover:shadow-md transition-shadow flex items-center gap-2 text-sm w-full" style={{borderColor: `${currentToolData.colorAcento}30`, borderWidth:1}}>
-                                    {/* CORRECCIÓN error 3415 (asumiendo es por style en IconPlayCircle): IconPlayCircle ahora acepta style */}
+                                <a key={`ex-modal-${idx}`} href={ej.url} target={ej.tipo === 'audio' ? '_self' : '_blank'} rel="noopener noreferrer" className="mb-1.5 bg-white p-2 rounded-md shadow-sm hover:shadow-md transition-shadow flex items-center gap-2 text-sm w-full" style={{borderColor: `${currentToolData.colorAcento}30`, borderWidth:1}}>
                                     <IconPlayCircle className="w-4 h-4 flex-shrink-0" style={{color: currentToolData.colorAcento}}/>
                                     <span style={{fontFamily: 'Raleway', color: slide7Colors.negro}}>{ej.texto}</span>
+                                    {ej.tipo !== 'audio' && <IconExternalLink className="w-3 h-3 ml-auto" style={{ color: slide7Colors.grayMedium }} />}
                                 </a>
                                 ))}
                             </div>
@@ -3249,105 +3390,129 @@ const Diapositiva7 = () => {
                             </a>
                         </div>
                     </div>
-                ) : (
+                ) : ( // modalSource === 'wow'
                     <div className="flex-1 overflow-y-auto custom-scrollbar-minimal pr-2">
                         <div className="text-center mb-6">
                             <h3 className="text-xl font-medium mb-2" style={{fontFamily: 'Raleway SemiBold', color: slide7Colors.negro}}>
                                 Escucha la Diferencia
                             </h3>
                             <p className="text-sm" style={{fontFamily: 'Raleway', color: slide7Colors.grayMedium}}>
-                                Compara el original con el resultado procesado por IA
+                                Compara el original con el resultado procesado por IA. Haz clic para reproducir.
                             </p>
                         </div>
 
-                        {currentToolData.comparisons.map((comparison, index) => (
-                            <motion.div
-                                key={`comparison-${index}`}
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.3, delay: index * 0.1 }}
-                                className="mb-8"
-                            >
-                                <h4 className="text-lg font-semibold mb-4 text-center" 
-                                    style={{fontFamily: 'Raleway SemiBold', color: slide7Colors.azulOscuro}}>
-                                    {comparison.title}
-                                </h4>
-                                
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <motion.div 
-                                        whileHover={{ scale: 1.02 }}
-                                        className="relative"
-                                    >
-                                        <div className="absolute -top-3 left-4 px-3 py-1 rounded-full text-xs font-medium" 
-                                             style={{backgroundColor: slide7Colors.verdeTurquesa + '20', color: slide7Colors.verdeTurquesa}}>
-                                            Original
-                                        </div>
-                                        <a 
-                                            href={comparison.original.url}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="block p-6 rounded-xl hover:shadow-lg transition-all"
-                                            style={{ 
-                                                backgroundColor: slide7Colors.grayLight,
-                                                border: `2px solid ${slide7Colors.verdeTurquesa}30`
-                                            }}
-                                        >
-                                            <div className="flex flex-col items-center gap-3">
-                                                {/* CORRECCIÓN: Iconos ahora aceptan style */}
-                                                {comparison.original.type === 'video' ? 
-                                                    <IconVideo className="w-12 h-12" style={{ color: slide7Colors.verdeTurquesa }} /> : 
-                                                    <IconHeadphones className="w-12 h-12" style={{ color: slide7Colors.verdeTurquesa }} />
-                                                }
-                                                <span className="text-sm text-center" style={{ fontFamily: 'Raleway', color: slide7Colors.negro }}>
-                                                    {comparison.original.label}
-                                                </span>
-                                                <IconExternalLink className="w-4 h-4" style={{ color: slide7Colors.grayMedium }} />
-                                            </div>
-                                        </a>
-                                    </motion.div>
+                        {currentToolData.comparisons.map((comparison, index) => {
+                            const originalCardKey = `comp-${index}-original-${currentToolData.id}`;
+                            const resultadoCardKey = `comp-${index}-resultado-${currentToolData.id}`;
 
-                                    <motion.div 
-                                        whileHover={{ scale: 1.02 }}
-                                        className="relative"
-                                    >
-                                        <div className="absolute -top-3 left-4 px-3 py-1 rounded-full text-xs font-medium" 
-                                             style={{backgroundColor: currentToolData.colorAcento + '20', color: currentToolData.colorAcento}}>
-                                            Con IA
-                                        </div>
-                                        <a 
-                                            href={comparison.resultado.url}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="block p-6 rounded-xl hover:shadow-lg transition-all"
-                                            style={{ 
-                                                backgroundColor: currentToolData.colorAcento + '10',
-                                                border: `2px solid ${currentToolData.colorAcento}30`
-                                            }}
-                                        >
-                                            <div className="flex flex-col items-center gap-3">
-                                                <IconHeadphones className="w-12 h-12" style={{ color: currentToolData.colorAcento }} />
-                                                <span className="text-sm text-center" style={{ fontFamily: 'Raleway', color: slide7Colors.negro }}>
-                                                    {comparison.resultado.label}
-                                                </span>
-                                                <IconExternalLink className="w-4 h-4" style={{ color: slide7Colors.grayMedium }} />
-                                            </div>
-                                        </a>
-                                    </motion.div>
-                                </div>
-                            </motion.div>
-                        ))}
+                            return (
+                                <motion.div
+                                    key={`comparison-${index}`}
+                                    initial={{ opacity: 0, y: 20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ duration: 0.3, delay: index * 0.1 }}
+                                    className="mb-8"
+                                >
+                                    <h4 className="text-lg font-semibold mb-4 text-center"
+                                        style={{fontFamily: 'Raleway SemiBold', color: slide7Colors.azulOscuro}}>
+                                        {comparison.title}
+                                    </h4>
 
-                        <motion.div 
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        {/* TARJETA ORIGINAL */}
+                                        <motion.div
+                                            whileHover={{ scale: 1.02 }}
+                                            className="relative"
+                                        >
+                                            <div className="absolute -top-3 left-4 px-3 py-1 rounded-full text-xs font-medium"
+                                                 style={{backgroundColor: slide7Colors.verdeTurquesa + '20', color: slide7Colors.verdeTurquesa}}>
+                                                Original
+                                            </div>
+                                            <div // Cambiado de <a> a <div> para controlar el clic
+                                                onClick={() => handlePlayAudio(originalCardKey, comparison.original.url, comparison.original.type as 'audio' | 'video')}
+                                                className="block p-6 rounded-xl hover:shadow-lg transition-all cursor-pointer min-h-[150px] flex flex-col justify-center items-center"
+                                                style={{
+                                                    backgroundColor: slide7Colors.grayLight,
+                                                    border: `2px solid ${slide7Colors.verdeTurquesa}30`
+                                                }}
+                                            >
+                                                {activeAudio && activeAudio.cardKey === originalCardKey ? (
+                                                    <audio
+                                                        src={activeAudio.url}
+                                                        controls
+                                                        autoPlay
+                                                        onEnded={() => setActiveAudio(null)}
+                                                        onError={() => { console.error("Error al cargar audio"); setActiveAudio(null);}}
+                                                        className="w-full h-10" // Estilo básico para el reproductor
+                                                    />
+                                                ) : (
+                                                    <div className="flex flex-col items-center gap-3 text-center">
+                                                        {comparison.original.type === 'video' ?
+                                                            <IconVideo className="w-12 h-12" style={{ color: slide7Colors.verdeTurquesa }} /> :
+                                                            <IconHeadphones className="w-12 h-12" style={{ color: slide7Colors.verdeTurquesa }} />
+                                                        }
+                                                        <span className="text-sm" style={{ fontFamily: 'Raleway', color: slide7Colors.negro }}>
+                                                            {comparison.original.label}
+                                                        </span>
+                                                        {comparison.original.type === 'video' && <IconExternalLink className="w-4 h-4" style={{ color: slide7Colors.grayMedium }} />}
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </motion.div>
+
+                                        {/* TARJETA RESULTADO IA */}
+                                        <motion.div
+                                            whileHover={{ scale: 1.02 }}
+                                            className="relative"
+                                        >
+                                            <div className="absolute -top-3 left-4 px-3 py-1 rounded-full text-xs font-medium"
+                                                 style={{backgroundColor: currentToolData.colorAcento + '20', color: currentToolData.colorAcento}}>
+                                                Con IA
+                                            </div>
+                                            <div // Cambiado de <a> a <div> para controlar el clic
+                                                onClick={() => handlePlayAudio(resultadoCardKey, comparison.resultado.url, comparison.resultado.type as 'audio' | 'video')}
+                                                className="block p-6 rounded-xl hover:shadow-lg transition-all cursor-pointer min-h-[150px] flex flex-col justify-center items-center"
+                                                style={{
+                                                    backgroundColor: currentToolData.colorAcento + '10',
+                                                    border: `2px solid ${currentToolData.colorAcento}30`
+                                                }}
+                                            >
+                                                {activeAudio && activeAudio.cardKey === resultadoCardKey ? (
+                                                    <audio
+                                                        src={activeAudio.url}
+                                                        controls
+                                                        autoPlay
+                                                        onEnded={() => setActiveAudio(null)}
+                                                        onError={() => { console.error("Error al cargar audio"); setActiveAudio(null);}}
+                                                        className="w-full h-10" // Estilo básico para el reproductor
+                                                    />
+                                                ) : (
+                                                    <div className="flex flex-col items-center gap-3 text-center">
+                                                        <IconHeadphones className="w-12 h-12" style={{ color: currentToolData.colorAcento }} />
+                                                        <span className="text-sm" style={{ fontFamily: 'Raleway', color: slide7Colors.negro }}>
+                                                            {comparison.resultado.label}
+                                                        </span>
+                                                        {/* No external link for local audio typically */}
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </motion.div>
+                                    </div>
+                                </motion.div>
+                            )
+                        })}
+
+                        <motion.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             transition={{ duration: 0.5, delay: 0.3 }}
                             className="mt-6 text-center"
                         >
-                            <a 
-                                href={currentToolData.url} 
-                                target="_blank" 
-                                rel="noopener noreferrer" 
-                                className="inline-flex items-center gap-2 font-semibold py-3 px-6 rounded-lg text-sm shadow-md hover:opacity-90 transition-opacity" 
+                            <a
+                                href={currentToolData.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center gap-2 font-semibold py-3 px-6 rounded-lg text-sm shadow-md hover:opacity-90 transition-opacity"
                                 style={{backgroundColor: currentToolData.colorAcento, color: slide7Colors.azulOscuro, fontFamily: 'Raleway SemiBold'}}
                             >
                                 Probar {currentToolData.displayText} tú mismo <IconLinkSimple className="inline w-4 h-4"/>
@@ -3360,31 +3525,37 @@ const Diapositiva7 = () => {
         )}
       </AnimatePresence>
 
-      <motion.div 
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.7, delay: 1.2 }}
-        className="text-center py-3 mt-auto z-10"
+      {/* Footer Unificado */}
+      <div 
+        className={FooterConfig.position}
+        style={{
+          backgroundColor: FooterConfig.background,
+          backdropFilter: FooterConfig.backdropFilter,
+          padding: FooterConfig.padding
+        }}
       >
-        <p style={{ 
-          fontFamily: 'Raleway, sans-serif',
-          fontSize: '11px',
-          // CORRECCIÓN error 4000, 4063: Cambiado 'verdeOscuro' por 'verdeTurquesa' como placeholder
-          color: slide7Colors.azulOscuro, // Manteniendo el color original si 'verdeOscuro' era un error y el color correcto es 'azulOscuro'
-          opacity: 0.8
-        }}>
-          © {year} Hablandis Centro Internacional de Idiomas. Todos los derechos reservados.
+        <p 
+          className="text-center"
+          style={{
+            fontFamily: FooterConfig.text.fontFamily,
+            fontSize: FooterConfig.text.size,
+            color: FooterConfig.text.color,
+            opacity: FooterConfig.text.opacity,
+            fontWeight: FooterConfig.text.weight
+          }}
+        >
+          © {new Date().getFullYear()} Hablandis. Centro Internacional de Idiomas. Todos los derechos reservados.
         </p>
-      </motion.div>
+      </div>
     </div>
   );
 };
 // =======================================================================
-// FIN DIAPOSITIVA 7
+// FIN DIAPOSITIVA 7 (CON DISEÑO UNIFICADO)
 // =======================================================================
 
 // =======================================================================
-// DIAPOSITIVA 8: CÓDIGO COMPLETO CON TEXTDATA RESTAURADO Y LÍNEAS TEXTURIZADAS
+// DIAPOSITIVA 8: CÓDIGO COMPLETO CON DISEÑO UNIFICADO
 // =======================================================================
 const Diapositiva8 = () => {
   const year = new Date().getFullYear();
@@ -3398,8 +3569,107 @@ const Diapositiva8 = () => {
     puntoConexionAzul: '#0075FF', // Un azul para los puntos
     puntoConexionVerde: '#00C853', // Un verde para el punto especial
     textSecondaryOnPanel: '#374151',
-    connectionActive: '#FF0000', 
+    connectionActive: '#FF0000',
   };
+
+  // Colores base del diseño unificado
+  const unifiedColors = {
+    azulOscuro: '#12055F',
+    verdeTurquesa: '#007567',
+    blanco: '#FFFFFF'
+  };
+
+  // Configuración de Logo
+  const LogoConfig = {
+    size: 'h-24 md:h-32',
+    position: 'absolute top-6 left-6 z-30',
+    fallbackFontSize: '36px md:48px',
+    shadow: 'drop-shadow(0 4px 8px rgba(0,0,0,0.1))'
+  };
+
+  // Configuración de Títulos
+  const TitleConfig = {
+    fontFamily: 'Aglet Mono, monospace', // Sin "Light"
+    mainSize: 'text-3xl md:text-4xl lg:text-5xl',
+    weight: 'font-semibold',
+    color: unifiedColors.azulOscuro,
+    spacing: 'mb-4 md:mb-6'
+  };
+
+  // Configuración de Subtítulos
+  const SubtitleConfig = {
+    fontFamily: 'Raleway, sans-serif',
+    size: 'text-lg md:text-xl lg:text-2xl',
+    weight: 'font-normal',
+    color: unifiedColors.verdeTurquesa,
+    spacing: 'mb-2'
+  };
+
+  // Configuración de Footer (SIN LÍNEA)
+  const FooterConfig = {
+    position: 'absolute bottom-4 left-0 right-0',
+    padding: 'py-3',
+    background: `${unifiedColors.blanco}70`,
+    backdropFilter: 'backdrop-blur(10px)',
+    text: {
+      fontFamily: 'Raleway, sans-serif',
+      size: '13px',
+      color: unifiedColors.azulOscuro,
+      opacity: '0.8',
+      weight: '500'
+    }
+  };
+
+  // Componente Logo Unificado
+  const LogoHablandisUnified = ({ className = "" }: { className?: string }) => (
+    <img 
+      src="/hablandis.png" 
+      alt="Hablandis" 
+      className={`${LogoConfig.size} ${className}`}
+      style={{ filter: LogoConfig.shadow }}
+      onError={(e) => {
+        const img = e.target as HTMLImageElement;
+        img.style.display = 'none';
+        const parent = img.parentElement;
+        if (parent) {
+          parent.innerHTML = `
+            <div style="font-family: 'Aglet Mono', monospace; color: ${unifiedColors.azulOscuro}; font-size: ${LogoConfig.fallbackFontSize}; font-weight: 700; line-height: 1;">
+              Hablandis
+            </div>
+            <div style="font-family: 'Raleway', sans-serif; color: ${unifiedColors.verdeTurquesa}; font-size: 14px; margin-top: 2px;">
+              Centro Internacional de Idiomas
+            </div>
+          `;
+        }
+      }}
+    />
+  );
+
+  // Componente Título Principal Unificado
+  const MainTitle = ({ children, className = "" }: { children: React.ReactNode, className?: string }) => (
+    <h1 
+      className={`${TitleConfig.mainSize} ${TitleConfig.weight} ${TitleConfig.spacing} ${className}`}
+      style={{ 
+        fontFamily: TitleConfig.fontFamily,
+        color: TitleConfig.color
+      }}
+    >
+      {children}
+    </h1>
+  );
+
+  // Componente Subtítulo Unificado
+  const Subtitle = ({ children, className = "" }: { children: React.ReactNode, className?: string }) => (
+    <p 
+      className={`${SubtitleConfig.size} ${SubtitleConfig.weight} ${SubtitleConfig.spacing} ${className}`}
+      style={{ 
+        fontFamily: SubtitleConfig.fontFamily,
+        color: SubtitleConfig.color
+      }}
+    >
+      {children}
+    </p>
+  );
 
   // --- ICONOS ---
   const IconLinearDocument = ({ className = "w-9 h-9" }: { className?: string }) => ( <svg className={className} strokeWidth="1.2" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg> );
@@ -3416,11 +3686,31 @@ const Diapositiva8 = () => {
   const [hoveredNodeId, setHoveredNodeId] = React.useState<string | null>(null);
   const canvasRef = React.useRef<HTMLCanvasElement>(null);
 
-  interface ProcessingNode { id: string; title: string; shortTitle: string; icon: JSX.Element; position: { x: number; y: number }; connections: string[]; dataKey: keyof typeof textData; baseColor: string; }
+  // Tipos para textData
+  interface OriginalContentData {
+    title: string;
+    content: () => React.ReactElement;
+  }
+
+  interface ProcessedContentData {
+    promptTitle: string;
+    promptContent: () => React.ReactElement;
+    responseTitle: string;
+    responseContent: () => React.ReactElement;
+  }
+
+  interface TextDataMap {
+    originalB1: OriginalContentData;
+    transformColloquial: ProcessedContentData;
+    extractVocab: ProcessedContentData;
+    refineB2: ProcessedContentData;
+  }
+
+  interface ProcessingNode { id: string; title: string; shortTitle: string; icon: React.ReactElement; position: { x: number; y: number }; connections: string[]; dataKey: keyof TextDataMap; baseColor: string; }
   const nodes: ProcessingNode[] = [ { id: 'original', title: "Texto Original: Reglamento B1", shortTitle: "ORIGEN B1", icon: <IconLinearDocument />, position: { x: 20, y: 50 }, connections: ['colloquial'], dataKey: 'originalB1', baseColor: colors.verdeTurquesa }, { id: 'colloquial', title: "Transformación: Diálogo Informal", shortTitle: "DIÁLOGO", icon: <IconLinearChat />, position: { x: 45, y: 35 }, connections: ['extraction'], dataKey: 'transformColloquial', baseColor: colors.lila }, { id: 'extraction', title: "Análisis: Vocabulario A2", shortTitle: "VOCAB. A2", icon: <IconLinearSearchPlus />, position: { x: 55, y: 65 }, connections: ['refinement'], dataKey: 'extractVocab', baseColor: colors.verdeClaro }, { id: 'refinement', title: "Refinamiento: Texto Nivel B2", shortTitle: "NIVEL B2", icon: <IconLinearTuneSliders />, position: { x: 80, y: 50 }, connections: [], dataKey: 'refineB2', baseColor: colors.azulOscuro }, ];
-  
+
   // TEXTDATA COMPLETO Y RESTAURADO
-  const textData = {
+  const textData: TextDataMap = {
     originalB1: {
       title: "Texto Original: Reglamento B1",
       content: () => (
@@ -3496,52 +3786,162 @@ const Diapositiva8 = () => {
     }
   };
 
-  const drawBrushStrokeLine = ( /* ... Misma función drawBrushStrokeLine ... */ ctx: CanvasRenderingContext2D, x1: number, y1: number, x2: number, y2: number, color: string, baseThickness: number, pointColorStart?: string, pointColorEnd?: string, midPointColor?: string ) => { const distance = Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2); const steps = Math.max(10, Math.floor(distance / 3)); const dx = (x2 - x1) / steps; const dy = (y2 - y1) / steps; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; for (let i = 0; i <= steps; i++) { const currentX = x1 + dx * i; const currentY = y1 + dy * i; const thickness = baseThickness + (Math.random() - 0.5) * (baseThickness * 0.6); const offsetX = (Math.random() - 0.5) * (baseThickness * 0.4); const offsetY = (Math.random() - 0.5) * (baseThickness * 0.4); ctx.beginPath(); ctx.arc(currentX + offsetX, currentY + offsetY, thickness / 2, 0, Math.PI * 2); ctx.fillStyle = color + Math.floor((0.7 + Math.random() * 0.3) * 255).toString(16).padStart(2, '0'); ctx.fill(); } const pointRadius = baseThickness * 1.2; if (pointColorStart) { ctx.beginPath(); ctx.arc(x1, y1, pointRadius, 0, Math.PI * 2); ctx.fillStyle = pointColorStart; ctx.fill(); } if (pointColorEnd) { ctx.beginPath(); ctx.arc(x2, y2, pointRadius, 0, Math.PI * 2); ctx.fillStyle = pointColorEnd; ctx.fill(); } if (midPointColor && steps > 1) { const midX = x1 + dx * Math.floor(steps / 2); const midY = y1 + dy * Math.floor(steps / 2); ctx.beginPath(); ctx.arc(midX, midY, pointRadius * 1.2, 0, Math.PI * 2); ctx.fillStyle = midPointColor; ctx.fill(); } };
-  React.useEffect(() => { /* ... Misma lógica de Canvas con drawBrushStrokeLine ... */ }, [selectedNodeId, hoveredNodeId, nodes, colors]);
-  React.useEffect(() => { /* Misma lógica de resize */ }, []);
+  const drawBrushStrokeLine = ( ctx: CanvasRenderingContext2D, x1: number, y1: number, x2: number, y2: number, color: string, baseThickness: number, pointColorStart?: string, pointColorEnd?: string, midPointColor?: string ) => { const distance = Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2); const steps = Math.max(10, Math.floor(distance / 3)); const dx = (x2 - x1) / steps; const dy = (y2 - y1) / steps; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; for (let i = 0; i <= steps; i++) { const currentX = x1 + dx * i; const currentY = y1 + dy * i; const thickness = baseThickness + (Math.random() - 0.5) * (baseThickness * 0.6); const offsetX = (Math.random() - 0.5) * (baseThickness * 0.4); const offsetY = (Math.random() - 0.5) * (baseThickness * 0.4); ctx.beginPath(); ctx.arc(currentX + offsetX, currentY + offsetY, thickness / 2, 0, Math.PI * 2); ctx.fillStyle = color + Math.floor((0.7 + Math.random() * 0.3) * 255).toString(16).padStart(2, '0'); ctx.fill(); } const pointRadius = baseThickness * 1.2; if (pointColorStart) { ctx.beginPath(); ctx.arc(x1, y1, pointRadius, 0, Math.PI * 2); ctx.fillStyle = pointColorStart; ctx.fill(); } if (pointColorEnd) { ctx.beginPath(); ctx.arc(x2, y2, pointRadius, 0, Math.PI * 2); ctx.fillStyle = pointColorEnd; ctx.fill(); } if (midPointColor && steps > 1) { const midX = x1 + dx * Math.floor(steps / 2); const midY = y1 + dy * Math.floor(steps / 2); ctx.beginPath(); ctx.arc(midX, midY, pointRadius * 1.2, 0, Math.PI * 2); ctx.fillStyle = midPointColor; ctx.fill(); } };
+  React.useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const dpr = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    ctx.scale(dpr, dpr);
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    nodes.forEach(node => {
+      node.connections.forEach(connId => {
+        const targetNode = nodes.find(n => n.id === connId);
+        if (targetNode) {
+          const startX = node.position.x / 100 * rect.width;
+          const startY = node.position.y / 100 * rect.height;
+          const endX = targetNode.position.x / 100 * rect.width;
+          const endY = targetNode.position.y / 100 * rect.height;
+
+          const isActive = selectedNodeId === node.id || selectedNodeId === targetNode.id || hoveredNodeId === node.id || hoveredNodeId === targetNode.id;
+          const lineColor = isActive ? colors.connectionActive : colors.lineaRojaPrincipal + '90'; // Atenuado si no activo
+          const lineThickness = isActive ? 5 : 4;
+
+          drawBrushStrokeLine(
+            ctx, startX, startY, endX, endY,
+            lineColor,
+            lineThickness,
+            colors.puntoConexionAzul, // Color para el punto de inicio
+            colors.puntoConexionAzul, // Color para el punto final
+            (node.id === 'extraction' && targetNode.id === 'refinement') ? colors.puntoConexionVerde : undefined // Punto especial
+          );
+        }
+      });
+    });
+  }, [selectedNodeId, hoveredNodeId, nodes, colors]); // Agregado 'colors' a las dependencias
+  React.useEffect(() => {
+    const handleResize = () => {
+      const canvas = canvasRef.current;
+      if (canvas && canvas.parentElement) {
+        setHoveredNodeId(prev => prev);
+      }
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const currentSelectedNodeDetails = selectedNodeId ? nodes.find(n => n.id === selectedNodeId) : null;
   const currentSelectedNodeContent = currentSelectedNodeDetails ? textData[currentSelectedNodeDetails.dataKey] : null;
 
-  const nodeDisplaySize = 110; 
+  const nodeDisplaySize = 110;
   const nodeClickAreaPadding = 20;
-  const panelWidthPercentage = 45; 
-  const networkShiftFactor = 1.8; 
-  const titleShiftFactor = 2.0;   
+  const panelWidthPercentage = 45;
+  const networkShiftFactor = 1.8;
+  const titleShiftFactor = 2.0;
 
   return (
-    // ... JSX de la Diapositiva (exactamente igual que en la respuesta anterior, incluyendo el panel lateral y su contenido)
     <div className="min-h-screen w-full flex flex-col items-center justify-start p-4 sm:p-6 overflow-hidden relative" style={{ background: `linear-gradient(160deg, ${colors.verdeClaro}2A 0%, ${colors.lila}2A 100%), ${colors.fondoBase}` }}>
-      <motion.div className="absolute top-6 left-6 z-30" initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.7, delay: 0.1, type: "spring", stiffness: 120 }}>
-        <HablandisLogo className="h-32 sm:h-36" />
-      </motion.div>
+      {/* Logo Unificado */}
+      <div className={LogoConfig.position}>
+        <LogoHablandisUnified />
+      </div>
+      
+      {/* Título y Subtítulo Unificados */}
       <motion.div className="text-center my-8 sm:my-10 md:my-12 w-full max-w-4xl z-10 flex-shrink-0 transition-all duration-500 ease-in-out" initial={{ opacity: 0, y: -25 }} animate={{ opacity: 1, y: 0, x: selectedNodeId ? `-${panelWidthPercentage / titleShiftFactor}%` : '0%', }} transition={{ type: "spring", stiffness: 180, damping: 22 }}>
-        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-light mb-2" style={{ color: colors.azulOscuro, fontFamily: 'Aglet Mono Light, monospace', textShadow: `1px 1px 0px ${colors.lila}40` }}> Flujo de Procesamiento Textual IA </h1>
-        <p className="text-sm sm:text-base" style={{ color: colors.negro, fontFamily: 'Raleway, sans-serif', opacity: 0.85 }}> Haz clic en una etapa para explorar los detalles de transformación. </p>
+        <MainTitle className="mb-2">
+          Flujo de Procesamiento Textual IA
+        </MainTitle>
+        <Subtitle>
+          Haz clic en una etapa para explorar los detalles de transformación.
+        </Subtitle>
       </motion.div>
-      <motion.div id="network-container" className="relative flex-grow w-full max-w-5xl xl:max-w-6xl mb-6 rounded-lg transition-all duration-500 ease-in-out" style={{minHeight: '45vh', sm:{minHeight:'55vh'}}} animate={{ x: selectedNodeId ? `-${panelWidthPercentage / networkShiftFactor}%` : '0%', width: selectedNodeId ? `${100 - panelWidthPercentage + (panelWidthPercentage / (networkShiftFactor + 0.5))}%` : '100%', }} transition={{ type: "spring", stiffness: 180, damping: 22 }}>
+      
+      {/* CORRECCIÓN 1: Eliminado 'sm' del objeto style */}
+      <motion.div id="network-container" className="relative flex-grow w-full max-w-5xl xl:max-w-6xl mb-6 rounded-lg transition-all duration-500 ease-in-out" style={{minHeight: '45vh'}} animate={{ x: selectedNodeId ? `-${panelWidthPercentage / networkShiftFactor}%` : '0%', width: selectedNodeId ? `${100 - panelWidthPercentage + (panelWidthPercentage / (networkShiftFactor + 0.5))}%` : '100%', }} transition={{ type: "spring", stiffness: 180, damping: 22 }}>
         <canvas ref={canvasRef} className="absolute inset-0 w-full h-full z-0" />
-        {nodes.map((node) => ( <motion.div key={node.id} className="absolute cursor-pointer z-10 flex flex-col items-center justify-center transition-all duration-200 ease-out" style={{ left: `calc(${node.position.x}% - ${(nodeDisplaySize + nodeClickAreaPadding) / 2}px)`, top: `calc(${node.position.y}% - ${(nodeDisplaySize + nodeClickAreaPadding) / 2}px)`, width: `${nodeDisplaySize + nodeClickAreaPadding}px`, height: `${nodeDisplaySize + nodeClickAreaPadding}px`, }} initial={{ opacity: 0, scale: 0.5 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.3 + nodes.indexOf(node) * 0.1, type: "spring", stiffness:150, damping:20 }} onClick={() => setSelectedNodeId(selectedNodeId === node.id ? null : node.id)} onMouseEnter={() => setHoveredNodeId(node.id)} onMouseLeave={() => setHoveredNodeId(null)} > <motion.div className="rounded-full flex flex-col items-center justify-center bg-white shadow-lg" style={{ width: `${nodeDisplaySize}px`, height: `${nodeDisplaySize}px`, border: `3.5px solid ${selectedNodeId === node.id || hoveredNodeId === node.id ? node.baseColor : colors.azulOscuro + 'B0'}`, color: selectedNodeId === node.id || hoveredNodeId === node.id ? node.baseColor : colors.azulOscuro, boxShadow: selectedNodeId === node.id || hoveredNodeId === node.id ? `0 0 18px ${node.baseColor}70, 0 0 0 3.5px ${node.baseColor}30`  : `0 5px 12px rgba(0,0,0,0.1)`, }} animate={{ scale: selectedNodeId === node.id ? 1.1 : hoveredNodeId === node.id ? 1.05 : 1 }} transition={{ type: "spring", stiffness: 200, damping: 15 }} > {React.cloneElement(node.icon, { className: "w-9 h-9 sm:w-10 sm:h-10 stroke-current" })} </motion.div> <span className="mt-2.5 text-center text-xs sm:text-sm font-semibold leading-tight tracking-normal" style={{ fontFamily: 'Raleway Semibold', color: colors.negro, opacity: 0.95 }}> {node.shortTitle} </span> </motion.div> ))}
+        {nodes.map((node, index) => ( <motion.div key={node.id} className="absolute cursor-pointer z-10 flex flex-col items-center justify-center transition-all duration-200 ease-out" style={{ left: `calc(${node.position.x}% - ${(nodeDisplaySize + nodeClickAreaPadding) / 2}px)`, top: `calc(${node.position.y}% - ${(nodeDisplaySize + nodeClickAreaPadding) / 2}px)`, width: `${nodeDisplaySize + nodeClickAreaPadding}px`, height: `${nodeDisplaySize + nodeClickAreaPadding}px`, }} initial={{ opacity: 0, scale: 0.5 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.3 + index * 0.1, type: "spring", stiffness:150, damping:20 }} onClick={() => setSelectedNodeId(selectedNodeId === node.id ? null : node.id)} onMouseEnter={() => setHoveredNodeId(node.id)} onMouseLeave={() => setHoveredNodeId(null)} > <motion.div className="rounded-full flex flex-col items-center justify-center bg-white shadow-lg" style={{ width: `${nodeDisplaySize}px`, height: `${nodeDisplaySize}px`, border: `3.5px solid ${selectedNodeId === node.id || hoveredNodeId === node.id ? node.baseColor : colors.azulOscuro + 'B0'}`, color: selectedNodeId === node.id || hoveredNodeId === node.id ? node.baseColor : colors.azulOscuro, boxShadow: selectedNodeId === node.id || hoveredNodeId === node.id ? `0 0 18px ${node.baseColor}70, 0 0 0 3.5px ${node.baseColor}30`  : `0 5px 12px rgba(0,0,0,0.1)`, }} animate={{ scale: selectedNodeId === node.id ? 1.1 : hoveredNodeId === node.id ? 1.05 : 1 }} transition={{ type: "spring", stiffness: 200, damping: 15 }} >
+            {/* CORRECCIÓN 2: Casteo de node.icon */}
+            {React.cloneElement(node.icon as React.ReactElement<{ className?: string }>, { className: "w-9 h-9 sm:w-10 sm:h-10 stroke-current" })}
+            </motion.div> <span className="mt-2.5 text-center text-xs sm:text-sm font-semibold leading-tight tracking-normal" style={{ fontFamily: 'Raleway Semibold', color: colors.negro, opacity: 0.95 }}> {node.shortTitle} </span> </motion.div> ))}
       </motion.div>
       <AnimatePresence>
         {selectedNodeId && currentSelectedNodeDetails && currentSelectedNodeContent && (
           <motion.div key="details-panel-complete" initial={{ x: "100%", opacity: 0 }} animate={{ x: "0%", opacity: 1 }} exit={{ x: "100%", opacity: 0 }} transition={{ type: "spring", stiffness: 280, damping: 30, duration:0.4 }} className="fixed top-0 right-0 bottom-0 shadow-2xl z-40 flex flex-col border-l-4" style={{ width: `${panelWidthPercentage}%`, minWidth: '380px', maxWidth: '650px', borderColor: currentSelectedNodeDetails.baseColor, backgroundColor: colors.panelBg }}>
             <div className="flex items-center justify-between p-5 sm:p-6 border-b" style={{borderColor: colors.panelBorder, backgroundColor: colors.white }}> <h2 className="text-xl sm:text-2xl font-medium" style={{fontFamily: 'Aglet Mono Light, monospace', color: currentSelectedNodeDetails.baseColor, letterSpacing:'-0.5px'}}> {currentSelectedNodeDetails.title} </h2> <button onClick={() => setSelectedNodeId(null)} className="p-2 rounded-full text-gray-500 hover:bg-gray-100 hover:text-gray-700 transition-colors"> <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.5"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"></path></svg> </button> </div>
             <div className="flex-1 overflow-y-auto p-5 sm:p-7 space-y-8 custom-scrollbar-minimalist" style={{ fontFamily:'Raleway, sans-serif', color: colors.negro, fontSize: '1.1rem', lineHeight:'1.8', backgroundColor: colors.white }}>
-              {currentSelectedNodeDetails.id === 'original' ? ( <section> <div className="flex items-center mb-4 p-3 rounded-lg" style={{backgroundColor: `${currentSelectedNodeDetails.baseColor}10`}}> <div className="p-2 rounded-full mr-3 shadow-sm" style={{backgroundColor: currentSelectedNodeDetails.baseColor, color: colors.white}}>{React.cloneElement(currentSelectedNodeDetails.icon, {className:"w-5 h-5"})}</div> <h3 className="text-lg font-semibold" style={{fontFamily: 'Raleway Semibold', color: colors.negro}}>Contenido Original</h3> </div> {currentSelectedNodeContent.content()} </section> ) : ( <> {currentSelectedNodeContent.promptContent && ( <section> <div className="flex items-center mb-4 p-3 rounded-lg" style={{backgroundColor: `${colors.amarillo}10`}}> <div className="p-2 rounded-full mr-3 shadow-sm" style={{backgroundColor: colors.amarillo, color: colors.azulOscuro}}><IconPencilSimple className="w-5 h-5"/></div> <h3 className="text-lg font-semibold" style={{fontFamily: 'Raleway Semibold', color: colors.negro}}>Prompt (Entrada)</h3> </div> {currentSelectedNodeContent.promptContent()} </section> )} {currentSelectedNodeContent.responseContent && ( <section> <div className="flex items-center mb-4 p-3 rounded-lg" style={{backgroundColor: `${colors.verdeTurquesa}10`}}> <div className="p-2 rounded-full mr-3 shadow-sm" style={{backgroundColor: colors.verdeTurquesa, color: colors.white}}><IconAISparkles className="w-5 h-5"/></div> <h3 className="text-lg font-semibold" style={{fontFamily: 'Raleway Semibold', color: colors.negro}}>Respuesta IA (Salida)</h3> </div> {currentSelectedNodeContent.responseContent()} </section> )} </> )}
+              {/* CORRECCIONES 3, 4, 5, 6, 7, 8: Casteo de icono y aserciones de tipo para contenido */}
+              {currentSelectedNodeDetails.id === 'original' ? (
+                <section>
+                  <div className="flex items-center mb-4 p-3 rounded-lg" style={{backgroundColor: `${currentSelectedNodeDetails.baseColor}10`}}>
+                    <div className="p-2 rounded-full mr-3 shadow-sm" style={{backgroundColor: currentSelectedNodeDetails.baseColor, color: colors.white}}>
+                      {React.cloneElement(currentSelectedNodeDetails.icon as React.ReactElement<{ className?: string }>, {className:"w-5 h-5"})}
+                    </div>
+                    <h3 className="text-lg font-semibold" style={{fontFamily: 'Raleway Semibold', color: colors.negro}}>Contenido Original</h3>
+                  </div>
+                  {(currentSelectedNodeContent as OriginalContentData).content()}
+                </section>
+              ) : (
+                <>
+                  {(currentSelectedNodeContent as ProcessedContentData).promptContent && (
+                    <section>
+                      <div className="flex items-center mb-4 p-3 rounded-lg" style={{backgroundColor: `${colors.amarillo}10`}}>
+                        <div className="p-2 rounded-full mr-3 shadow-sm" style={{backgroundColor: colors.amarillo, color: colors.azulOscuro}}><IconPencilSimple className="w-5 h-5"/></div>
+                        <h3 className="text-lg font-semibold" style={{fontFamily: 'Raleway Semibold', color: colors.negro}}>Prompt (Entrada)</h3>
+                      </div>
+                      {(currentSelectedNodeContent as ProcessedContentData).promptContent()}
+                    </section>
+                  )}
+                  {(currentSelectedNodeContent as ProcessedContentData).responseContent && (
+                    <section>
+                      <div className="flex items-center mb-4 p-3 rounded-lg" style={{backgroundColor: `${colors.verdeTurquesa}10`}}>
+                        <div className="p-2 rounded-full mr-3 shadow-sm" style={{backgroundColor: colors.verdeTurquesa, color: colors.white}}><IconAISparkles className="w-5 h-5"/></div>
+                        <h3 className="text-lg font-semibold" style={{fontFamily: 'Raleway Semibold', color: colors.negro}}>Respuesta IA (Salida)</h3>
+                      </div>
+                      {(currentSelectedNodeContent as ProcessedContentData).responseContent()}
+                    </section>
+                  )}
+                </>
+              )}
             </div>
             <div className="p-4 border-t text-xs text-center" style={{borderColor: colors.panelBorder, color: colors.textSecondaryOnPanel, fontFamily:'Raleway', backgroundColor: colors.white}}> Contenido generado y procesado por IA para fines educativos. </div>
           </motion.div>
         )}
       </AnimatePresence>
-      <motion.div className="text-center py-3 sm:py-4 mt-auto z-10 flex-shrink-0" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.7, delay: 0.8 }}>
-        <p style={{ fontFamily: 'Raleway, sans-serif', fontSize: '0.7rem', sm:'0.75rem', color: colors.azulOscuro, opacity: 0.8 }}> © {year} Hablandis. Todos los derechos reservados. </p>
-      </motion.div>
+      
+      {/* Footer Unificado */}
+      <div 
+        className={FooterConfig.position}
+        style={{
+          backgroundColor: FooterConfig.background,
+          backdropFilter: FooterConfig.backdropFilter,
+          padding: FooterConfig.padding
+        }}
+      >
+        <p 
+          className="text-center"
+          style={{
+            fontFamily: FooterConfig.text.fontFamily,
+            fontSize: FooterConfig.text.size,
+            color: FooterConfig.text.color,
+            opacity: FooterConfig.text.opacity,
+            fontWeight: FooterConfig.text.weight
+          }}
+        >
+          © {year} Hablandis. Centro Internacional de Idiomas. Todos los derechos reservados.
+        </p>
+      </div>
     </div>
   );
 };
 // =======================================================================
-// FIN DIAPOSITIVA 8
+// FIN DIAPOSITIVA 8 (CON DISEÑO UNIFICADO)
 // =======================================================================
 
 // =======================================================================
@@ -3582,52 +3982,64 @@ const IconClipboardList = ({ className = "w-8 h-8", style }: { className?: strin
   </svg>
 );
 
-// NOTA: IconChevronDown e IconLinkSimple ya están declarados globalmente en el archivo
-
-// --- LOGO DE HABLANDIS AUMENTADO AL DOBLE ---
-const HablandisLogo9 = ({ className }: { className?: string }) => {
-  const logoColors = { azulOscuro: '#12055F', verdeTurquesa: '#007567' };
-  return (
-    <div className={className}>
-      <img 
-        src="/hablandis.png" 
-        alt="Hablandis" 
-        className="h-32 md:h-40" // Duplicado: de h-16/h-20 a h-32/h-40
-        style={{ filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))' }}
-        onError={(e) => {
-          const img = e.target as HTMLImageElement;
-          if (img.parentElement) {
-            img.style.display = 'none';
-            img.parentElement.innerHTML = `
-              <div style="display: flex; flex-direction: column; align-items: flex-start;">
-                <div style="font-family: 'Aglet Mono', monospace; color: ${logoColors.azulOscuro}; font-size: 48px; font-weight: 500; line-height: 1;">Hablandis</div>
-                <div style="font-family: 'Raleway', sans-serif; color: ${logoColors.verdeTurquesa}; font-size: 16px; margin-top: 2px; line-height: 1;">Centro internacional de idiomas</div>
-              </div>
-            `;
-          }
-        }}
-      />
-    </div>
-  );
-};
-// --- FIN DE LOGO ---
+// NOTA: IconChevronDown e IconLinkSimple se asumen declarados globalmente.
+// La definición de HablandisLogo9 local se elimina, se aplicarán los estilos de LogoConfig.
 
 const Diapositiva9 = () => {
   const year = new Date().getFullYear();
-  const [openPanelId, setOpenPanelId] = useState<string | null>(null); 
+  const [openPanelId, setOpenPanelId] = useState<string | null>(null);
 
-  const slide9Colors = {
+  const slide9Colors = { // Estos son los colores locales de la Diapositiva 9
     bgGradientFrom: '#F3F4F6',
     bgGradientTo: '#E5E7EB',
-    titleColor: '#12055F',
+    titleColor: '#12055F',     // Mapea a colors.azulOscuro de Config
     textColor: '#111827',
     panelBg: '#FFFFFF',
     panelBorder: '#D1D5DB',
-    panelBorderActive: '#007567',
-    accent1: '#007567', // Verde Turquesa (para Respuesta)
-    accent2: '#FFC846', // Amarillo (para Prompt)
+    panelBorderActive: '#007567', // Mapea a colors.verdeTurquesa de Config
+    accent1: '#007567',       // Mapea a colors.verdeTurquesa de Config
+    accent2: '#FFC846',
     footerText: '#4B5563'
   };
+
+  // Valores de Configuración Global (adaptados para uso directo)
+  const GlobalLogoConfig = {
+    size: 'h-24 md:h-32',
+    position: 'absolute top-6 left-6 z-30',
+    fallbackFontSize: '36px', // Usando el valor base, md: se maneja por clase de tamaño
+    shadow: 'drop-shadow(0 4px 8px rgba(0,0,0,0.1))'
+  };
+
+  const GlobalTitleConfig = {
+    fontFamily: 'Aglet Mono, monospace',
+    mainSize: 'text-3xl md:text-4xl lg:text-5xl', // Tamaño base de config
+    weight: 'font-semibold',
+    color: slide9Colors.titleColor, // Mapeado desde slide9Colors
+    spacing: 'mb-4 md:mb-6' // Espaciado base de config
+  };
+
+  const GlobalSubtitleConfig = {
+    fontFamily: 'Raleway, sans-serif',
+    size: 'text-lg md:text-xl lg:text-2xl', // Tamaño base de config
+    weight: 'font-normal', // CSS: 400
+    color: slide9Colors.accent1, // Mapeado desde slide9Colors (verdeTurquesa)
+    spacing: 'mb-2' // Espaciado base de config
+  };
+
+  const GlobalFooterConfig = {
+    position: 'absolute bottom-4 left-0 right-0',
+    padding: 'py-3',
+    background: `${'#FFFFFF'}70`, // colors.blanco -> '#FFFFFF'
+    backdropFilter: 'backdrop-blur(10px)',
+    text: {
+      fontFamily: 'Raleway, sans-serif',
+      size: '13px',
+      color: slide9Colors.titleColor, // Mapeado (azulOscuro)
+      opacity: '0.8',
+      weight: '500' // CSS: 500
+    }
+  };
+
 
   const panelData = [
     {
@@ -3708,7 +4120,7 @@ const Diapositiva9 = () => {
           <div className="p-3 rounded" style={{backgroundColor: `${slide9Colors.accent1}15`}}>
             <strong className="block mb-1" style={{color: slide9Colors.titleColor}}>Respuesta:</strong>
             <p>
-              <a href="https://chatgpt.com/share/94daefd0-aaff-4a1e-8fb9-f2380fb362fc" target="_blank" rel="noopener noreferrer" 
+              <a href="https://chatgpt.com/share/94daefd0-aaff-4a1e-8fb9-f2380fb362fc" target="_blank" rel="noopener noreferrer"
                  className="inline-flex items-center gap-2 font-semibold py-2 px-4 rounded-lg text-lg transition-transform hover:scale-105"
                  style={{backgroundColor: slide9Colors.accent2, color: slide9Colors.titleColor}}>
                 Ver en ChatGPT <IconLinkSimple className="w-4 h-4"/>
@@ -3753,35 +4165,58 @@ const Diapositiva9 = () => {
         padding: '24px'
       }}
     >
-      {/* Logo en esquina superior izquierda */}
-      <div className="absolute top-6 left-6 z-30">
-        <HablandisLogo9 className="" />
+      {/* Logo en esquina superior izquierda - Estilos de GlobalLogoConfig aplicados */}
+      <div className={GlobalLogoConfig.position}>
+        <img
+          src="/hablandis.png"
+          alt="Hablandis"
+          className={GlobalLogoConfig.size} // Tamaño de GlobalLogoConfig
+          style={{ filter: GlobalLogoConfig.shadow }} // Sombra de GlobalLogoConfig
+          onError={(e) => {
+            const img = e.target as HTMLImageElement;
+            if (img.parentElement) {
+              img.style.display = 'none';
+              img.parentElement.innerHTML = `
+                <div style="display: flex; flex-direction: column; align-items: flex-start;">
+                  <div style="font-family: 'Aglet Mono', monospace; color: ${slide9Colors.titleColor}; font-size: ${GlobalLogoConfig.fallbackFontSize}; font-weight: 700; line-height: 1;">Hablandis</div>
+                  <div style="font-family: 'Raleway', sans-serif; color: ${slide9Colors.accent1}; font-size: 14px; margin-top: 2px; line-height: 1;">Centro internacional de idiomas</div>
+                </div>
+              `;
+            }
+          }}
+        />
       </div>
-      
-      {/* Título centrado */}
+
+      {/* Título centrado - Estilos de GlobalTitleConfig aplicados */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay:0.1 }}
-        className="text-center mt-8 mb-6"
+        className="text-center mt-8 mb-6" // Espaciado local
       >
         <h1
-          className="text-4xl sm:text-5xl lg:text-6xl font-medium mb-2"
-          style={{ 
-            color: slide9Colors.titleColor, 
-            fontFamily: 'Aglet Mono, monospace' // Cambio a Aglet Mono (sin Light)
+          // Tamaños locales, peso y espaciado de GlobalTitleConfig
+          className={`text-4xl sm:text-5xl lg:text-6xl ${GlobalTitleConfig.weight} mb-2`}
+          style={{
+            color: GlobalTitleConfig.color,
+            fontFamily: GlobalTitleConfig.fontFamily
           }}
         >
           Secretos del Prompting
         </h1>
         <p
-          className="text-xl sm:text-2xl"
-          style={{ color: slide9Colors.textColor, fontFamily: 'Raleway, Arial, sans-serif' }}
+          // Tamaño local, peso y espaciado de GlobalSubtitleConfig
+          className={`text-xl sm:text-2xl ${GlobalSubtitleConfig.spacing}`} // Añadido GlobalSubtitleConfig.spacing
+          style={{
+            color: GlobalSubtitleConfig.color, // Color del subtítulo de config
+            fontFamily: GlobalSubtitleConfig.fontFamily,
+            fontWeight: GlobalSubtitleConfig.weight
+          }}
         >
           Claves para una comunicación eficaz con IA.
         </p>
       </motion.div>
-      
+
       {/* Contenedor principal con flex-grow para usar todo el espacio disponible */}
       <main className="w-full max-w-[1400px] mx-auto flex flex-col flex-grow">
         {/* Paneles (5) */}
@@ -3791,9 +4226,9 @@ const Diapositiva9 = () => {
               key={panel.id}
               onClick={() => setOpenPanelId(openPanelId === panel.id ? null : panel.id)}
               className={`p-3 rounded-lg shadow-md text-left w-full flex flex-col items-center justify-center min-h-[100px] sm:min-h-[120px] transition-all duration-300 ease-in-out focus:outline-none relative group`}
-              style={{ 
-                backgroundColor: slide9Colors.panelBg, 
-                borderWidth: '2px', 
+              style={{
+                backgroundColor: slide9Colors.panelBg,
+                borderWidth: '2px',
                 borderColor: openPanelId === panel.id ? slide9Colors.panelBorderActive : slide9Colors.panelBorder,
                 color: slide9Colors.textColor,
               }}
@@ -3802,20 +4237,20 @@ const Diapositiva9 = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 + index * 0.05, type: "spring", stiffness: 190, damping: 20 }}
             >
-              {React.cloneElement(panel.icon as React.ReactElement, { 
-                className: "w-7 h-7 sm:w-8 sm:h-8 mb-1 transition-colors duration-300", 
-                style: { color: openPanelId === panel.id ? slide9Colors.panelBorderActive : slide9Colors.textColor } 
+              {React.cloneElement(panel.icon as React.ReactElement<{ className?: string; style?: React.CSSProperties }>, {
+                className: "w-7 h-7 sm:w-8 sm:h-8 mb-1 transition-colors duration-300",
+                style: { color: openPanelId === panel.id ? slide9Colors.panelBorderActive : slide9Colors.textColor }
               })}
-              <span 
-                className="text-xs sm:text-sm font-semibold text-center leading-tight transition-colors duration-300" 
-                style={{ 
-                  fontFamily: 'Raleway SemiBold',
-                  color: openPanelId === panel.id ? slide9Colors.panelBorderActive : slide9Colors.textColor 
+              <span
+                className="text-xs sm:text-sm font-semibold text-center leading-tight transition-colors duration-300"
+                style={{
+                  fontFamily: 'Raleway SemiBold', // Manteniendo estilo local para botones de panel
+                  color: openPanelId === panel.id ? slide9Colors.panelBorderActive : slide9Colors.textColor
                 }}
               >
                 {panel.title}
               </span>
-              <motion.div 
+              <motion.div
                 className="absolute bottom-1.5 right-1.5 opacity-50 group-hover:opacity-100 transition-opacity"
                 animate={{ rotate: openPanelId === panel.id ? 180 : 0 }}
               >
@@ -3829,35 +4264,42 @@ const Diapositiva9 = () => {
         <AnimatePresence mode="wait">
           {openPanelId && panelData.find(p => p.id === openPanelId) && (
             <motion.div
-              key={openPanelId} 
+              key={openPanelId}
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto', transition: { height: {duration: 0.35, ease: "easeInOut"}, opacity: {duration: 0.25, delay: 0.1}} }}
               exit={{ opacity: 0, height: 0, transition: { height: {duration: 0.3, ease: "easeInOut"}, opacity: {duration: 0.2}} }}
               className="w-full flex-grow p-6 sm:p-8 rounded-xl shadow-xl overflow-auto bg-white border"
-              style={{ 
+              style={{
                 borderColor: slide9Colors.panelBorder,
-                maxHeight: 'calc(100vh - 350px)' // Ajustado para dejar espacio para el copyright
+                maxHeight: 'calc(100vh - 350px)'
               }}
             >
               <div className="leading-relaxed space-y-4 text-lg" style={{fontFamily: 'Raleway, Arial, sans-serif', color: slide9Colors.textColor}}>
-                {panelData.find(p => p.id === openPanelId)?.content}
+                {panelData.find(p => p.id === openPanelId)?.content as React.ReactNode}
               </div>
             </motion.div>
           )}
         </AnimatePresence>
       </main>
 
-      {/* Footer fijo en la parte inferior */}
-      <motion.footer
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.5 }}
-        className="text-center mt-4"
+      {/* Footer - Estilos de GlobalFooterConfig aplicados */}
+      <footer
+        className={`${GlobalFooterConfig.position} ${GlobalFooterConfig.padding} text-center`}
+        style={{
+          background: GlobalFooterConfig.background,
+          backdropFilter: GlobalFooterConfig.backdropFilter,
+        }}
       >
-        <p style={{ fontFamily: 'Raleway, Arial, sans-serif', fontSize: '13px', color: slide9Colors.footerText, fontWeight: 500 }}>
+        <p style={{
+          fontFamily: GlobalFooterConfig.text.fontFamily,
+          fontSize: GlobalFooterConfig.text.size,
+          color: GlobalFooterConfig.text.color,
+          opacity: GlobalFooterConfig.text.opacity,
+          fontWeight: GlobalFooterConfig.text.weight
+        }}>
           © {year} Hablandis. Todos los derechos reservados.
         </p>
-      </motion.footer>
+      </footer>
     </div>
   );
 };
@@ -3866,7 +4308,7 @@ const Diapositiva9 = () => {
 // =======================================================================
 
 // =======================================================================
-// DIAPOSITIVA 10: PROMPTS DIALÓGICOS Y COMUNICACIÓN
+// DIAPOSITIVA 10: PROMPTS DIALÓGICOS (LAYOUT CORREGIDO)
 // =======================================================================
 const Diapositiva10 = () => {
   const [highlightedLetters, setHighlightedLetters] = useState<boolean>(false);
@@ -3877,6 +4319,108 @@ const Diapositiva10 = () => {
     content: false,
     phrase: false
   });
+
+  // Colores base del diseño unificado
+  const colors = {
+    azulOscuro: '#12055F',
+    verdeTurquesa: '#007567',
+    verdeOscuro: '#007567',
+    blanco: '#FFFFFF',
+    amarillo: '#FFC846',
+    verdeClaro: '#C4D4A4'
+  };
+
+  // Configuración de Logo
+  const LogoConfig = {
+    size: 'h-24 md:h-32',
+    position: 'absolute top-6 left-6 z-30',
+    fallbackFontSize: '36px md:48px',
+    shadow: 'drop-shadow(0 4px 8px rgba(0,0,0,0.1))'
+  };
+
+  // Configuración de Títulos
+  const TitleConfig = {
+    fontFamily: 'Aglet Mono, monospace',
+    mainSize: 'text-3xl md:text-4xl lg:text-5xl',
+    weight: 'font-semibold',
+    color: colors.azulOscuro,
+    spacing: 'mb-4 md:mb-6'
+  };
+
+  // Configuración de Subtítulos
+  const SubtitleConfig = {
+    fontFamily: 'Raleway, sans-serif',
+    size: 'text-lg md:text-xl lg:text-2xl',
+    weight: 'font-normal',
+    color: colors.verdeTurquesa,
+    spacing: 'mb-2'
+  };
+
+  // Configuración de Footer
+  const FooterConfig = {
+    position: 'absolute bottom-4 left-0 right-0',
+    padding: 'py-3',
+    background: `${colors.blanco}70`,
+    backdropFilter: 'backdrop-blur(10px)',
+    text: {
+      fontFamily: 'Raleway, sans-serif',
+      size: '13px',
+      color: colors.azulOscuro,
+      opacity: '0.8',
+      weight: '500'
+    }
+  };
+
+  // Componente Logo Unificado
+  const LogoHablandis = ({ className = "" }: { className?: string }) => (
+    <img 
+      src="/hablandis.png" 
+      alt="Hablandis" 
+      className={`${LogoConfig.size} ${className}`}
+      style={{ filter: LogoConfig.shadow }}
+      onError={(e) => {
+        const img = e.target as HTMLImageElement;
+        img.style.display = 'none';
+        const parent = img.parentElement;
+        if (parent) {
+          parent.innerHTML = `
+            <div style="font-family: 'Aglet Mono', monospace; color: ${colors.azulOscuro}; font-size: ${LogoConfig.fallbackFontSize}; font-weight: 700; line-height: 1;">
+              Hablandis
+            </div>
+            <div style="font-family: 'Raleway', sans-serif; color: ${colors.verdeTurquesa}; font-size: 14px; margin-top: 2px;">
+              Centro Internacional de Idiomas
+            </div>
+          `;
+        }
+      }}
+    />
+  );
+
+  // Componente Título Principal Unificado
+  const MainTitle = ({ children, className = "" }: { children: React.ReactNode, className?: string }) => (
+    <h1 
+      className={`${TitleConfig.mainSize} ${TitleConfig.weight} ${TitleConfig.spacing} ${className}`}
+      style={{ 
+        fontFamily: TitleConfig.fontFamily,
+        color: TitleConfig.color
+      }}
+    >
+      {children}
+    </h1>
+  );
+
+  // Componente Subtítulo Unificado
+  const Subtitle = ({ children, className = "" }: { children: React.ReactNode, className?: string }) => (
+    <p 
+      className={`${SubtitleConfig.size} ${SubtitleConfig.weight} ${SubtitleConfig.spacing} ${className}`}
+      style={{ 
+        fontFamily: SubtitleConfig.fontFamily,
+        color: SubtitleConfig.color
+      }}
+    >
+      {children}
+    </p>
+  );
 
   // Animación de entrada secuencial
   useEffect(() => {
@@ -3892,7 +4436,7 @@ const Diapositiva10 = () => {
   }, []);
 
   return (
-    <div className="relative w-full h-screen overflow-hidden bg-white">
+    <div className="relative w-full h-screen overflow-hidden bg-white flex flex-col">
       {/* Gradiente suave de fondo */}
       <div 
         className="absolute inset-0 opacity-30"
@@ -3901,28 +4445,12 @@ const Diapositiva10 = () => {
         }}
       />
 
-      {/* Logo ENORME */}
-      <motion.div
-        initial={{ opacity: 0, scale: 0.5 }}
-        animate={{ 
-          opacity: showElements.logo ? 1 : 0, 
-          scale: showElements.logo ? 1 : 0.5
-        }}
-        transition={{ duration: 1, type: "spring" }}
-        className="absolute top-0 left-0"
-      >
-        <img 
-          src="/hablandis.png" 
-          alt="Hablandis" 
-          className="h-96"
-          style={{ 
-            filter: 'drop-shadow(0 10px 20px rgba(0,0,0,0.1))',
-            maxWidth: '500px'
-          }}
-        />
-      </motion.div>
+      {/* Logo Unificado */}
+      <div className={LogoConfig.position}>
+        <LogoHablandis />
+      </div>
 
-      {/* Título de la diapositiva */}
+      {/* Título y Subtítulo - Sección superior */}
       <motion.div
         initial={{ opacity: 0, y: -30 }}
         animate={{ 
@@ -3930,309 +4458,330 @@ const Diapositiva10 = () => {
           y: showElements.title ? 0 : -30
         }}
         transition={{ duration: 0.8, delay: 0.5 }}
-        className="absolute top-8 right-16 text-right"
+        className="text-center pt-16 pb-8 relative z-10"
       >
-        <h1 className="text-5xl font-mono font-bold" style={{ color: colors.azulOscuro }}>
+        <MainTitle className="mb-2">
           Prompts dialógicos
-        </h1>
+        </MainTitle>
+        <Subtitle>
+          Construyendo conversaciones interactivas con IA
+        </Subtitle>
       </motion.div>
 
-      {/* Layout principal con dos columnas - SUBIDO 1CM */}
-      <div className="relative z-10 h-full flex items-start px-16 pt-52">
-        <div className="w-full max-w-7xl mx-auto flex gap-8">
-          {/* Columna izquierda - Contenido principal */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ 
-              opacity: showElements.content ? 1 : 0,
-              scale: showElements.content ? 1 : 0.9
-            }}
-            transition={{ duration: 0.8, delay: 0.8 }}
-            className="flex-1"
-          >
-            <div 
-              className="rounded-3xl px-8 py-6 overflow-y-auto max-h-[500px]"
-              style={{ 
-                backgroundColor: colors.blanco + '70',
-                backdropFilter: 'blur(30px)',
-                boxShadow: '0 20px 60px rgba(0,0,0,0.08)'
-              }}
-            >
-              {/* Sección 1: Un asistente para mejorar nuestros prompts */}
-              <div className="mb-6">
-                <div 
-                  className="flex items-center justify-between cursor-pointer p-4 rounded-lg hover:bg-gray-50 transition-colors"
-                  onClick={() => setExpandedSection(expandedSection === 1 ? null : 1)}
-                >
-                  <h2 className="text-xl font-bold" style={{ color: colors.azulOscuro }}>
-                    Un asistente para mejorar nuestros prompts:
-                  </h2>
-                  <svg 
-                    className={`w-5 h-5 transition-transform ${expandedSection === 1 ? 'rotate-180' : ''}`}
-                    fill="none" 
-                    stroke="currentColor" 
-                    viewBox="0 0 24 24"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </div>
-                
-                {expandedSection === 1 && (
-                  <div className="px-4 pb-4">
-                    <div className="bg-gray-50 p-4 rounded-lg font-mono text-xs overflow-x-auto">
-                      <p className="mb-2">I want you to become my Expert Prompt Creator. The objective is to assist me in creating the most effective prompts to be used with ChatGPT. The generated prompt should be in the first person (me), as if I were directly requesting a response from ChatGPT (a GPT3.5/GPT4 interface). Your response will be in the following format:</p>
-                      
-                      <p className="mb-2">"<br/>
-                      <strong>**Prompt:**</strong><br/>
-                      &gt;{`{Provide the best possible prompt according to my request. There are no restrictions to the length of the prompt. Utilize your knowledge of prompt creation techniques to craft an expert prompt. Don't assume any details, we'll add to the prompt as we go along. Frame the prompt as a request for a response from ChatGPT. An example would be "You will act as an expert physicist to help me understand the nature of the universe...". Make this section stand out using '>' Markdown formatting. Don't add additional quotation marks.}`}</p>
-                      
-                      <p className="mb-2"><strong>**Possible Additions:**</strong><br/>
-                      {`{Create three possible additions to incorporate directly in the prompt. These should be additions to expand the details of the prompt. Options will be very concise and listed using uppercase-alpha. Always update with new Additions after every response.}`}</p>
-                      
-                      <p className="mb-2"><strong>**Questions:**</strong><br/>
-                      {`{Frame three questions that seek additional information from me to further refine the prompt. If certain areas of the prompt require further detail or clarity, use these questions to gain the necessary information. I am not required to answer all questions.}`}<br/>
-                      "</p>
-                      
-                      <p className="mt-2">Instructions: After sections Prompt, Possible Additions, and Questions are generated, I will respond with my chosen additions and answers to the questions. Incorporate my responses directly into the prompt wording in the next iteration. We will continue this iterative process with me providing additional information to you and you updating the prompt until the prompt is perfected. Be thoughtful and imaginative while crafting the prompt. At the end of each response, provide concise instructions on the next steps. Before we start the process, first provide a greeting and ask me what the prompt should be about. Don't display the sections on this first response.</p>
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              {/* Sección 2: ...Y esto es lo que hace - con enlace mejorado */}
-              <div className="mb-6">
-                <h3 className="text-lg font-bold mb-3" style={{ color: colors.verdeOscuro }}>
-                  ...Y esto es lo que hace:
-                </h3>
-                <a 
-                  href="https://chatgpt.com/share/d8ef604b-e5b8-4e42-a915-ea5f6cb9a835" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-lg transition-all hover:scale-105"
-                  style={{ 
-                    backgroundColor: colors.amarillo + '30',
-                    border: `2px solid ${colors.amarillo}`,
-                    color: colors.azulOscuro
-                  }}
-                >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                  </svg>
-                  Ver ejemplo en ChatGPT
-                </a>
-              </div>
-
-              {/* Sección 3: Construyendo un chat "dialógico" */}
-              <div className="mb-6">
-                <div 
-                  className="flex items-center justify-between cursor-pointer p-4 rounded-lg hover:bg-gray-50 transition-colors"
-                  onClick={() => setExpandedSection(expandedSection === 3 ? null : 3)}
-                >
-                  <h2 className="text-xl font-bold" style={{ color: colors.azulOscuro }}>
-                    Construyendo un chat "dialógico"
-                  </h2>
-                  <svg 
-                    className={`w-5 h-5 transition-transform ${expandedSection === 3 ? 'rotate-180' : ''}`}
-                    fill="none" 
-                    stroke="currentColor" 
-                    viewBox="0 0 24 24"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </div>
-                
-                {expandedSection === 3 && (
-                  <div className="px-4 pb-4">
-                    <p className="mb-3 font-medium">Ejemplo: Prompt para creación de textos</p>
-                    <div className="bg-gray-50 p-4 rounded-lg space-y-2 text-sm">
-                      <p>Actúa como un asistente especialista en redactar textos útiles, relevantes, vibrantes, interesantes y originales para el aprendizaje de lenguas extranjeras.</p>
-                      <p>- Vas a preguntarme sucesivos datos antes de crear un texto. Espera SIEMPRE a mis respuestas antes de pasar a la siguiente pregunta.</p>
-                      <p>- Sugiéreme varias lenguas y pregúntame la lengua en la que deseo el texto y espera a mi respuesta.</p>
-                      <p>- Dame a elegir una amplia variedad de tipos de texto y pídeme que diga cuál deseo que crees. Espera a mi respuesta.</p>
-                      <p>- Pregúntame qué nivel del MCERL debe tener el texto. Espera a mi respuesta.</p>
-                      <p>- Pregúntame por la temática que debe tener el texto. Espera a mi respuesta.</p>
-                      <p>- Pregúntame qué longitud debe tener el texto. Espera mi respuesta.</p>
-                      <p>- Sugiéreme expresiones para que aparezcan en el texto acordes a la temática, tipo de texto y nivel. Espera mi respuesta.</p>
-                      <p>- ...?</p>
-                    </div>
-                    <p className="mt-3 text-center italic text-gray-600">
-                      ... a partir de aquí vuestra imaginación es el límite.
-                    </p>
-                  </div>
-                )}
-              </div>
-
-              {/* Sección 4: Y si no sabemos lo que queremos - con enlace mejorado */}
-              <div className="mb-4">
-                <h3 className="text-lg font-bold mb-3" style={{ color: colors.verdeOscuro }}>
-                  Y si no sabemos lo que queremos... preguntemos.
-                </h3>
-                <a 
-                  href="https://chatgpt.com/share/9b7900ea-1195-4eae-ba32-836a7bc680b3" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-lg transition-all hover:scale-105"
-                  style={{ 
-                    backgroundColor: colors.verdeClaro + '30',
-                    border: `2px solid ${colors.verdeClaro}`,
-                    color: colors.azulOscuro
-                  }}
-                >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                  </svg>
-                  Ver chat de ejemplo
-                </a>
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Columna derecha - Espacio para foto */}
-          <motion.div
-            initial={{ opacity: 0, x: 50 }}
-            animate={{ 
-              opacity: showElements.content ? 1 : 0,
-              x: showElements.content ? 0 : 50
-            }}
-            transition={{ duration: 0.8, delay: 1 }}
-            className="w-80"
-          >
-            <div 
-              className="h-full rounded-2xl overflow-hidden shadow-2xl"
-              style={{ 
-                backgroundColor: colors.blanco + '50',
-                border: `3px solid ${colors.amarillo}50`
-              }}
-            >
-              <div className="h-full flex items-center justify-center p-8 text-center">
-                <div className="space-y-4">
-                  <svg className="w-16 h-16 mx-auto text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                  </svg>
-                  <p className="text-gray-500 text-sm">
-                    Espacio para foto vertical de estudiantes conversando en los jardines de Hablandis
-                  </p>
-                  <p className="text-xs text-gray-400 italic">
-                    Dimensiones recomendadas: 800x1200px
-                  </p>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        </div>
-      </div>
-
-      {/* Sección inferior centrada con frase HABLANDIS y QR más grande */}
-      <div className="absolute bottom-6 left-0 right-0">
-        <div className="flex items-center justify-center">
-          <div className="flex items-center gap-10">
-            {/* Frase HABLANDIS */}
+      {/* Contenedor principal con scroll */}
+      <div className="flex-1 overflow-y-auto px-8 pb-32 relative z-10">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {/* Columna principal - 2/3 del ancho */}
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, scale: 0.9 }}
               animate={{ 
-                opacity: showElements.phrase ? 1 : 0,
-                y: showElements.phrase ? 0 : 30
+                opacity: showElements.content ? 1 : 0,
+                scale: showElements.content ? 1 : 0.9
               }}
-              transition={{ duration: 0.8, delay: 1.3 }}
-              className="text-right"
-            >
-              <h2 className="text-3xl mb-2">
-                <span 
-                  className={`transition-all duration-700 ${
-                    highlightedLetters ? 'font-black text-4xl' : 'font-normal'
-                  }`}
-                  style={{ color: highlightedLetters ? colors.azulOscuro : '#333' }}
-                >
-                  Habla
-                </span>
-                <span className="font-normal text-gray-700">, </span>
-                <span 
-                  className={`transition-all duration-700 ${
-                    highlightedLetters ? 'font-black text-4xl' : 'font-normal'
-                  }`}
-                  style={{ color: highlightedLetters ? colors.azulOscuro : '#333' }}
-                >
-                  n
-                </span>
-                <span className="font-normal text-gray-700">o te calles, </span>
-                <span 
-                  className={`transition-all duration-700 ${
-                    highlightedLetters ? 'font-black text-4xl' : 'font-normal'
-                  }`}
-                  style={{ color: highlightedLetters ? colors.azulOscuro : '#333' }}
-                >
-                  di
-                </span>
-                <span className="font-normal text-gray-700"> lo que sientes, </span>
-                <span 
-                  className={`transition-all duration-700 ${
-                    highlightedLetters ? 'font-black text-4xl' : 'font-normal'
-                  }`}
-                  style={{ color: highlightedLetters ? colors.azulOscuro : '#333' }}
-                >
-                  s
-                </span>
-                <span className="font-normal text-gray-700">é tú</span>
-              </h2>
-              <p className="text-lg italic text-gray-600">
-                En Hablandis, cada conversación es una oportunidad para ser tú mismo
-              </p>
-            </motion.div>
-
-            {/* Código QR más grande con diseño coherente */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ 
-                opacity: showElements.phrase ? 1 : 0,
-                scale: showElements.phrase ? 1 : 0.8
-              }}
-              transition={{ duration: 0.8, delay: 1.5 }}
+              transition={{ duration: 0.8, delay: 0.8 }}
+              className="lg:col-span-2"
             >
               <div 
-                className="rounded-xl p-5 flex items-center gap-5"
+                className="rounded-3xl px-8 py-6"
                 style={{ 
                   backgroundColor: colors.blanco + '70',
-                  backdropFilter: 'blur(20px)',
-                  boxShadow: '0 10px 30px rgba(0,0,0,0.08)'
+                  backdropFilter: 'blur(30px)',
+                  boxShadow: '0 20px 60px rgba(0,0,0,0.08)'
                 }}
               >
-                <div className="w-32 h-32 rounded-lg flex items-center justify-center flex-shrink-0"
-                     style={{ 
-                       backgroundColor: colors.verdeClaro + '20',
-                       border: `2px solid ${colors.verdeClaro}40`
-                     }}>
-                  <img
-                    src="/qr.png"
-                    alt="QR Code Presentación EVALIA"
-                    className="w-28 h-28 object-contain"
-                  />
+                {/* Sección 1: Un asistente para mejorar nuestros prompts */}
+                <div className="mb-6">
+                  <div 
+                    className="flex items-center justify-between cursor-pointer p-4 rounded-lg hover:bg-gray-50 transition-colors"
+                    onClick={() => setExpandedSection(expandedSection === 1 ? null : 1)}
+                  >
+                    <h2 className="text-xl font-bold" style={{ color: colors.azulOscuro }}>
+                      Un asistente para mejorar nuestros prompts:
+                    </h2>
+                    <svg 
+                      className={`w-5 h-5 transition-transform ${expandedSection === 1 ? 'rotate-180' : ''}`}
+                      fill="none" 
+                      stroke="currentColor" 
+                      viewBox="0 0 24 24"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </div>
+                  
+                  {expandedSection === 1 && (
+                    <div className="px-4 pb-4">
+                      <div className="bg-gray-50 p-4 rounded-lg font-mono text-xs overflow-x-auto max-h-96 overflow-y-auto">
+                        <p className="mb-2">I want you to become my Expert Prompt Creator. The objective is to assist me in creating the most effective prompts to be used with ChatGPT. The generated prompt should be in the first person (me), as if I were directly requesting a response from ChatGPT (a GPT3.5/GPT4 interface). Your response will be in the following format:</p>
+                        
+                        <p className="mb-2">"<br/>
+                        <strong>**Prompt:**</strong><br/>
+                        &gt;{`{Provide the best possible prompt according to my request. There are no restrictions to the length of the prompt. Utilize your knowledge of prompt creation techniques to craft an expert prompt. Don't assume any details, we'll add to the prompt as we go along. Frame the prompt as a request for a response from ChatGPT. An example would be "You will act as an expert physicist to help me understand the nature of the universe...". Make this section stand out using '>' Markdown formatting. Don't add additional quotation marks.}`}</p>
+                        
+                        <p className="mb-2"><strong>**Possible Additions:**</strong><br/>
+                        {`{Create three possible additions to incorporate directly in the prompt. These should be additions to expand the details of the prompt. Options will be very concise and listed using uppercase-alpha. Always update with new Additions after every response.}`}</p>
+                        
+                        <p className="mb-2"><strong>**Questions:**</strong><br/>
+                        {`{Frame three questions that seek additional information from me to further refine the prompt. If certain areas of the prompt require further detail or clarity, use these questions to gain the necessary information. I am not required to answer all questions.}`}<br/>
+                        "</p>
+                        
+                        <p className="mt-2">Instructions: After sections Prompt, Possible Additions, and Questions are generated, I will respond with my chosen additions and answers to the questions. Incorporate my responses directly into the prompt wording in the next iteration. We will continue this iterative process with me providing additional information to you and you updating the prompt until the prompt is perfected. Be thoughtful and imaginative while crafting the prompt. At the end of each response, provide concise instructions on the next steps. Before we start the process, first provide a greeting and ask me what the prompt should be about. Don't display the sections on this first response.</p>
+                      </div>
+                    </div>
+                  )}
                 </div>
-                <div className="pr-4">
-                  <h3 className="text-lg font-semibold mb-1" style={{
-                    color: colors.azulOscuro,
-                    fontFamily: 'Raleway, sans-serif'
-                  }}>
-                    Materiales de Presentación
+
+                {/* Sección 2: ...Y esto es lo que hace */}
+                <div className="mb-6">
+                  <h3 className="text-lg font-bold mb-3" style={{ color: colors.verdeOscuro }}>
+                    ...Y esto es lo que hace:
                   </h3>
-                  <p className="text-sm text-gray-600" style={{ fontFamily: 'Raleway, sans-serif' }}>
-                    Escanea para acceder a recursos
-                  </p>
+                  <a 
+                    href="https://chatgpt.com/share/d8ef604b-e5b8-4e42-a915-ea5f6cb9a835" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-lg transition-all hover:scale-105"
+                    style={{ 
+                      backgroundColor: colors.amarillo + '30',
+                      border: `2px solid ${colors.amarillo}`,
+                      color: colors.azulOscuro
+                    }}
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                    </svg>
+                    Ver ejemplo en ChatGPT
+                  </a>
+                </div>
+
+                {/* Sección 3: Construyendo un chat "dialógico" */}
+                <div className="mb-6">
+                  <div 
+                    className="flex items-center justify-between cursor-pointer p-4 rounded-lg hover:bg-gray-50 transition-colors"
+                    onClick={() => setExpandedSection(expandedSection === 3 ? null : 3)}
+                  >
+                    <h2 className="text-xl font-bold" style={{ color: colors.azulOscuro }}>
+                      Construyendo un chat "dialógico"
+                    </h2>
+                    <svg 
+                      className={`w-5 h-5 transition-transform ${expandedSection === 3 ? 'rotate-180' : ''}`}
+                      fill="none" 
+                      stroke="currentColor" 
+                      viewBox="0 0 24 24"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </div>
+                  
+                  {expandedSection === 3 && (
+                    <div className="px-4 pb-4">
+                      <p className="mb-3 font-medium">Ejemplo: Prompt para creación de textos</p>
+                      <div className="bg-gray-50 p-4 rounded-lg space-y-2 text-sm max-h-96 overflow-y-auto">
+                        <p>Actúa como un asistente especialista en redactar textos útiles, relevantes, vibrantes, interesantes y originales para el aprendizaje de lenguas extranjeras.</p>
+                        <p>- Vas a preguntarme sucesivos datos antes de crear un texto. Espera SIEMPRE a mis respuestas antes de pasar a la siguiente pregunta.</p>
+                        <p>- Sugiéreme varias lenguas y pregúntame la lengua en la que deseo el texto y espera a mi respuesta.</p>
+                        <p>- Dame a elegir una amplia variedad de tipos de texto y pídeme que diga cuál deseo que crees. Espera a mi respuesta.</p>
+                        <p>- Pregúntame qué nivel del MCERL debe tener el texto. Espera a mi respuesta.</p>
+                        <p>- Pregúntame por la temática que debe tener el texto. Espera a mi respuesta.</p>
+                        <p>- Pregúntame qué longitud debe tener el texto. Espera mi respuesta.</p>
+                        <p>- Sugiéreme expresiones para que aparezcan en el texto acordes a la temática, tipo de texto y nivel. Espera mi respuesta.</p>
+                        <p>- ...?</p>
+                      </div>
+                      <p className="mt-3 text-center italic text-gray-600">
+                        ... a partir de aquí vuestra imaginación es el límite.
+                      </p>
+                    </div>
+                  )}
+                </div>
+
+                {/* Sección 4: Y si no sabemos lo que queremos */}
+                <div className="mb-4">
+                  <h3 className="text-lg font-bold mb-3" style={{ color: colors.verdeOscuro }}>
+                    Y si no sabemos lo que queremos... preguntemos.
+                  </h3>
+                  <a 
+                    href="https://chatgpt.com/share/9b7900ea-1195-4eae-ba32-836a7bc680b3" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-lg transition-all hover:scale-105"
+                    style={{ 
+                      backgroundColor: colors.verdeClaro + '30',
+                      border: `2px solid ${colors.verdeClaro}`,
+                      color: colors.azulOscuro
+                    }}
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                    Ver chat de ejemplo
+                  </a>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Columna derecha - Espacio para foto */}
+            <motion.div
+              initial={{ opacity: 0, x: 50 }}
+              animate={{ 
+                opacity: showElements.content ? 1 : 0,
+                x: showElements.content ? 0 : 50
+              }}
+              transition={{ duration: 0.8, delay: 1 }}
+              className="lg:col-span-1"
+            >
+              <div 
+                className="h-full rounded-2xl overflow-hidden shadow-2xl min-h-[400px]"
+                style={{ 
+                  backgroundColor: colors.blanco + '50',
+                  border: `3px solid ${colors.amarillo}50`
+                }}
+              >
+                <div className="h-full flex items-center justify-center p-8 text-center">
+                  <div className="space-y-4">
+                    <svg className="w-16 h-16 mx-auto text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    <p className="text-gray-500 text-sm">
+                      Espacio para foto vertical de estudiantes conversando en los jardines de Hablandis
+                    </p>
+                    <p className="text-xs text-gray-400 italic">
+                      Dimensiones recomendadas: 800x1200px
+                    </p>
+                  </div>
                 </div>
               </div>
             </motion.div>
           </div>
+
+          {/* Sección inferior con frase HABLANDIS y QR */}
+          <div className="mt-12 mb-8">
+            <div className="flex flex-col lg:flex-row items-center justify-center gap-8">
+              {/* Frase HABLANDIS */}
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ 
+                  opacity: showElements.phrase ? 1 : 0,
+                  y: showElements.phrase ? 0 : 30
+                }}
+                transition={{ duration: 0.8, delay: 1.3 }}
+                className="text-center lg:text-right max-w-2xl"
+              >
+                <h2 className="text-3xl mb-2">
+                  <span 
+                    className={`transition-all duration-700 ${
+                      highlightedLetters ? 'font-black text-4xl' : 'font-normal'
+                    }`}
+                    style={{ color: highlightedLetters ? colors.azulOscuro : '#333' }}
+                  >
+                    Habla
+                  </span>
+                  <span className="font-normal text-gray-700">, </span>
+                  <span 
+                    className={`transition-all duration-700 ${
+                      highlightedLetters ? 'font-black text-4xl' : 'font-normal'
+                    }`}
+                    style={{ color: highlightedLetters ? colors.azulOscuro : '#333' }}
+                  >
+                    n
+                  </span>
+                  <span className="font-normal text-gray-700">o te calles, </span>
+                  <span 
+                    className={`transition-all duration-700 ${
+                      highlightedLetters ? 'font-black text-4xl' : 'font-normal'
+                    }`}
+                    style={{ color: highlightedLetters ? colors.azulOscuro : '#333' }}
+                  >
+                    di
+                  </span>
+                  <span className="font-normal text-gray-700"> lo que sientes, </span>
+                  <span 
+                    className={`transition-all duration-700 ${
+                      highlightedLetters ? 'font-black text-4xl' : 'font-normal'
+                    }`}
+                    style={{ color: highlightedLetters ? colors.azulOscuro : '#333' }}
+                  >
+                    s
+                  </span>
+                  <span className="font-normal text-gray-700">é tú</span>
+                </h2>
+                <p className="text-lg italic text-gray-600">
+                  En Hablandis, cada conversación es una oportunidad para ser tú mismo
+                </p>
+              </motion.div>
+
+              {/* Código QR */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ 
+                  opacity: showElements.phrase ? 1 : 0,
+                  scale: showElements.phrase ? 1 : 0.8
+                }}
+                transition={{ duration: 0.8, delay: 1.5 }}
+              >
+                <div 
+                  className="rounded-xl p-5 flex items-center gap-5"
+                  style={{ 
+                    backgroundColor: colors.blanco + '70',
+                    backdropFilter: 'blur(20px)',
+                    boxShadow: '0 10px 30px rgba(0,0,0,0.08)'
+                  }}
+                >
+                  <div className="w-32 h-32 rounded-lg flex items-center justify-center flex-shrink-0"
+                       style={{ 
+                         backgroundColor: colors.verdeClaro + '20',
+                         border: `2px solid ${colors.verdeClaro}40`
+                       }}>
+                    <img
+                      src="/qr.png"
+                      alt="QR Code Presentación EVALIA"
+                      className="w-28 h-28 object-contain"
+                    />
+                  </div>
+                  <div className="pr-4">
+                    <h3 className="text-lg font-semibold mb-1" style={{
+                      color: colors.azulOscuro,
+                      fontFamily: 'Raleway, sans-serif'
+                    }}>
+                      Materiales de Presentación
+                    </h3>
+                    <p className="text-sm text-gray-600" style={{ fontFamily: 'Raleway, sans-serif' }}>
+                      Escanea para acceder a recursos
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Footer con año actualizado */}
-      <div className="absolute bottom-1 left-0 right-0 text-center text-gray-500 text-xs z-20">
-        © 2025 Hablandis. Todos los derechos reservados.
+      {/* Footer Unificado */}
+      <div 
+        className={FooterConfig.position}
+        style={{
+          backgroundColor: FooterConfig.background,
+          backdropFilter: FooterConfig.backdropFilter,
+          padding: FooterConfig.padding
+        }}
+      >
+        <p 
+          className="text-center"
+          style={{
+            fontFamily: FooterConfig.text.fontFamily,
+            fontSize: FooterConfig.text.size,
+            color: FooterConfig.text.color,
+            opacity: FooterConfig.text.opacity,
+            fontWeight: FooterConfig.text.weight
+          }}
+        >
+          © 2025 Hablandis. Centro Internacional de Idiomas. Todos los derechos reservados.
+        </p>
       </div>
     </div>
   );
 };
 // =======================================================================
-// FIN DIAPOSITIVA 10
+// FIN DIAPOSITIVA 10 (LAYOUT CORREGIDO)
 // =======================================================================
 
 // =======================================================================
