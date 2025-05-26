@@ -64,7 +64,7 @@ const animations = {
 };
 
 
-/// =======================================================================
+// =======================================================================
 // DIAPOSITIVA 1: PORTADA CON FOOTER MINIMALISTA
 // =======================================================================
 const Diapositiva1 = () => {
@@ -365,6 +365,39 @@ const Diapositiva1 = () => {
           </div>
         </div>
 
+        {/* Logos institucionales - Parte inferior derecha */}
+        <motion.div
+          initial={{ opacity: 0, x: 50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 1.5, duration: 0.8 }}
+          className="absolute bottom-8 right-8 flex items-center gap-6"
+        >
+          <img 
+            src="/embajada.png" 
+            alt="Embajada" 
+            className="h-16 object-contain"
+            style={{ 
+              filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))',
+            }}
+            onError={(e) => {
+              const img = e.target as HTMLImageElement;
+              img.style.display = 'none';
+            }}
+          />
+          <img 
+            src="/ore.jpg" 
+            alt="ORE" 
+            className="h-16 object-contain"
+            style={{ 
+              filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))',
+            }}
+            onError={(e) => {
+              const img = e.target as HTMLImageElement;
+              img.style.display = 'none';
+            }}
+          />
+        </motion.div>
+
         {/* Footer Minimalista - NUEVO DISEÑO */}
         <div className="absolute bottom-2 left-0 right-0 text-center">
           <p className="text-xs" style={{ 
@@ -382,7 +415,6 @@ const Diapositiva1 = () => {
 // =======================================================================
 // FIN DIAPOSITIVA 1
 // =======================================================================
-
 // =======================================================================
 // DIAPOSITIVA 2: EL DRAMA DE LA EVALUACIÓN - DISEÑO UNIFICADO
 // =======================================================================
@@ -6189,7 +6221,6 @@ const Diapositiva14 = () => {
 const Diapositiva15 = () => {
   const [currentSubSlide, setCurrentSubSlide] = useState(0);
   const [mousePos, setMousePos] = useState({ x: 50, y: 50 }); // Para el gradiente radial interactivo
-  const currentYear = new Date().getFullYear();
 
   // Efecto para seguir la posición del mouse para el gradiente radial
   useEffect(() => {
@@ -6234,22 +6265,22 @@ const Diapositiva15 = () => {
     const getCurrentExample = () => examples[currentExample];
 
     return (
-      <div className="flex flex-col p-4 md:p-6 bg-white rounded-lg shadow-xl h-full" style={{ fontFamily: 'Raleway, sans-serif' }}>
+      <div className="flex flex-col p-3 md:p-4 bg-white rounded-lg shadow-xl h-full" style={{ fontFamily: 'Raleway, sans-serif' }}>
         <div style={{ backgroundColor: colors.azulOscuro }} className="text-white p-3 md:p-4 rounded-t-lg">
-          <h3 className="text-xl md:text-2xl font-bold text-center" style={{ fontFamily: 'Aglet Mono, monospace' }}>¡DETECTIVE DE MODALIDADES!</h3>
-          <h4 className="text-md md:text-lg text-center" style={{ color: colors.lila }}>Dictum vs Modus: Descubriendo las Intenciones 🕵️‍♂️</h4>
+          <h3 className="text-lg md:text-xl font-bold text-center" style={{ fontFamily: 'Aglet Mono, monospace' }}>¡DETECTIVE DE MODALIDADES!</h3>
+          <h4 className="text-sm md:text-base text-center" style={{ color: colors.lila }}>Dictum vs Modus: Descubriendo las Intenciones 🕵️‍♂️</h4>
         </div>
         
-        <div className="p-3 md:p-4 mb-3 md:mb-4 rounded-lg" style={{ backgroundColor: colors.lila+'30' }}>
+        <div className="p-3 md:p-4 mb-2 md:mb-3 rounded-lg" style={{ backgroundColor: colors.lila+'30' }}>
           <p className="text-sm md:text-base font-medium" style={{ color: colors.azulOscuro }}>
             La modalidad expresa la actitud del hablante hacia el contenido.
             <strong style={{color: colors.verdeTurquesa}}> DICTUM</strong> = lo que se dice | <strong style={{color: colors.amarillo}}>MODUS</strong> = actitud del hablante
           </p>
         </div>
         
-        <div className="flex-grow p-3 md:p-6 rounded-lg mb-3 md:mb-4 min-h-[200px] md:min-h-[250px]" style={{ backgroundColor: colors.grisClaro }}>
+        <div className="flex-grow p-3 md:p-6 rounded-lg mb-2 md:mb-3 min-h-[150px] md:min-h-[200px]" style={{ backgroundColor: colors.grisClaro }}>
           <div className="text-center mb-4 md:mb-6">
-            <p className="text-xl md:text-2xl font-bold mb-3 md:mb-4" style={{ color: colors.azulOscuro }}>
+            <p className="text-lg md:text-xl font-bold mb-3 md:mb-4" style={{ color: colors.azulOscuro }}>
               "{getCurrentExample().sentence}"
             </p>
             <p className="text-xs md:text-sm" style={{color: colors.grisOscuro}}>🔍 Analiza esta oración y encuentra el DICTUM y MODUS</p>
@@ -6280,7 +6311,7 @@ const Diapositiva15 = () => {
           )}
         </div>
         
-        <div className="p-3 md:p-4 rounded-lg mb-3 md:mb-4" style={{ backgroundColor: colors.amarillo+'30' }}>
+        <div className="p-3 md:p-4 rounded-lg mb-2 md:mb-3" style={{ backgroundColor: colors.amarillo+'30' }}>
           <h5 className="font-bold mb-2" style={{ fontFamily: 'Raleway Bold, sans-serif', color: colors.azulOscuro }}>🤖 Relevancia para IA:</h5>
           <p className="text-xs md:text-sm" style={{ color: colors.grisOscuro }}>
             Para los sistemas de IA, distinguir DICTUM y MODUS es fundamental para comprender intención comunicativa. 
@@ -6334,7 +6365,6 @@ const Diapositiva15 = () => {
       { sentence: "¡Qué hermoso día!", type: "extraproposicional", explanation: "Expresión dirigida hacia el interlocutor para compartir evaluación" }
     ];
 
-    // Corregido: Añadido tipo string para el parámetro type
     const checkAnswer = (type: string) => {
       setSelectedType(type);
       setShowResult(true);
@@ -6352,13 +6382,13 @@ const Diapositiva15 = () => {
     const getCurrentExample = () => examples[currentExample];
 
     return (
-      <div className="flex flex-col p-4 md:p-6 bg-white rounded-lg shadow-xl h-full" style={{ fontFamily: 'Raleway, sans-serif' }}>
+      <div className="flex flex-col p-3 md:p-4 bg-white rounded-lg shadow-xl h-full" style={{ fontFamily: 'Raleway, sans-serif' }}>
         <div style={{ backgroundColor: colors.verdeTurquesa }} className="text-white p-3 md:p-4 rounded-t-lg">
-          <h3 className="text-xl md:text-2xl font-bold text-center" style={{ fontFamily: 'Aglet Mono, monospace' }}>¡BATALLA DE MODALIDADES!</h3>
-          <h4 className="text-md md:text-lg text-center" style={{ color: colors.lila }}>Proposicional vs Extraproposicional: El Duelo Lingüístico ⚔️</h4>
+          <h3 className="text-lg md:text-xl font-bold text-center" style={{ fontFamily: 'Aglet Mono, monospace' }}>¡BATALLA DE MODALIDADES!</h3>
+          <h4 className="text-sm md:text-base text-center" style={{ color: colors.lila }}>Proposicional vs Extraproposicional: El Duelo Lingüístico ⚔️</h4>
         </div>
 
-        <div className="p-3 md:p-4 mb-3 md:mb-4 rounded-lg" style={{ backgroundColor: colors.lila+'30' }}>
+        <div className="p-3 md:p-4 mb-2 md:mb-3 rounded-lg" style={{ backgroundColor: colors.lila+'30' }}>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
             <div className="text-center">
               <h5 className="font-bold" style={{ color: colors.azulOscuro, fontFamily: 'Raleway Bold, sans-serif' }}>🎯 PROPOSICIONAL</h5>
@@ -6371,9 +6401,9 @@ const Diapositiva15 = () => {
           </div>
         </div>
 
-        <div className="flex-grow p-3 md:p-6 rounded-lg mb-3 md:mb-4 min-h-[200px] md:min-h-[250px]" style={{ backgroundColor: colors.grisClaro }}>
+        <div className="flex-grow p-3 md:p-6 rounded-lg mb-2 md:mb-3 min-h-[150px] md:min-h-[200px]" style={{ backgroundColor: colors.grisClaro }}>
           <div className="text-center mb-4 md:mb-6">
-            <p className="text-xl md:text-2xl font-bold mb-3 md:mb-4" style={{ color: colors.verdeTurquesa }}>
+            <p className="text-lg md:text-xl font-bold mb-3 md:mb-4" style={{ color: colors.verdeTurquesa }}>
               "{getCurrentExample().sentence}"
             </p>
             <p className="text-xs md:text-sm" style={{color: colors.grisOscuro}}>⚔️ ¿Qué tipo de modalidad detectas?</p>
@@ -6417,7 +6447,7 @@ const Diapositiva15 = () => {
           )}
         </div>
 
-        <div className="p-3 md:p-4 rounded-lg mb-3 md:mb-4" style={{ backgroundColor: colors.amarillo+'30' }}>
+        <div className="p-3 md:p-4 rounded-lg mb-2 md:mb-3" style={{ backgroundColor: colors.amarillo+'30' }}>
           <h5 className="font-bold mb-2" style={{ fontFamily: 'Raleway Bold, sans-serif', color: colors.azulOscuro }}>🤖 Relevancia para IA:</h5>
           <p className="text-xs md:text-sm" style={{ color: colors.grisOscuro }}>
             Esta distinción es crucial para que las IA interpreten intenciones. La proposicional requiere procesamiento semántico, la extraproposicional requiere procesamiento pragmático.
@@ -6468,7 +6498,6 @@ const Diapositiva15 = () => {
       }
     ];
 
-    // Corregido: Añadido tipo number para el parámetro index
     const selectContext = (index: number) => {
       setSelectedContextIdx(index);
       setShowTransformation(true);
@@ -6483,13 +6512,13 @@ const Diapositiva15 = () => {
     const getCurrentExample = () => examples[currentExample];
 
     return (
-      <div className="flex flex-col p-4 md:p-6 bg-white rounded-lg shadow-xl h-full" style={{ fontFamily: 'Raleway, sans-serif' }}>
+      <div className="flex flex-col p-3 md:p-4 bg-white rounded-lg shadow-xl h-full" style={{ fontFamily: 'Raleway, sans-serif' }}>
         <div style={{ backgroundColor: colors.amarillo }} className="p-3 md:p-4 rounded-t-lg">
-          <h3 className="text-xl md:text-2xl font-bold text-center" style={{ fontFamily: 'Aglet Mono, monospace', color: colors.azulOscuro }}>¡ORACIÓN VS ENUNCIADO!</h3>
-          <h4 className="text-md md:text-lg text-center" style={{ color: colors.verdeTurquesa }}>Del Laboratorio a la Vida Real: El Contexto lo Cambia Todo 🔬➡️🌍</h4>
+          <h3 className="text-lg md:text-xl font-bold text-center" style={{ fontFamily: 'Aglet Mono, monospace', color: colors.azulOscuro }}>¡ORACIÓN VS ENUNCIADO!</h3>
+          <h4 className="text-sm md:text-base text-center" style={{ color: colors.verdeTurquesa }}>Del Laboratorio a la Vida Real: El Contexto lo Cambia Todo 🔬➡️🌍</h4>
         </div>
 
-        <div className="p-3 md:p-4 mb-3 md:mb-4 rounded-lg" style={{ backgroundColor: colors.lila+'30' }}>
+        <div className="p-3 md:p-4 mb-2 md:mb-3 rounded-lg" style={{ backgroundColor: colors.lila+'30' }}>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
             <div className="text-center">
               <h5 className="font-bold" style={{ color: colors.azulOscuro, fontFamily: 'Raleway Bold, sans-serif' }}>⚗️ ORACIÓN</h5>
@@ -6502,11 +6531,11 @@ const Diapositiva15 = () => {
           </div>
         </div>
 
-        <div className="flex-grow p-3 md:p-6 rounded-lg mb-3 md:mb-4 min-h-[250px] md:min-h-[300px]" style={{ backgroundColor: colors.grisClaro }}>
+        <div className="flex-grow p-3 md:p-6 rounded-lg mb-2 md:mb-3 min-h-[200px] md:min-h-[250px]" style={{ backgroundColor: colors.grisClaro }}>
           <div className="text-center mb-4 md:mb-6">
             <div className="p-3 md:p-4 rounded-lg mb-3 md:mb-4" style={{ backgroundColor: colors.verdeClaro+'50' }}>
               <h5 className="font-bold" style={{ color: colors.verdeTurquesa, fontFamily: 'Raleway Bold, sans-serif' }}>📝 ORACIÓN ABSTRACTA:</h5>
-              <p className="text-xl md:text-2xl font-bold" style={{ color: colors.azulOscuro }}>"{getCurrentExample().oracion}"</p>
+              <p className="text-lg md:text-xl font-bold" style={{ color: colors.azulOscuro }}>"{getCurrentExample().oracion}"</p>
             </div>
             <p className="text-xs md:text-sm mb-3 md:mb-4" style={{color: colors.grisOscuro}}>🎭 Elige un contexto para transformarla en enunciado:</p>
           </div>
@@ -6544,7 +6573,7 @@ const Diapositiva15 = () => {
           )}
         </div>
 
-        <div className="p-3 md:p-4 rounded-lg mb-3 md:mb-4" style={{ backgroundColor: colors.amarillo+'30' }}>
+        <div className="p-3 md:p-4 rounded-lg mb-2 md:mb-3" style={{ backgroundColor: colors.amarillo+'30' }}>
           <h5 className="font-bold mb-2" style={{ fontFamily: 'Raleway Bold, sans-serif', color: colors.azulOscuro }}>🤖 Relevancia para IA:</h5>
           <p className="text-xs md:text-sm" style={{ color: colors.grisOscuro }}>
             Crucial para IA conversacional. Los modelos deben procesar estructura gramatical y contexto situacional. GPT-4 lo hace bien. Ayuda a entender que la misma forma tiene múltiples funciones.
@@ -6591,13 +6620,13 @@ const Diapositiva15 = () => {
     const getCurrentExample = () => examples[currentExample];
 
     return (
-      <div className="flex flex-col p-4 md:p-6 bg-white rounded-lg shadow-xl h-full" style={{ fontFamily: 'Raleway, sans-serif' }}>
+      <div className="flex flex-col p-3 md:p-4 bg-white rounded-lg shadow-xl h-full" style={{ fontFamily: 'Raleway, sans-serif' }}>
         <div style={{ backgroundColor: colors.lila }} className="p-3 md:p-4 rounded-t-lg">
-          <h3 className="text-xl md:text-2xl font-bold text-center" style={{ fontFamily: 'Aglet Mono, monospace', color: colors.azulOscuro }}>¡TRIPLE IMPERATIVO!</h3>
-          <h4 className="text-md md:text-lg text-center" style={{ color: colors.blanco }}>Modo, Oración y Acto de Habla: Tres en Uno 3️⃣</h4>
+          <h3 className="text-lg md:text-xl font-bold text-center" style={{ fontFamily: 'Aglet Mono, monospace', color: colors.azulOscuro }}>¡TRIPLE IMPERATIVO!</h3>
+          <h4 className="text-sm md:text-base text-center" style={{ color: colors.blanco }}>Modo, Oración y Acto de Habla: Tres en Uno 3️⃣</h4>
         </div>
 
-        <div className="p-3 md:p-4 mb-3 md:mb-4 rounded-lg" style={{ backgroundColor: colors.azulOscuro+'15' }}>
+        <div className="p-3 md:p-4 mb-2 md:mb-3 rounded-lg" style={{ backgroundColor: colors.azulOscuro+'15' }}>
           <div className="grid grid-cols-3 gap-1 md:gap-2 text-center text-xs md:text-sm">
             <div className="p-1 md:p-2 rounded" style={{backgroundColor: colors.verdeClaro+'80'}}>
               <strong style={{color: colors.verdeTurquesa}}>MODO VERBAL</strong><br/>Forma morfológica
@@ -6611,9 +6640,9 @@ const Diapositiva15 = () => {
           </div>
         </div>
         
-        <div className="flex-grow p-3 md:p-6 rounded-lg mb-3 md:mb-4 min-h-[250px] md:min-h-[300px]" style={{ backgroundColor: colors.grisClaro }}>
+        <div className="flex-grow p-3 md:p-6 rounded-lg mb-2 md:mb-3 min-h-[200px] md:min-h-[250px]" style={{ backgroundColor: colors.grisClaro }}>
           <div className="text-center mb-4 md:mb-6">
-            <p className="text-2xl md:text-3xl font-bold mb-3 md:mb-4" style={{ color: colors.azulOscuro }}>
+            <p className="text-xl md:text-2xl font-bold mb-3 md:mb-4" style={{ color: colors.azulOscuro }}>
               "{getCurrentExample().ejemplo}"
             </p>
           </div>
@@ -6647,7 +6676,7 @@ const Diapositiva15 = () => {
           )}
         </div>
 
-        <div className="p-3 md:p-4 rounded-lg mb-3 md:mb-4" style={{ backgroundColor: colors.amarillo+'30' }}>
+        <div className="p-3 md:p-4 rounded-lg mb-2 md:mb-3" style={{ backgroundColor: colors.amarillo+'30' }}>
           <h5 className="font-bold mb-2" style={{ fontFamily: 'Raleway Bold, sans-serif', color: colors.azulOscuro }}>🤖 Relevancia para IA:</h5>
           <p className="text-xs md:text-sm" style={{ color: colors.grisOscuro }}>
             Esencial para responder a comandos. Un asistente virtual debe entender que "Pon música", "¿Podrías poner música?" y "Música, por favor" requieren la misma acción con diferente cortesía.
@@ -6691,7 +6720,6 @@ const Diapositiva15 = () => {
       { imperativo: "Prepárense las patatas", tipo: "pasivo", funcionReal: "Instrucción de receta", parafrasis: "Alguien debe preparar las patatas", explicacion: "Instrucción general sin destinatario específico presente" }
     ];
 
-    // Corregido: Añadido tipo string para el parámetro tipo
     const checkType = (tipo: string) => {
       setSelectedType(tipo);
       setShowInterpretation(true);
@@ -6704,13 +6732,13 @@ const Diapositiva15 = () => {
     const getCurrentExample = () => examples[currentExample];
 
     return (
-      <div className="flex flex-col p-4 md:p-6 bg-white rounded-lg shadow-xl h-full" style={{ fontFamily: 'Raleway, sans-serif' }}>
+      <div className="flex flex-col p-3 md:p-4 bg-white rounded-lg shadow-xl h-full" style={{ fontFamily: 'Raleway, sans-serif' }}>
         <div style={{ backgroundColor: colors.negro }} className="text-white p-3 md:p-4 rounded-t-lg">
-          <h3 className="text-xl md:text-2xl font-bold text-center" style={{ fontFamily: 'Aglet Mono, monospace' }}>¡IMPERATIVOS ESPECIALES!</h3>
-          <h4 className="text-md md:text-lg text-center" style={{ color: colors.lila }}>Más Allá del Mandato: Actos de Habla Creativos 🎭✨</h4>
+          <h3 className="text-lg md:text-xl font-bold text-center" style={{ fontFamily: 'Aglet Mono, monospace' }}>¡IMPERATIVOS ESPECIALES!</h3>
+          <h4 className="text-sm md:text-base text-center" style={{ color: colors.lila }}>Más Allá del Mandato: Actos de Habla Creativos 🎭✨</h4>
         </div>
 
-        <div className="p-3 md:p-4 mb-3 md:mb-4 rounded-lg" style={{ backgroundColor: colors.lila+'30' }}>
+        <div className="p-3 md:p-4 mb-2 md:mb-3 rounded-lg" style={{ backgroundColor: colors.lila+'30' }}>
           <div className="grid grid-cols-3 gap-1 md:gap-2 text-center text-xs">
             {[
               { label: "CONDICIONALES", detail: "Expresan consecuencias", color: colors.verdeTurquesa },
@@ -6724,9 +6752,9 @@ const Diapositiva15 = () => {
           </div>
         </div>
 
-        <div className="flex-grow p-3 md:p-6 rounded-lg mb-3 md:mb-4 min-h-[250px] md:min-h-[300px]" style={{ backgroundColor: colors.grisClaro }}>
+        <div className="flex-grow p-3 md:p-6 rounded-lg mb-2 md:mb-3 min-h-[200px] md:min-h-[250px]" style={{ backgroundColor: colors.grisClaro }}>
           <div className="text-center mb-4 md:mb-6">
-            <p className="text-xl md:text-2xl font-bold mb-3 md:mb-4" style={{ color: colors.negro }}>
+            <p className="text-lg md:text-xl font-bold mb-3 md:mb-4" style={{ color: colors.negro }}>
               "{getCurrentExample().imperativo}"
             </p>
             <p className="text-xs md:text-sm mb-3 md:mb-4" style={{color: colors.grisOscuro}}>🎭 ¿Qué tipo de imperativo especial es?</p>
@@ -6775,7 +6803,7 @@ const Diapositiva15 = () => {
           )}
         </div>
 
-        <div className="p-3 md:p-4 rounded-lg mb-3 md:mb-4" style={{ backgroundColor: colors.amarillo+'30' }}>
+        <div className="p-3 md:p-4 rounded-lg mb-2 md:mb-3" style={{ backgroundColor: colors.amarillo+'30' }}>
           <h5 className="font-bold mb-2" style={{ fontFamily: 'Raleway Bold, sans-serif', color: colors.azulOscuro }}>🤖 Relevancia para IA:</h5>
           <p className="text-xs md:text-sm" style={{ color: colors.grisOscuro }}>
             Estos representan el mayor desafío para la IA, requieren inferencia pragmática avanzada. Interpretar literalmente "Vete tú a encontrar trabajo" como orden real fallaría en captar la ironía.
@@ -6827,7 +6855,6 @@ const Diapositiva15 = () => {
     setCurrentSubSlide(prev => (prev > 0 ? prev - 1 : prev));
   };
   
-  // Corregido: Añadido tipo number para el parámetro index
   const goToSubSlide = (index: number) => {
     setCurrentSubSlide(index);
   };
@@ -6836,21 +6863,21 @@ const Diapositiva15 = () => {
 
   return (
     <div 
-      className="h-screen flex flex-col p-4 md:p-8 relative overflow-hidden" 
+      className="h-screen flex flex-col p-2 md:p-4 relative overflow-hidden" 
       style={{ 
         background: `radial-gradient(circle at ${mousePos.x}% ${mousePos.y}%, ${colors.verdeTurquesa}25 0%, transparent 60%)`,
       }}
     >
-      <motion.div {...animations.fadeIn} className="mb-4 text-center">
-        <h1 className="text-2xl md:text-4xl font-bold" style={{ fontFamily: 'Aglet Mono, monospace', color: colors.azulOscuro }}>
+      <motion.div {...animations.fadeIn} className="mb-2 text-center">
+        <h1 className="text-lg md:text-2xl font-bold" style={{ fontFamily: 'Aglet Mono, monospace', color: colors.azulOscuro }}>
           Complejidad en la Interpretación Oral
         </h1>
-        <h2 className="text-lg md:text-xl mt-1 md:mt-2" style={{ fontFamily: 'Raleway, sans-serif', color: colors.verdeTurquesa }}>
+        <h2 className="text-sm md:text-base mt-1" style={{ fontFamily: 'Raleway, sans-serif', color: colors.verdeTurquesa }}>
           Un ejemplo con los Imperativos en ELE y su tratamiento por IA
         </h2>
       </motion.div>
       
-      <div className="flex-grow mb-3 md:mb-4 overflow-y-auto">
+      <div className="flex-grow mb-2 overflow-y-auto">
         <AnimatePresence mode="wait">
           <motion.div
             key={currentSubSlide}
@@ -6868,7 +6895,7 @@ const Diapositiva15 = () => {
       <motion.div 
         {...animations.fadeIn} 
         transition={{delay:0.3}} 
-        className="p-3 md:p-4 rounded-lg mt-auto" 
+        className="p-2 md:p-3 rounded-lg mt-auto" 
         style={{ 
             backgroundColor: colors.blanco + 'A6',
             backdropFilter: 'blur(8px)',
@@ -6877,7 +6904,7 @@ const Diapositiva15 = () => {
       >
         <div className="flex flex-col sm:flex-row justify-between items-center">
           <button 
-            className="px-3 py-1 md:px-4 md:py-2 text-white rounded-lg text-xs md:text-sm mb-2 sm:mb-0"
+            className="px-2 py-1 md:px-3 md:py-2 text-white rounded-lg text-xs mb-2 sm:mb-0"
             style={{ backgroundColor: currentSubSlide === 0 ? colors.grisMedio : colors.azulOscuro, fontFamily: 'Raleway Semibold, sans-serif' }}
             onClick={prevSubSlide}
             disabled={currentSubSlide === 0}
@@ -6905,7 +6932,7 @@ const Diapositiva15 = () => {
           </div>
           
           <button 
-            className="px-3 py-1 md:px-4 md:py-2 text-white rounded-lg text-xs md:text-sm"
+            className="px-2 py-1 md:px-3 md:py-2 text-white rounded-lg text-xs"
             style={{ backgroundColor: currentSubSlide === subSlideComponents.length - 1 ? colors.grisMedio : colors.azulOscuro, fontFamily: 'Raleway Semibold, sans-serif' }}
             onClick={nextSubSlide}
             disabled={currentSubSlide === subSlideComponents.length - 1}
@@ -6914,22 +6941,10 @@ const Diapositiva15 = () => {
           </button>
         </div>
         
-        <div className="mt-2 md:mt-3 text-center text-xs md:text-sm" style={{color: colors.grisOscuro}}>
+        <div className="mt-2 text-center text-xs" style={{color: colors.grisOscuro}}>
           <p className="font-medium" style={{fontFamily: 'Raleway Medium, sans-serif'}}>Tiempo recomendado: 2-3 minutos por actividad</p>
           <p style={{fontFamily: 'Raleway, sans-serif'}}>Actividad {currentSubSlide + 1} de {subSlideComponents.length} - <span style={{fontFamily: 'Raleway Semibold, sans-serif'}}>{subSlideTitles[currentSubSlide]}</span></p>
         </div>
-      </motion.div>
-
-      {/* Footer con Copyright */}
-      <motion.div 
-        className="absolute bottom-1 left-0 right-0 text-center"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1 }}
-      >
-        <p style={{ fontFamily: 'Raleway, sans-serif', fontSize: '10px', color: colors.azulOscuro+'90' }}>
-          © {currentYear} Hablandis. Todos los derechos reservados.
-        </p>
       </motion.div>
     </div>
   );
