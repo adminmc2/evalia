@@ -6874,7 +6874,7 @@ const Diapositiva16 = ({
     grisOscuro: '#555555'
   }
 }) => {
-  const [mousePos, setMousePos] = useState({ x: 50, y: 50 });
+  const mousePos = { x: 50, y: 50 };
   const [flyingWords, setFlyingWords] = useState<Array<{
     id: number,
     x: number,
