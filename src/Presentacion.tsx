@@ -4307,6 +4307,7 @@ const Diapositiva9 = () => {
 // FIN DIAPOSITIVA 9
 // =======================================================================
 
+
 // =======================================================================
 // DIAPOSITIVA 10: PROMPTS DIALÓGICOS (LAYOUT CORREGIDO)
 // =======================================================================
@@ -4316,8 +4317,8 @@ const Diapositiva10 = () => {
   const [showElements, setShowElements] = useState({
     logo: false,
     title: false,
-    content: false,
-    phrase: false
+    content: false, // Controla la aparición de ambas columnas principales
+    phrase: false // Específico para la frase en la columna derecha
   });
 
   // Colores base del diseño unificado
@@ -4356,20 +4357,19 @@ const Diapositiva10 = () => {
     spacing: 'mb-2'
   };
 
-  // Configuración de Footer
-  const FooterConfig = {
-    position: 'absolute bottom-4 left-0 right-0',
-    padding: 'py-3',
-    background: `${colors.blanco}70`,
-    backdropFilter: 'backdrop-blur(10px)',
-    text: {
-      fontFamily: 'Raleway, sans-serif',
-      size: '13px',
-      color: colors.azulOscuro,
-      opacity: '0.8',
-      weight: '500'
-    }
-  };
+  // --- FooterConfig ELIMINADO ---
+  // const FooterConfig = {
+  //   padding: 'py-3',
+  //   background: `${colors.blanco}70`,
+  //   backdropFilter: 'backdrop-blur(10px)',
+  //   text: {
+  //     fontFamily: 'Raleway, sans-serif',
+  //     size: '13px',
+  //     color: colors.azulOscuro,
+  //     opacity: '0.8',
+  //     weight: '500'
+  //   }
+  // };
 
   // Componente Logo Unificado
   const LogoHablandis = ({ className = "" }: { className?: string }) => (
@@ -4428,12 +4428,19 @@ const Diapositiva10 = () => {
       setTimeout(() => setShowElements(prev => ({ ...prev, logo: true })), 100),
       setTimeout(() => setShowElements(prev => ({ ...prev, title: true })), 600),
       setTimeout(() => setShowElements(prev => ({ ...prev, content: true })), 1000),
-      setTimeout(() => setShowElements(prev => ({ ...prev, phrase: true })), 1500),
-      setTimeout(() => setHighlightedLetters(true), 2000)
+      setTimeout(() => setShowElements(prev => ({ ...prev, phrase: true })), 1500) // Animación de la frase
     ];
-
     return () => timers.forEach(timer => clearTimeout(timer));
   }, []);
+
+  // Activa el resaltado de letras después de que la frase aparezca
+  useEffect(() => {
+    if (showElements.phrase) {
+      const timer = setTimeout(() => setHighlightedLetters(true), 500); // Pequeño retraso
+      return () => clearTimeout(timer);
+    }
+  }, [showElements.phrase]);
+
 
   return (
     <div className="relative w-full h-screen overflow-hidden bg-white flex flex-col">
@@ -4444,13 +4451,11 @@ const Diapositiva10 = () => {
           background: `linear-gradient(135deg, #FFC846 0%, #C4D4A4 100%)`,
         }}
       />
-
       {/* Logo Unificado */}
       <div className={LogoConfig.position}>
         <LogoHablandis />
       </div>
-
-      {/* Título y Subtítulo - Sección superior */}
+      {/* Título y Subtítulo - Sección superior (ocupa su espacio sin encogerse) */}
       <motion.div
         initial={{ opacity: 0, y: -30 }}
         animate={{ 
@@ -4458,7 +4463,7 @@ const Diapositiva10 = () => {
           y: showElements.title ? 0 : -30
         }}
         transition={{ duration: 0.8, delay: 0.5 }}
-        className="text-center pt-16 pb-8 relative z-10"
+        className="text-center pt-16 pb-8 relative z-10 flex-shrink-0" 
       >
         <MainTitle className="mb-2">
           Prompts dialógicos
@@ -4468,194 +4473,179 @@ const Diapositiva10 = () => {
         </Subtitle>
       </motion.div>
 
-      {/* Contenedor principal con scroll */}
-      <div className="flex-1 overflow-y-auto px-8 pb-32 relative z-10">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Columna principal - 2/3 del ancho */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ 
-                opacity: showElements.content ? 1 : 0,
-                scale: showElements.content ? 1 : 0.9
+      {/* CONTENEDOR PRINCIPAL DEL LAYOUT CENTRAL (ocupa el espacio restante verticalmente) */}
+      {/* Es flex-col en móvil (apila las columnas) y flex-row en LG (columnas lado a lado) */}
+      {/* Como el footer ya no existe, este contenedor ahora puede tomar todo el espacio vertical disponible */}
+      <div className="flex-1 max-w-7xl mx-auto w-full px-8 flex flex-col lg:flex-row gap-8 pb-8"> 
+        
+        {/* Columna izquierda: Contenido scrollable (ocupa todo el ancho en móvil, 2/3 en LG) */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ 
+            opacity: showElements.content ? 1 : 0,
+            scale: showElements.content ? 1 : 0.9
+          }}
+          transition={{ duration: 0.8, delay: 0.8 }}
+          className="w-full lg:w-2/3 flex flex-col min-h-0" 
+        >
+          {/* Este div es el que realmente tiene el scroll */}
+          <div className="flex-1 overflow-y-auto custom-scrollbar"> 
+            <div 
+              className="rounded-3xl px-8 py-6"
+              style={{ 
+                backgroundColor: colors.blanco + '70',
+                backdropFilter: 'blur(30px)',
+                boxShadow: '0 20px 60px rgba(0,0,0,0.08)'
               }}
-              transition={{ duration: 0.8, delay: 0.8 }}
-              className="lg:col-span-2"
             >
-              <div 
-                className="rounded-3xl px-8 py-6"
-                style={{ 
-                  backgroundColor: colors.blanco + '70',
-                  backdropFilter: 'blur(30px)',
-                  boxShadow: '0 20px 60px rgba(0,0,0,0.08)'
-                }}
-              >
-                {/* Sección 1: Un asistente para mejorar nuestros prompts */}
-                <div className="mb-6">
-                  <div 
-                    className="flex items-center justify-between cursor-pointer p-4 rounded-lg hover:bg-gray-50 transition-colors"
-                    onClick={() => setExpandedSection(expandedSection === 1 ? null : 1)}
+              {/* Sección 1: Un asistente para mejorar nuestros prompts */}
+              <div className="mb-6">
+                <div 
+                  className="flex items-center justify-between cursor-pointer p-4 rounded-lg hover:bg-gray-50 transition-colors"
+                  onClick={() => setExpandedSection(expandedSection === 1 ? null : 1)}
+                >
+                  <h2 className="text-xl font-bold" style={{ color: colors.azulOscuro }}>
+                    Un asistente para mejorar nuestros prompts:
+                  </h2>
+                  <svg 
+                    className={`w-5 h-5 transition-transform ${expandedSection === 1 ? 'rotate-180' : ''}`}
+                    fill="none" 
+                    stroke="currentColor" 
+                    viewBox="0 0 24 24"
                   >
-                    <h2 className="text-xl font-bold" style={{ color: colors.azulOscuro }}>
-                      Un asistente para mejorar nuestros prompts:
-                    </h2>
-                    <svg 
-                      className={`w-5 h-5 transition-transform ${expandedSection === 1 ? 'rotate-180' : ''}`}
-                      fill="none" 
-                      stroke="currentColor" 
-                      viewBox="0 0 24 24"
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                    </svg>
-                  </div>
-                  
-                  {expandedSection === 1 && (
-                    <div className="px-4 pb-4">
-                      <div className="bg-gray-50 p-4 rounded-lg font-mono text-xs overflow-x-auto max-h-96 overflow-y-auto">
-                        <p className="mb-2">I want you to become my Expert Prompt Creator. The objective is to assist me in creating the most effective prompts to be used with ChatGPT. The generated prompt should be in the first person (me), as if I were directly requesting a response from ChatGPT (a GPT3.5/GPT4 interface). Your response will be in the following format:</p>
-                        
-                        <p className="mb-2">"<br/>
-                        <strong>**Prompt:**</strong><br/>
-                        &gt;{`{Provide the best possible prompt according to my request. There are no restrictions to the length of the prompt. Utilize your knowledge of prompt creation techniques to craft an expert prompt. Don't assume any details, we'll add to the prompt as we go along. Frame the prompt as a request for a response from ChatGPT. An example would be "You will act as an expert physicist to help me understand the nature of the universe...". Make this section stand out using '>' Markdown formatting. Don't add additional quotation marks.}`}</p>
-                        
-                        <p className="mb-2"><strong>**Possible Additions:**</strong><br/>
-                        {`{Create three possible additions to incorporate directly in the prompt. These should be additions to expand the details of the prompt. Options will be very concise and listed using uppercase-alpha. Always update with new Additions after every response.}`}</p>
-                        
-                        <p className="mb-2"><strong>**Questions:**</strong><br/>
-                        {`{Frame three questions that seek additional information from me to further refine the prompt. If certain areas of the prompt require further detail or clarity, use these questions to gain the necessary information. I am not required to answer all questions.}`}<br/>
-                        "</p>
-                        
-                        <p className="mt-2">Instructions: After sections Prompt, Possible Additions, and Questions are generated, I will respond with my chosen additions and answers to the questions. Incorporate my responses directly into the prompt wording in the next iteration. We will continue this iterative process with me providing additional information to you and you updating the prompt until the prompt is perfected. Be thoughtful and imaginative while crafting the prompt. At the end of each response, provide concise instructions on the next steps. Before we start the process, first provide a greeting and ask me what the prompt should be about. Don't display the sections on this first response.</p>
-                      </div>
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
+                {expandedSection === 1 && (
+                  <div className="px-4 pb-4">
+                    <div className="bg-gray-50 p-4 rounded-lg font-mono text-xs overflow-x-auto max-h-96 overflow-y-auto">
+                      <p className="mb-2">I want you to become my Expert Prompt Creator. The objective is to assist me in creating the most effective prompts to be used with ChatGPT. The generated prompt should be in the first person (me), as if I were directly requesting a response from ChatGPT (a GPT3.5/GPT4 interface). Your response will be in the following format:</p>
+                      <p className="mb-2">"<br/>
+                      <strong>**Prompt:**</strong><br/>
+                      {'>'}{`{Provide the best possible prompt according to my request. There are no restrictions to the length of the prompt. Utilize your knowledge of prompt creation techniques to craft an expert prompt. Don't assume any details, we'll add to the prompt as we go along. Frame the prompt as a request for a response from ChatGPT. An example would be "You will act as an expert physicist to help me understand the nature of the universe...". Make this section stand out using '>' Markdown formatting. Don't add additional quotation marks.}`}</p>
+                      <p className="mb-2"><strong>**Possible Additions:**</strong><br/>
+                      {`{Create three possible additions to incorporate directly in the prompt. These should be additions to expand the details of the prompt. Options will be very concise and listed using uppercase-alpha. Always update with new Additions after every response.}`}</p>
+                      <p className="mb-2"><strong>**Questions:**</strong><br/>
+                      {`{Frame three questions that seek additional information from me to further refine the prompt. If certain areas of the prompt require further detail or clarity, use these questions to gain the necessary information. I am not required to answer all questions.}`}<br/>
+                      "</p>
+                      <p className="mt-2">Instructions: After sections Prompt, Possible Additions, and Questions are generated, I will respond with my chosen additions and answers to the questions. Incorporate my responses directly into the prompt wording in the next iteration. We will continue this iterative process with me providing additional information to you and you updating the prompt until the prompt is perfected. Be thoughtful and imaginative while crafting the prompt. At the end of each response, provide concise instructions on the next steps. Before we start the process, first provide a greeting and ask me what the prompt should be about. Don't display the sections on this first response.</p>
                     </div>
-                  )}
-                </div>
-
-                {/* Sección 2: ...Y esto es lo que hace */}
-                <div className="mb-6">
-                  <h3 className="text-lg font-bold mb-3" style={{ color: colors.verdeOscuro }}>
-                    ...Y esto es lo que hace:
-                  </h3>
-                  <a 
-                    href="https://chatgpt.com/share/d8ef604b-e5b8-4e42-a915-ea5f6cb9a835" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-4 py-2 rounded-lg transition-all hover:scale-105"
-                    style={{ 
-                      backgroundColor: colors.amarillo + '30',
-                      border: `2px solid ${colors.amarillo}`,
-                      color: colors.azulOscuro
-                    }}
-                  >
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                    </svg>
-                    Ver ejemplo en ChatGPT
-                  </a>
-                </div>
-
-                {/* Sección 3: Construyendo un chat "dialógico" */}
-                <div className="mb-6">
-                  <div 
-                    className="flex items-center justify-between cursor-pointer p-4 rounded-lg hover:bg-gray-50 transition-colors"
-                    onClick={() => setExpandedSection(expandedSection === 3 ? null : 3)}
-                  >
-                    <h2 className="text-xl font-bold" style={{ color: colors.azulOscuro }}>
-                      Construyendo un chat "dialógico"
-                    </h2>
-                    <svg 
-                      className={`w-5 h-5 transition-transform ${expandedSection === 3 ? 'rotate-180' : ''}`}
-                      fill="none" 
-                      stroke="currentColor" 
-                      viewBox="0 0 24 24"
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                    </svg>
                   </div>
-                  
-                  {expandedSection === 3 && (
-                    <div className="px-4 pb-4">
-                      <p className="mb-3 font-medium">Ejemplo: Prompt para creación de textos</p>
-                      <div className="bg-gray-50 p-4 rounded-lg space-y-2 text-sm max-h-96 overflow-y-auto">
-                        <p>Actúa como un asistente especialista en redactar textos útiles, relevantes, vibrantes, interesantes y originales para el aprendizaje de lenguas extranjeras.</p>
-                        <p>- Vas a preguntarme sucesivos datos antes de crear un texto. Espera SIEMPRE a mis respuestas antes de pasar a la siguiente pregunta.</p>
-                        <p>- Sugiéreme varias lenguas y pregúntame la lengua en la que deseo el texto y espera a mi respuesta.</p>
-                        <p>- Dame a elegir una amplia variedad de tipos de texto y pídeme que diga cuál deseo que crees. Espera a mi respuesta.</p>
-                        <p>- Pregúntame qué nivel del MCERL debe tener el texto. Espera a mi respuesta.</p>
-                        <p>- Pregúntame por la temática que debe tener el texto. Espera a mi respuesta.</p>
-                        <p>- Pregúntame qué longitud debe tener el texto. Espera mi respuesta.</p>
-                        <p>- Sugiéreme expresiones para que aparezcan en el texto acordes a la temática, tipo de texto y nivel. Espera mi respuesta.</p>
-                        <p>- ...?</p>
-                      </div>
-                      <p className="mt-3 text-center italic text-gray-600">
-                        ... a partir de aquí vuestra imaginación es el límite.
-                      </p>
-                    </div>
-                  )}
-                </div>
-
-                {/* Sección 4: Y si no sabemos lo que queremos */}
-                <div className="mb-4">
-                  <h3 className="text-lg font-bold mb-3" style={{ color: colors.verdeOscuro }}>
-                    Y si no sabemos lo que queremos... preguntemos.
-                  </h3>
-                  <a 
-                    href="https://chatgpt.com/share/9b7900ea-1195-4eae-ba32-836a7bc680b3" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-4 py-2 rounded-lg transition-all hover:scale-105"
-                    style={{ 
-                      backgroundColor: colors.verdeClaro + '30',
-                      border: `2px solid ${colors.verdeClaro}`,
-                      color: colors.azulOscuro
-                    }}
-                  >
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                    </svg>
-                    Ver chat de ejemplo
-                  </a>
-                </div>
+                )}
               </div>
-            </motion.div>
-
-            {/* Columna derecha - Espacio para foto */}
-            <motion.div
-              initial={{ opacity: 0, x: 50 }}
-              animate={{ 
-                opacity: showElements.content ? 1 : 0,
-                x: showElements.content ? 0 : 50
-              }}
-              transition={{ duration: 0.8, delay: 1 }}
-              className="lg:col-span-1"
-            >
-              <div 
-                className="h-full rounded-2xl overflow-hidden shadow-2xl min-h-[400px]"
-                style={{ 
-                  backgroundColor: colors.blanco + '50',
-                  border: `3px solid ${colors.amarillo}50`
-                }}
-              >
-                <div className="h-full flex items-center justify-center p-8 text-center">
-                  <div className="space-y-4">
-                    <svg className="w-16 h-16 mx-auto text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                    </svg>
-                    <p className="text-gray-500 text-sm">
-                      Espacio para foto vertical de estudiantes conversando en los jardines de Hablandis
-                    </p>
-                    <p className="text-xs text-gray-400 italic">
-                      Dimensiones recomendadas: 800x1200px
+              {/* Sección 2: ...Y esto es lo que hace */}
+              <div className="mb-6">
+                <h3 className="text-lg font-bold mb-3" style={{ color: colors.verdeOscuro }}>
+                  ...Y esto es lo que hace:
+                </h3>
+                <a 
+                  href="https://chatgpt.com/share/d8ef604b-e5b8-4e42-a915-ea5f6cb9a835 " 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-lg transition-all hover:scale-105"
+                  style={{ 
+                    backgroundColor: colors.amarillo + '30',
+                    border: `2px solid ${colors.amarillo}`,
+                    color: colors.azulOscuro
+                  }}
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                  </svg>
+                  Ver ejemplo en ChatGPT
+                </a>
+              </div>
+              {/* Sección 3: Construyendo un chat "dialógico" */}
+              <div className="mb-6">
+                <div 
+                  className="flex items-center justify-between cursor-pointer p-4 rounded-lg hover:bg-gray-50 transition-colors"
+                  onClick={() => setExpandedSection(expandedSection === 3 ? null : 3)}
+                >
+                  <h2 className="text-xl font-bold" style={{ color: colors.azulOscuro }}>
+                    Construyendo un chat "dialógico"
+                  </h2>
+                  <svg 
+                    className={`w-5 h-5 transition-transform ${expandedSection === 3 ? 'rotate-180' : ''}`}
+                    fill="none" 
+                    stroke="currentColor" 
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
+                {expandedSection === 3 && (
+                  <div className="px-4 pb-4">
+                    <p className="mb-3 font-medium">Ejemplo: Prompt para creación de textos</p>
+                    <div className="bg-gray-50 p-4 rounded-lg space-y-2 text-sm max-h-96 overflow-y-auto">
+                      <p>Actúa como un asistente especialista en redactar textos útiles, relevantes, vibrantes, interesantes y originales para el aprendizaje de lenguas extranjeras.</p>
+                      <p>- Vas a preguntarme sucesivos datos antes de crear un texto. Espera SIEMPRE a mis respuestas antes de pasar a la siguiente pregunta.</p>
+                      <p>- Sugiéreme varias lenguas y pregúntame la lengua en la que deseo el texto y espera a mi respuesta.</p>
+                      <p>- Dame a elegir una amplia variedad de tipos de texto y pídeme que diga cuál deseo que crees. Espera a mi respuesta.</p>
+                      <p>- Pregúntame qué nivel del MCERL debe tener el texto. Espera a mi respuesta.</p>
+                      <p>- Pregúntame por la temática que debe tener el texto. Espera a mi respuesta.</p>
+                      <p>- Pregúntame qué longitud debe tener el texto. Espera mi respuesta.</p>
+                      <p>- Sugiéreme expresiones para que aparezcan en el texto acordes a la temática, tipo de texto y nivel. Espera mi respuesta.</p>
+                      <p>- ...?</p>
+                    </div>
+                    <p className="mt-3 text-center italic text-gray-600">
+                      ... a partir de aquí vuestra imaginación es el límite.
                     </p>
                   </div>
-                </div>
+                )}
               </div>
-            </motion.div>
+              {/* Sección 4: Y si no sabemos lo que queremos */}
+              <div className="mb-4">
+                <h3 className="text-lg font-bold mb-3" style={{ color: colors.verdeOscuro }}>
+                  Y si no sabemos lo que queremos... preguntemos.
+                </h3>
+                <a 
+                  href="https://chatgpt.com/share/9b7900ea-1195-4eae-ba32-836a7bc680b3 " 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-lg transition-all hover:scale-105"
+                  style={{ 
+                    backgroundColor: colors.verdeClaro + '30',
+                    border: `2px solid ${colors.verdeClaro}`,
+                    color: colors.azulOscuro
+                  }}
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                  </svg>
+                  Ver chat de ejemplo
+                </a>
+              </div>
+            </div>
           </div>
+        </motion.div>
 
-          {/* Sección inferior con frase HABLANDIS y QR */}
-          <div className="mt-12 mb-8">
-            <div className="flex flex-col lg:flex-row items-center justify-center gap-8">
+        {/* Columna derecha: Contenido fijo (imagen y frase) */}
+        <motion.div
+          initial={{ opacity: 0, x: 50 }}
+          animate={{ 
+            opacity: showElements.content ? 1 : 0,
+            x: showElements.content ? 0 : 50
+          }}
+          transition={{ duration: 0.8, delay: 1 }}
+          className="w-full lg:w-1/3 flex-shrink-0 flex flex-col gap-8 justify-start items-center" 
+        >
+          {/* Imagen */}
+          <div 
+            className="w-full rounded-2xl overflow-hidden shadow-2xl min-h-[300px] lg:min-h-[400px]" 
+            style={{ 
+              backgroundColor: colors.blanco + '50',
+              border: `3px solid ${colors.amarillo}50`
+            }}
+          >
+            <img
+              src="/20231124_110650.jpg"
+              alt="Estudiantes conversando en Hablandis"
+              className="w-full h-full object-cover"
+            />
+          </div>
+          {/* Sección inferior con frase HABLANDIS (QR Eliminado) */}
+          <div className="w-full">
+            <div className="flex flex-col items-center justify-center">
               {/* Frase HABLANDIS */}
               <motion.div
                 initial={{ opacity: 0, y: 30 }}
@@ -4664,7 +4654,7 @@ const Diapositiva10 = () => {
                   y: showElements.phrase ? 0 : 30
                 }}
                 transition={{ duration: 0.8, delay: 1.3 }}
-                className="text-center lg:text-right max-w-2xl"
+                className="text-center max-w-2xl"
               >
                 <h2 className="text-3xl mb-2">
                   <span 
@@ -4708,56 +4698,14 @@ const Diapositiva10 = () => {
                   En Hablandis, cada conversación es una oportunidad para ser tú mismo
                 </p>
               </motion.div>
-
-              {/* Código QR */}
-              <motion.div
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ 
-                  opacity: showElements.phrase ? 1 : 0,
-                  scale: showElements.phrase ? 1 : 0.8
-                }}
-                transition={{ duration: 0.8, delay: 1.5 }}
-              >
-                <div 
-                  className="rounded-xl p-5 flex items-center gap-5"
-                  style={{ 
-                    backgroundColor: colors.blanco + '70',
-                    backdropFilter: 'blur(20px)',
-                    boxShadow: '0 10px 30px rgba(0,0,0,0.08)'
-                  }}
-                >
-                  <div className="w-32 h-32 rounded-lg flex items-center justify-center flex-shrink-0"
-                       style={{ 
-                         backgroundColor: colors.verdeClaro + '20',
-                         border: `2px solid ${colors.verdeClaro}40`
-                       }}>
-                    <img
-                      src="/qr.png"
-                      alt="QR Code Presentación EVALIA"
-                      className="w-28 h-28 object-contain"
-                    />
-                  </div>
-                  <div className="pr-4">
-                    <h3 className="text-lg font-semibold mb-1" style={{
-                      color: colors.azulOscuro,
-                      fontFamily: 'Raleway, sans-serif'
-                    }}>
-                      Materiales de Presentación
-                    </h3>
-                    <p className="text-sm text-gray-600" style={{ fontFamily: 'Raleway, sans-serif' }}>
-                      Escanea para acceder a recursos
-                    </p>
-                  </div>
-                </div>
-              </motion.div>
             </div>
           </div>
-        </div>
+        </motion.div>
       </div>
 
-      {/* Footer Unificado */}
-      <div 
-        className={FooterConfig.position}
+      {/* --- Footer Unificado ELIMINADO --- */}
+      {/* <div 
+        className="flex-shrink-0" 
         style={{
           backgroundColor: FooterConfig.background,
           backdropFilter: FooterConfig.backdropFilter,
@@ -4776,7 +4724,7 @@ const Diapositiva10 = () => {
         >
           © 2025 Hablandis. Centro Internacional de Idiomas. Todos los derechos reservados.
         </p>
-      </div>
+      </div> */}
     </div>
   );
 };
@@ -4788,6 +4736,12 @@ const Diapositiva10 = () => {
 // DIAPOSITIVA 11: IA PARA DETERMINAR (Y ADAPTAR) EL NIVEL DE UN TEXTO
 // Subtítulo implícito: Centralidad de Errores - El Mapa del Aprendizaje y Aplicaciones Prácticas
 // =======================================================================
+
+interface SvgIconProps {
+  className?: string;
+  style?: React.CSSProperties; 
+}
+
 const Diapositiva11 = () => {
   const [currentInstante, setCurrentInstante] = useState(1);
   const [activeLevel, setActiveLevel] = useState<string | null>('A1-A2');
@@ -4819,26 +4773,22 @@ const Diapositiva11 = () => {
   };
 
   // --- Iconos SVG ---
-  const IconFrequencyBars = ({ className = "w-7 h-7" }: { className?: string }) => (
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}>
+  const IconFrequencyBars = ({ className = "w-7 h-7", style }: SvgIconProps) => (
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className} style={style}>
       <path strokeLinecap="round" strokeLinejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
     </svg>
   );
-  const IconImpact = ({ className = "w-7 h-7" }: { className?: string }) => ( <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}><path strokeLinecap="round" strokeLinejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" /></svg>);
-  const IconComplexity = ({ className = "w-7 h-7" }: { className?: string }) => ( <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}><path strokeLinecap="round" strokeLinejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.646.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.333.183-.582.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z" /><path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>);
-  const IconRelations = ({ className = "w-7 h-7" }: { className?: string }) => ( <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}><path strokeLinecap="round" strokeLinejoin="round" d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.933-2.185 2.25 2.25 0 00-3.933 2.185z" /></svg>);
-  const IconDocumentText = ({ className = "w-7 h-7" }: { className?: string }) => ( <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}><path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" /></svg>);
-  const IconChatBubbleLeftRight = ({ className = "w-7 h-7" }: { className?: string }) => ( <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}><path strokeLinecap="round" strokeLinejoin="round" d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3.697-3.697c-.02.002-.039.005-.058.007H9.486c-1.136 0-2.097-.847-2.193-1.98A18.75 18.75 0 016.75 12.25c0-1.136.847-2.097 1.98-2.193.34-.027.68-.052 1.02-.072V6.75A2.25 2.25 0 0112 4.5h3.879a2.25 2.25 0 012.121 1.608M12 6.75v2.25m0 0H8.25m3.75 0M12 11.25V9m0 2.25H8.25m3.75 0a2.25 2.25 0 012.25 2.25M15 11.25h2.25" /></svg>);
-  const IconExternalLink = ({ className = "w-4 h-4 ml-1" }: { className?: string }) => ( <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className={className}><path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" /></svg>);
-  const IconAdjustmentsHorizontal = ({ className = "w-7 h-7" }: { className?: string }) => ( <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}><path strokeLinecap="round" strokeLinejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75" /></svg>);
-  const IconArrowsRightLeft = ({ className = "w-7 h-7" }: { className?: string }) => ( <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}><path strokeLinecap="round" strokeLinejoin="round" d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h18M16.5 3L21 7.5m0 0L16.5 12M21 7.5H3" /></svg>);
+  const IconImpact = ({ className = "w-7 h-7", style }: SvgIconProps) => ( <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className} style={style}><path strokeLinecap="round" strokeLinejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" /></svg>);
+  const IconComplexity = ({ className = "w-7 h-7", style }: SvgIconProps) => ( <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className} style={style}><path strokeLinecap="round" strokeLinejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.646.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.333.183-.582.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z" /><path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>);
+  const IconRelations = ({ className = "w-7 h-7", style }: SvgIconProps) => ( <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className} style={style}><path strokeLinecap="round" strokeLinejoin="round" d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.933-2.185 2.25 2.25 0 00-3.933 2.185z" /></svg>);
+  const IconDocumentText = ({ className = "w-7 h-7", style }: SvgIconProps) => ( <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className} style={style}><path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" /></svg>);
+  const IconChatBubbleLeftRight = ({ className = "w-7 h-7", style }: SvgIconProps) => ( <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className} style={style}><path strokeLinecap="round" strokeLinejoin="round" d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3.697-3.697c-.02.002-.039.005-.058.007H9.486c-1.136 0-2.097-.847-2.193-1.98A18.75 18.75 0 016.75 12.25c0-1.136.847-2.097 1.98-2.193.34-.027.68-.052 1.02-.072V6.75A2.25 2.25 0 0112 4.5h3.879a2.25 2.25 0 012.121 1.608M12 6.75v2.25m0 0H8.25m3.75 0M12 11.25V9m0 2.25H8.25m3.75 0a2.25 2.25 0 012.25 2.25M15 11.25h2.25" /></svg>);
+  const IconExternalLink = ({ className = "w-4 h-4 ml-1", style }: SvgIconProps) => ( <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className={className} style={style}><path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" /></svg>);
+  const IconAdjustmentsHorizontal = ({ className = "w-7 h-7", style }: SvgIconProps) => ( <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className} style={style}><path strokeLinecap="round" strokeLinejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75" /></svg>);
+  const IconArrowsRightLeft = ({ className = "w-7 h-7", style }: SvgIconProps) => ( <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className} style={style}><path strokeLinecap="round" strokeLinejoin="round" d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h18M16.5 3L21 7.5m0 0L16.5 12M21 7.5H3" /></svg>);
 
   // --------------------------------------------------------------------
   // PUNTO CRÍTICO 1: ¿Están 'factors' y 'levelsData' definidos con datos REALES?
-  // Si las siguientes líneas están como "/* Tu código de ... */" o vacías,
-  // los instantes 2 y 3 fallarán.
-  // DEBEN contener los datos que tenías antes.
-  // Ejemplo (DEBES USAR TUS DATOS COMPLETOS):
   const factors = [
     { id: 'freq', name: 'Frecuencia', description: 'Errores que aparecen muy a menudo y afectan a muchas partes del discurso.', example: 'Ej: Uso incorrecto de ser/estar en niveles iniciales.', icon: IconFrequencyBars, color: hablandisColors.azulOscuro },
     { id: 'impact', name: 'Impacto Comunicativo', description: 'Errores que, aunque no sean frecuentes, pueden llevar a malentendidos graves o impedir la comunicación.', example: 'Ej: Confundir tiempos verbales clave en una narración.', icon: IconImpact, color: hablandisColors.verdeTurquesa },
@@ -4916,12 +4866,27 @@ const Diapositiva11 = () => {
 
       case 2:
         const factorNodePositions = [ { data: factors[0], x: 125, y: 45 }, { data: factors[1], x: 205, y: 100 }, { data: factors[3], x: 125, y: 155 }, { data: factors[2], x: 45,  y: 100 }, ];
-        return ( <motion.div key="inst2" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="w-full flex flex-col h-full"> <h2 className="text-3xl md:text-4xl mb-8 text-center" style={{ fontFamily: 'Aglet Mono Light, monospace', color: slideColors.textPrimary }}>Factores de Centralidad</h2> <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6"> {factors.map((factor, idx) => ( <motion.div key={factor.id} className="p-5 rounded-xl border-l-4 flex flex-col" style={{ borderColor: factor.color, backgroundColor: slideColors.bgGradientEnd, boxShadow: '0 4px 15px rgba(0,0,0,0.07)' }} initial={{opacity:0, x: idx % 2 === 0 ? -20 : 20, y:10}} animate={{opacity:1, x:0, y:0}} transition={{delay: idx * 0.15, duration:0.4}} > <div className="flex items-center mb-3"> <factor.icon className="w-8 h-8 mr-3 flex-shrink-0" style={{color: factor.color}}/> <h3 className="text-xl font-semibold" style={{ fontFamily: 'Raleway SemiBold, sans-serif', color: slideColors.textPrimary }}>{factor.name}</h3> </div> <p className="text-sm mb-2 flex-grow" style={{color: slideColors.textSecondary}}>{factor.description}</p> <p className="text-xs italic font-medium" style={{color: factor.color}}>{factor.example}</p> </motion.div> ))} </div> <div className="w-full h-60 md:h-72 flex items-center justify-center mt-4 mb-2 flex-grow"> <svg viewBox="0 0 250 200" className="w-full max-w-lg h-auto"> {highlightedFactorInMap && factorNodePositions.map(targetPos => { if (targetPos.data.id === highlightedFactorInMap) return null;  const sourcePos = factorNodePositions.find(p => p.data.id === highlightedFactorInMap); if (!sourcePos) return null; return ( <motion.line key={`line-${sourcePos.data.id}-${targetPos.data.id}`} x1={sourcePos.x} y1={sourcePos.y} x2={targetPos.x} y2={targetPos.y} stroke={slideColors.textSecondary} strokeWidth="1.5" initial={{ opacity: 0, pathLength: 0 }} animate={{ opacity: 0.4, pathLength: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.5 }} /> ); })} {factorNodePositions.map(({ data, x, y }) => ( <motion.g key={data.id} onClick={() => setHighlightedFactorInMap(highlightedFactorInMap === data.id ? null : data.id)} style={{ cursor: 'pointer' }} initial={{ scale: 0.9, opacity: 0.7 }} animate={{  scale: highlightedFactorInMap === data.id ? 1.15 : 0.9,  opacity: highlightedFactorInMap === data.id ? 1 : (highlightedFactorInMap ? 0.5 : 0.7)  }} whileHover={{ scale: highlightedFactorInMap === data.id ? 1.2 : 1.0 }} transition={{ duration: 0.25, ease: "circOut" }} > <circle cx={x} cy={y} r="24"  fill={data.color} stroke={highlightedFactorInMap === data.id ? data.color : slideColors.bgGradientEnd}  strokeWidth={highlightedFactorInMap === data.id ? 3 : 2} /> <foreignObject x={x - 12} y={y - 12} width="24" height="24"> <div className="flex items-center justify-center w-full h-full"> <data.icon  className="w-[18px] h-[18px]" style={{ color: slideColors.bgBase }}  /> </div> </foreignObject> <text  x={x} y={y + 38}  fontSize="11"  textAnchor="middle"  fill={highlightedFactorInMap === data.id ? data.color : slideColors.textSecondary} style={{fontFamily: 'Raleway Bold, sans-serif', fontWeight: highlightedFactorInMap === data.id ? 700 : 500}} > {data.name} </text> </motion.g> ))} </svg> </div> </motion.div>);
+        return ( <motion.div key="inst2" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="w-full flex flex-col h-full"> <h2 className="text-3xl md:text-4xl mb-8 text-center" style={{ fontFamily: 'Aglet Mono Light, monospace', color: slideColors.textPrimary }}>Factores de Centralidad</h2> <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6"> {factors.map((factor, idx) => ( <motion.div key={factor.id} className="p-5 rounded-xl border-l-4 flex flex-col" style={{ borderColor: factor.color, backgroundColor: slideColors.bgGradientEnd, boxShadow: '0 4px 15px rgba(0,0,0,0.07)' }} initial={{opacity:0, x: idx % 2 === 0 ? -20 : 20, y:10}} animate={{opacity:1, x:0, y:0}} transition={{delay: idx * 0.15, duration:0.4}} > <div className="flex items-center mb-3"> 
+          <factor.icon className="w-8 h-8 mr-3 flex-shrink-0" style={{color: factor.color}}/> 
+          <h3 className="text-xl font-semibold" style={{ fontFamily: 'Raleway SemiBold, sans-serif', color: slideColors.textPrimary }}>{factor.name}</h3> </div> <p className="text-sm mb-2 flex-grow" style={{color: slideColors.textSecondary}}>{factor.description}</p> <p className="text-xs italic font-medium" style={{color: factor.color}}>{factor.example}</p> </motion.div> ))} </div> <div className="w-full h-60 md:h-72 flex items-center justify-center mt-4 mb-2 flex-grow"> <svg viewBox="0 0 250 200" className="w-full max-w-lg h-auto"> {highlightedFactorInMap && factorNodePositions.map(targetPos => { if (targetPos.data.id === highlightedFactorInMap) return null;  const sourcePos = factorNodePositions.find(p => p.data.id === highlightedFactorInMap); if (!sourcePos) return null; return ( <motion.line key={`line-${sourcePos.data.id}-${targetPos.data.id}`} x1={sourcePos.x} y1={sourcePos.y} x2={targetPos.x} y2={targetPos.y} stroke={slideColors.textSecondary} strokeWidth="1.5" initial={{ opacity: 0, pathLength: 0 }} animate={{ opacity: 0.4, pathLength: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.5 }} /> ); })} {factorNodePositions.map(({ data, x, y }) => ( <motion.g key={data.id} onClick={() => setHighlightedFactorInMap(highlightedFactorInMap === data.id ? null : data.id)} style={{ cursor: 'pointer' }} initial={{ scale: 0.9, opacity: 0.7 }} animate={{  scale: highlightedFactorInMap === data.id ? 1.15 : 0.9,  opacity: highlightedFactorInMap === data.id ? 1 : (highlightedFactorInMap ? 0.5 : 0.7)  }} whileHover={{ scale: highlightedFactorInMap === data.id ? 1.2 : 1.0 }} transition={{ duration: 0.25, ease: "circOut" }} > <circle cx={x} cy={y} r="24"  fill={data.color} stroke={highlightedFactorInMap === data.id ? data.color : slideColors.bgGradientEnd}  strokeWidth={highlightedFactorInMap === data.id ? 3 : 2} /> <foreignObject x={x - 12} y={y - 12} width="24" height="24"> <div className="flex items-center justify-center w-full h-full"> 
+          <data.icon  className="w-[18px] h-[18px]" style={{ color: slideColors.bgBase }}  /> 
+          </div> </foreignObject> <text  x={x} y={y + 38}  fontSize="11"  textAnchor="middle"  fill={highlightedFactorInMap === data.id ? data.color : slideColors.textSecondary} style={{fontFamily: 'Raleway Bold, sans-serif', fontWeight: highlightedFactorInMap === data.id ? 700 : 500}} > {data.name} </text> </motion.g> ))} </svg> </div> </motion.div>);
 
       case 3:
         const selectedLevelData = levelsData.find(l => l.id === activeLevel);
         const levelNodesForDisplay = [ { ...levelsData[0], x: 75, y: 50 }, { ...levelsData[1], x: 150, y: 50 }, { ...levelsData[2], x: 225, y: 50 }, ];
-        return (  <motion.div key="inst3" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="w-full flex flex-col h-full"> <h2 className="text-3xl md:text-4xl mb-8 text-center" style={{ fontFamily: 'Aglet Mono Light, monospace', color: slideColors.textPrimary }}>Errores Centrales por Nivel</h2> <div className="flex justify-center mb-6 space-x-2 md:space-x-3"> {levelsData.map(level => ( <button key={level.id} onClick={() => setActiveLevel(level.id)} className={`py-2.5 px-4 md:px-6 rounded-lg text-sm md:text-base transition-all duration-300 transform hover:scale-105 ${activeLevel === level.id ? 'font-semibold shadow-xl scale-105' : 'opacity-80 hover:opacity-100 shadow-md'}`} style={{ backgroundColor: activeLevel === level.id ? level.color : `${level.color}55`, color: activeLevel === level.id ? (['B1-B2', 'A1-A2'].includes(level.id) ? slideColors.textPrimary : '#fff') : slideColors.textPrimary, fontFamily:'Raleway SemiBold, sans-serif'}} > {level.id} </button> ))} </div> {selectedLevelData && ( <motion.div key={activeLevel} initial={{opacity:0, y:15}} animate={{opacity:1, y:0}} transition={{duration:0.4}} className="p-6 md:p-8 rounded-xl shadow-lg text-center mb-8 mx-auto w-full max-w-xl lg:max-w-2xl" style={{backgroundColor: `${selectedLevelData.color}20`}} > <h3 className="text-xl md:text-2xl font-semibold mb-3" style={{fontFamily: 'Raleway Bold, sans-serif', color: slideColors.textPrimary}}>{selectedLevelData.name}</h3> <p className="text-md md:text-lg mb-2" style={{color: slideColors.accent1}}> <strong>Error Central:</strong> {selectedLevelData.error} </p> <p className="text-sm md:text-base" style={{color: slideColors.textSecondary}}>{selectedLevelData.details}</p> </motion.div> )} <div className="w-full h-48 md:h-56 flex items-center justify-center mt-auto mb-4 flex-grow"> <svg viewBox="0 0 300 100" className="w-full max-w-xl h-auto"> <path d={`M ${levelNodesForDisplay[0].x} ${levelNodesForDisplay[0].y} L ${levelNodesForDisplay[1].x} ${levelNodesForDisplay[1].y} L ${levelNodesForDisplay[2].x} ${levelNodesForDisplay[2].y}`} stroke={slideColors.textSecondary} strokeWidth="3.5" fill="none" /> {levelNodesForDisplay.map((nodeData, index) => ( <MetroNode key={`node-${nodeData.id}`} instante={currentInstante} id={3 + (index * 0.1)} x={nodeData.x} y={nodeData.y} size={activeLevel === nodeData.id ? 16 : 11} color={nodeData.color} pulse={activeLevel === nodeData.id}
+        return (  <motion.div key="inst3" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="w-full flex flex-col h-full"> <h2 className="text-3xl md:text-4xl mb-8 text-center" style={{ fontFamily: 'Aglet Mono Light, monospace', color: slideColors.textPrimary }}>Errores Centrales por Nivel</h2> <div className="flex justify-center mb-6 space-x-2 md:space-x-3"> {levelsData.map(level => (
+          <button key={level.id} onClick={() => setActiveLevel(level.id)} className={`py-2.5 px-4 md:px-6 rounded-lg text-sm md:text-base transition-all duration-300 transform hover:scale-105 ${activeLevel === level.id ? 'font-semibold shadow-xl scale-105' : 'opacity-80 hover:opacity-100 shadow-md'}`} 
+            // CORREGIDO: No pongas '--tw-ring-color' en style.
+            style={{ 
+              backgroundColor: activeLevel === level.id ? level.color : `${level.color}55`, 
+              color: activeLevel === level.id ? (['B1-B2', 'A1-A2'].includes(level.id) ? slideColors.textPrimary : '#fff') : slideColors.textPrimary, 
+              fontFamily:'Raleway SemiBold, sans-serif'
+            }} 
+          > 
+            {level.id} 
+          </button>
+        ))} </div> {selectedLevelData && ( <motion.div key={activeLevel} initial={{opacity:0, y:15}} animate={{opacity:1, y:0}} transition={{duration:0.4}} className="p-6 md:p-8 rounded-xl shadow-lg text-center mb-8 mx-auto w-full max-w-xl lg:max-w-2xl" style={{backgroundColor: `${selectedLevelData.color}20`}} > <h3 className="text-xl md:text-2xl font-semibold mb-3" style={{fontFamily: 'Raleway Bold, sans-serif', color: slideColors.textPrimary}}>{selectedLevelData.name}</h3> <p className="text-md md:text-lg mb-2" style={{color: slideColors.accent1}}> <strong>Error Central:</strong> {selectedLevelData.error} </p> <p className="text-sm md:text-base" style={{color: slideColors.textSecondary}}>{selectedLevelData.details}</p> </motion.div> )} <div className="w-full h-48 md:h-56 flex items-center justify-center mt-auto mb-4 flex-grow"> <svg viewBox="0 0 300 100" className="w-full max-w-xl h-auto"> <path d={`M ${levelNodesForDisplay[0].x} ${levelNodesForDisplay[0].y} L ${levelNodesForDisplay[1].x} ${levelNodesForDisplay[1].y} L ${levelNodesForDisplay[2].x} ${levelNodesForDisplay[2].y}`} stroke={slideColors.textSecondary} strokeWidth="3.5" fill="none" /> {levelNodesForDisplay.map((nodeData, index) => ( <MetroNode key={`node-${nodeData.id}`} instante={currentInstante} id={3 + (index * 0.1)} x={nodeData.x} y={nodeData.y} size={activeLevel === nodeData.id ? 16 : 11} color={nodeData.color} pulse={activeLevel === nodeData.id}
                            label={null} 
                             /> ))} </svg> </div> </motion.div>);
 
@@ -5054,7 +5019,10 @@ const Diapositiva11 = () => {
                 key={i}
                 onClick={() => setCurrentInstante(i)}
                 className={`w-3 h-3 md:w-3.5 md:h-3.5 rounded-full transition-all duration-300 ${currentInstante === i ? 'ring-2 ring-offset-2 scale-110' : 'opacity-60 hover:opacity-100'}`}
-                style={{ backgroundColor: currentInstante === i ? slideColors.accent1 : slideColors.textSecondary, ringColor: slideColors.accent1 }}
+                // CORREGIDO: No pongas '--tw-ring-color' en style.
+                style={{ 
+                  backgroundColor: currentInstante === i ? slideColors.accent1 : slideColors.textSecondary
+                }}
               />
             ))}
           </div>
@@ -5079,28 +5047,85 @@ const Diapositiva11 = () => {
 // =======================================================================
 
 // =======================================================================
-// DIAPOSITIVA 12: CREACIÓN DE TAREAS DE IA - PROMPTS (COMPLETO - LOGO MÁS GRANDE)
-// (Asegúrate que las dependencias globales como 'colors', 'motion', 'useState',
-//  'LogoHablandis', 'Footer' están definidas ANTES de este código)
+// DIAPOSITIVA 12: CREACIÓN DE TAREAS DE IA - PROMPTS (DISEÑO UNIFICADO)
 // =======================================================================
+
 const Diapositiva12 = () => {
-  const [currentSlide, setCurrentSlide] = useState(0); 
-  
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  // --- Logo y Título unificados ---
+  const LogoHablandisUnificado = () => (
+    <div className="absolute top-6 left-6 z-30 flex flex-col items-start">
+      <img
+        src="/hablandis.png"
+        alt="Hablandis"
+        className="h-24 md:h-32 lg:h-36 drop-shadow-[0_4px_8px_rgba(0,0,0,0.10)] rounded-xl" // <--- FONDO ELIMINADO
+        onError={(e) => {
+          const img = e.target as HTMLImageElement;
+          img.style.display = 'none';
+          const parent = img.parentElement;
+          if (parent) {
+            parent.innerHTML = `
+              <div style="font-family: 'Aglet Mono', monospace; color: ${colors.azulOscuro}; font-size: 42px; font-weight: 700; line-height: 1;">
+                Hablandis
+              </div>
+              <div style="font-family: 'Raleway', sans-serif; color: ${colors.verdeTurquesa}; font-size: 15px; margin-top: 2px;">
+                Centro Internacional de Idiomas
+              </div>
+            `;
+          }
+        }}
+      />
+    </div>
+  );
+
+  const MainTitleUnificado = ({ children }: { children: React.ReactNode }) => (
+    <h1
+      className="text-3xl md:text-4xl lg:text-5xl font-semibold mb-6 text-center pt-12"
+      style={{
+        fontFamily: "Aglet Mono, monospace",
+        color: colors.azulOscuro,
+        letterSpacing: "-0.01em"
+      }}
+    >
+      {children}
+    </h1>
+  );
+
+  // --- Footer unificado minimalista ---
+  const FooterUnificado = () => (
+    <div
+      className="absolute bottom-3 left-0 right-0 text-center py-2"
+      style={{
+        fontFamily: 'Raleway, sans-serif',
+        color: colors.azulOscuro,
+        opacity: 0.7,
+        fontWeight: 500,
+        fontSize: 13,
+        background: `${colors.blanco}70`,
+        backdropFilter: 'blur(10px)'
+      }}
+    >
+      © {new Date().getFullYear()} Hablandis. Todos los derechos reservados.
+    </div>
+  );
+
+  // --- Slides Content ---
   const slides = [
     {
-      id: 0, 
+      id: 0,
       title: "Elijamos un texto:",
       content: (
         <div className="h-full overflow-y-auto p-1">
           <article className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
-            <header className="mb-8 border-b-2 border-gray-300 pb-6">
-              <p className="text-sm text-red-600 font-semibold mb-2" style={{ fontFamily: "'Raleway', sans-serif" }}>
+            <header className="mb-8 border-b-2 border-gray-200 pb-5">
+              <p className="text-xs font-semibold mb-2" style={{ color: colors.verdeTurquesa, fontFamily: "'Raleway', sans-serif", letterSpacing: '0.03em' }}>
                 MOVILIDAD
               </p>
-              <h1 className="text-3xl md:text-4xl font-bold mb-4 leading-tight" style={{ fontFamily: "'Aglet Mono Light', monospace", color: colors.azulOscuro || "#12055F" }}>
+              <h2 className="text-2xl md:text-3xl font-bold mb-3" style={{ fontFamily: "'Aglet Mono', monospace", color: colors.azulOscuro }}>
                 Movilidad en València o la transformación de una ciudad más allá de los carriles bici
-              </h1>
-              <p className="text-lg text-gray-600" style={{ fontFamily: "'Raleway', sans-serif" }}>
+              </h2>
+              <p className="text-base text-gray-600" style={{ fontFamily: "'Raleway', sans-serif" }}>
                 La nueva Plaça de la Reina, los carriles bici y la recuperación del espacio público marcan el camino hacia una ciudad más sostenible
               </p>
             </header>
@@ -5108,41 +5133,41 @@ const Diapositiva12 = () => {
               <p className="mb-6 text-gray-800 leading-relaxed first-letter:text-5xl first-letter:font-bold first-letter:mr-1 first-letter:float-left">
                 La nueva Plaça de la Reina amanece soleada: eran los últimos días de agosto pero el reloj marcaba primera hora de la mañana, así que aún quedaba espacio en los recién estrenados aparcamientos de bicicleta. Un par de horas después empezó el trajín: familias con carritos que atraviesan las zonas de sombra mientras beben horchata, niños y niñas que se inclinan a beber agua en alguna de las fuentes habilitadas para tal fin, jóvenes que se sientan en los bancos y consultan sus dispositivos móviles, turistas que consumen en las terrazas que rodean el nuevo espacio público sin invadirlo.
               </p>
-              <div className="bg-blue-50 border-l-4 border-blue-600 p-6 my-6">
-                <p className="text-lg italic">
+              <div className="bg-blue-50 border-l-4 border-blue-600 p-6 my-6 rounded-lg">
+                <p className="text-base italic">
                   "La afluencia de gente que concentra la plaza desde su inauguración es la mejor muestra de que la transformación ha sido bien acogida"
                 </p>
-                <p className="text-sm mt-2 text-gray-600">— Giuseppe Grezzi, concejal de Movilidad Sostenible</p>
+                <p className="text-xs mt-2 text-gray-600">— Giuseppe Grezzi, concejal de Movilidad Sostenible</p>
               </div>
-              <h2 className="text-2xl font-bold mt-8 mb-4" style={{ color: colors.verdeTurquesa || "#007567" }}>
+              <h3 className="text-xl font-bold mt-8 mb-3" style={{ color: colors.verdeTurquesa }}>
                 Más allá de la peatonalización: la revuelta ciclista
-              </h2>
+              </h3>
               <p className="mb-6 text-gray-800 leading-relaxed">
                 La Organización de Consumidores determinó en un reciente estudio que València era una de las tres mejores ciudades españolas para montar en bicicleta. En determinados tramos de su red de casi 170 kilómetros se registran unos 7.000 vehículos diarios, y el uso de este medio de transporte sostenible se ha incrementado en un 21% en el último año.
               </p>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 my-8">
-                <div className="bg-green-100 p-4 rounded-lg text-center">
-                  <p className="text-3xl font-bold text-green-700">170 km</p>
-                  <p className="text-sm text-gray-700">Red ciclista actual</p>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 my-6">
+                <div className="bg-green-100 p-4 rounded-lg text-center border border-green-200">
+                  <p className="text-2xl font-bold text-green-700">170 km</p>
+                  <p className="text-xs text-gray-700">Red ciclista actual</p>
                 </div>
-                <div className="bg-green-100 p-4 rounded-lg text-center">
-                  <p className="text-3xl font-bold text-green-700">+21%</p>
-                  <p className="text-sm text-gray-700">Incremento anual</p>
+                <div className="bg-green-100 p-4 rounded-lg text-center border border-green-200">
+                  <p className="text-2xl font-bold text-green-700">+21%</p>
+                  <p className="text-xs text-gray-700">Incremento anual</p>
                 </div>
-                <div className="bg-green-100 p-4 rounded-lg text-center">
-                  <p className="text-3xl font-bold text-green-700">11%</p>
-                  <p className="text-sm text-gray-700">Ahorro energético</p>
+                <div className="bg-green-100 p-4 rounded-lg text-center border border-green-200">
+                  <p className="text-2xl font-bold text-green-700">11%</p>
+                  <p className="text-xs text-gray-700">Ahorro energético</p>
                 </div>
               </div>
-              <h2 className="text-2xl font-bold mt-8 mb-4" style={{ color: colors.verdeTurquesa || "#007567" }}>
+              <h3 className="text-xl font-bold mt-8 mb-3" style={{ color: colors.verdeTurquesa }}>
                 Urbanismo, la otra cara de la moneda
-              </h2>
+              </h3>
               <p className="mb-6 text-gray-800 leading-relaxed">
                 A pesar de que los índices contaminantes se han reducido en los últimos diez años en la ciudad, València sigue incumpliendo los valores de la Organización Mundial de la Salud. El vehículo a motor de combustión es, con diferencia, el principal foco de emisión de índices contaminantes.
               </p>
-              <div className="bg-yellow-50 border border-yellow-400 rounded-lg p-6 my-6">
-                <h3 className="font-bold text-lg mb-2">Datos clave:</h3>
-                <ul className="list-disc list-inside space-y-2 text-gray-700">
+              <div className="bg-yellow-50 border-l-4 border-yellow-400 rounded-lg p-5 my-6">
+                <h4 className="font-bold text-base mb-2">Datos clave:</h4>
+                <ul className="list-disc list-inside space-y-1 text-xs text-gray-700">
                   <li>50% de los desplazamientos se hacen a pie</li>
                   <li>6% en bicicleta</li>
                   <li>16% en transporte público</li>
@@ -5152,8 +5177,8 @@ const Diapositiva12 = () => {
               <p className="mb-6 text-gray-800 leading-relaxed">
                 El problema metropolitano es evidente: cada día salen y entran de Valencia casi un millón de personas. La coordinación entre administraciones sigue siendo un reto pendiente para abordar esta realidad.
               </p>
-              <div className="border-t-2 border-gray-300 pt-6 mt-8">
-                <p className="text-sm text-gray-600 italic">
+              <div className="border-t border-gray-200 pt-6 mt-8">
+                <p className="text-xs text-gray-600 italic">
                   Fuente: El Salto Diario - Artículo sobre movilidad sostenible en València
                 </p>
               </div>
@@ -5163,11 +5188,11 @@ const Diapositiva12 = () => {
       )
     },
     {
-      id: 1, 
+      id: 1,
       title: "Usemos un prompt 'mínimo':",
       content: (
-        <div className="h-full flex flex-col p-4 sm:p-6">
-          <div className="mb-6 p-4 bg-gray-100 rounded-lg border-l-4 border-blue-600">
+        <div className="h-full flex flex-col p-4 sm:p-6 bg-gray-50 rounded-lg">
+          <div className="mb-5 p-4 bg-white rounded-lg border-l-4 border-blue-600 shadow-sm">
             <p className="text-sm sm:text-base font-mono text-gray-800">
               Crea siete preguntas tipo test sobre el texto. Cada pregunta debe tener una respuesta correcta y tres incorrectas, con el siguiente formato: 
               Texto de la pregunta A. Respuesta correcta B. Respuesta incorrecta C. Respuesta incorrecta D. Respuesta incorrecta
@@ -5175,20 +5200,20 @@ const Diapositiva12 = () => {
           </div>
           <div className="flex-grow grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 overflow-hidden">
             {/* ChatGPT 4o */}
-            <div className="flex flex-col bg-green-50 rounded-lg p-3 sm:p-4 overflow-y-auto">
-              <h3 className="text-base sm:text-lg font-bold mb-3 text-green-800 sticky top-0 bg-green-50 pb-2 z-10">
+            <div className="flex flex-col bg-green-50 rounded-lg p-2 sm:p-3 border border-green-200 overflow-y-auto">
+              <h4 className="text-base sm:text-lg font-bold mb-2 text-green-800 sticky top-0 bg-green-50 pb-2 z-10">
                 ChatGPT 4o
-              </h3>
-              <div className="space-y-3 sm:space-y-4 text-xs sm:text-sm">
-                <div className="bg-white p-2 sm:p-3 rounded border border-green-200">
-                  <p className="font-semibold mb-1 sm:mb-2">¿Qué ha sido una de las principales líneas de trabajo del Ayuntamiento de València en los últimos años?</p>
+              </h4>
+              <div className="space-y-3 text-xs sm:text-sm">
+                <div className="bg-white p-2 rounded border border-green-100">
+                  <p className="font-semibold mb-1">¿Qué ha sido una de las principales líneas de trabajo del Ayuntamiento de València en los últimos años?</p>
                   <p className="text-green-700">A. Peatonalización</p>
                   <p>B. Construcción de rascacielos</p>
                   <p>C. Expansión de autopistas</p>
                   <p>D. Reducción de parques públicos</p>
                 </div>
-                <div className="bg-white p-2 sm:p-3 rounded border border-green-200">
-                  <p className="font-semibold mb-1 sm:mb-2">Según Francesc Arechavala, ¿cuál es el siguiente paso en la mejora de la movilidad urbana en València?</p>
+                <div className="bg-white p-2 rounded border border-green-100">
+                  <p className="font-semibold mb-1">Según Francesc Arechavala, ¿cuál es el siguiente paso en la mejora de la movilidad urbana en València?</p>
                   <p className="text-green-700">A. Extender las políticas a todos los barrios</p>
                   <p>B. Construir más autopistas</p>
                   <p>C. Aumentar el uso de vehículos privados</p>
@@ -5197,20 +5222,20 @@ const Diapositiva12 = () => {
               </div>
             </div>
             {/* Gemini */}
-            <div className="flex flex-col bg-purple-50 rounded-lg p-3 sm:p-4 overflow-y-auto">
-              <h3 className="text-base sm:text-lg font-bold mb-3 text-purple-800 sticky top-0 bg-purple-50 pb-2 z-10">
+            <div className="flex flex-col bg-purple-50 rounded-lg p-2 sm:p-3 border border-purple-200 overflow-y-auto">
+              <h4 className="text-base sm:text-lg font-bold mb-2 text-purple-800 sticky top-0 bg-purple-50 pb-2 z-10">
                 Gemini
-              </h3>
-              <div className="space-y-3 sm:space-y-4 text-xs sm:text-sm">
-                <div className="bg-white p-2 sm:p-3 rounded border border-purple-200">
-                  <p className="font-semibold mb-1 sm:mb-2">¿Cuáles son las dos principales líneas de trabajo que ha seguido el Ayuntamiento de València para reducir la contaminación en la ciudad?</p>
+              </h4>
+              <div className="space-y-3 text-xs sm:text-sm">
+                <div className="bg-white p-2 rounded border border-purple-100">
+                  <p className="font-semibold mb-1">¿Cuáles son las dos principales líneas de trabajo que ha seguido el Ayuntamiento de València para reducir la contaminación en la ciudad?</p>
                   <p>A. La construcción de nuevas carreteras y la ampliación de carriles para coches.</p>
                   <p className="text-purple-700">B. La peatonalización de calles y la mejora de la red de carriles bici.</p>
                   <p>C. La creación de nuevas zonas de aparcamiento para coches y la promoción del uso del transporte público.</p>
                   <p>D. La restricción del uso del vehículo privado en el centro de la ciudad y la inversión en energías renovables.</p>
                 </div>
-                <div className="bg-white p-2 sm:p-3 rounded border border-purple-200">
-                  <p className="font-semibold mb-1 sm:mb-2">¿Qué colectivo ciudadano critica la falta de ambición en las políticas de movilidad del Ayuntamiento de València?</p>
+                <div className="bg-white p-2 rounded border border-purple-100">
+                  <p className="font-semibold mb-1">¿Qué colectivo ciudadano critica la falta de ambición en las políticas de movilidad del Ayuntamiento de València?</p>
                   <p>A. València en Bici</p>
                   <p>B. Per l'horta per la defensa del territori</p>
                   <p className="text-purple-700">C. València per l'aire</p>
@@ -5219,20 +5244,20 @@ const Diapositiva12 = () => {
               </div>
             </div>
             {/* Claude */}
-            <div className="flex flex-col bg-orange-50 rounded-lg p-3 sm:p-4 overflow-y-auto">
-              <h3 className="text-base sm:text-lg font-bold mb-3 text-orange-800 sticky top-0 bg-orange-50 pb-2 z-10">
+            <div className="flex flex-col bg-orange-50 rounded-lg p-2 sm:p-3 border border-orange-200 overflow-y-auto">
+              <h4 className="text-base sm:text-lg font-bold mb-2 text-orange-800 sticky top-0 bg-orange-50 pb-2 z-10">
                 Claude
-              </h3>
-              <div className="space-y-3 sm:space-y-4 text-xs sm:text-sm">
-                <div className="bg-white p-2 sm:p-3 rounded border border-orange-200">
-                  <p className="font-semibold mb-1 sm:mb-2">¿Qué afirma el texto sobre la reducción de índices contaminantes en València en los últimos 10 años?</p>
+              </h4>
+              <div className="space-y-3 text-xs sm:text-sm">
+                <div className="bg-white p-2 rounded border border-orange-100">
+                  <p className="font-semibold mb-1">¿Qué afirma el texto sobre la reducción de índices contaminantes en València en los últimos 10 años?</p>
                   <p className="text-orange-700">A. Aunque se han reducido, València sigue incumpliendo los valores de la Organización Mundial de la Salud</p>
                   <p>B. Los índices contaminantes se han mantenido estables</p>
                   <p>C. València es una de las ciudades con menores índices de contaminación en España</p>
                   <p>D. No se menciona nada sobre la reducción de índices contaminantes</p>
                 </div>
-                <div className="bg-white p-2 sm:p-3 rounded border border-orange-200">
-                  <p className="font-semibold mb-1 sm:mb-2">Según el texto, ¿cuál es una de las propuestas para reducir el uso del vehículo privado en València?</p>
+                <div className="bg-white p-2 rounded border border-orange-100">
+                  <p className="font-semibold mb-1">Según el texto, ¿cuál es una de las propuestas para reducir el uso del vehículo privado en València?</p>
                   <p className="text-orange-700">A. Implementar un peaje urbano de tarifa progresiva</p>
                   <p>B. Prohibir totalmente el uso de vehículos privados en el centro de la ciudad</p>
                   <p>C. Aumentar significativamente el precio de los combustibles</p>
@@ -5241,20 +5266,20 @@ const Diapositiva12 = () => {
               </div>
             </div>
             {/* Microsoft Copilot */}
-            <div className="flex flex-col bg-blue-50 rounded-lg p-3 sm:p-4 overflow-y-auto">
-              <h3 className="text-base sm:text-lg font-bold mb-3 text-blue-800 sticky top-0 bg-blue-50 pb-2 z-10">
+            <div className="flex flex-col bg-blue-50 rounded-lg p-2 sm:p-3 border border-blue-200 overflow-y-auto">
+              <h4 className="text-base sm:text-lg font-bold mb-2 text-blue-800 sticky top-0 bg-blue-50 pb-2 z-10">
                 Microsoft Copilot
-              </h3>
-              <div className="space-y-3 sm:space-y-4 text-xs sm:text-sm">
-                <div className="bg-white p-2 sm:p-3 rounded border border-blue-200">
-                  <p className="font-semibold mb-1 sm:mb-2">¿Qué ha permitido la rehabilitación de la Plaça de la Reina?</p>
+              </h4>
+              <div className="space-y-3 text-xs sm:text-sm">
+                <div className="bg-white p-2 rounded border border-blue-100">
+                  <p className="font-semibold mb-1">¿Qué ha permitido la rehabilitación de la Plaça de la Reina?</p>
                   <p className="text-blue-700">A. La recuperación de 12.000 metros cuadrados como espacio peatonal</p>
                   <p>B. La construcción de un nuevo aparcamiento subterráneo</p>
                   <p>C. La instalación de más paradas de autobuses</p>
                   <p>D. El aumento de las zonas ajardinadas</p>
                 </div>
-                <div className="bg-white p-2 sm:p-3 rounded border border-blue-200">
-                  <p className="font-semibold mb-1 sm:mb-2">¿Cuál ha sido la reacción general ante la transformación de la Plaça de la Reina?</p>
+                <div className="bg-white p-2 rounded border border-blue-100">
+                  <p className="font-semibold mb-1">¿Cuál ha sido la reacción general ante la transformación de la Plaça de la Reina?</p>
                   <p className="text-blue-700">A. Bien acogida por la afluencia de gente</p>
                   <p>B. Rechazo total por la falta de vegetación</p>
                   <p>C. Indiferencia por parte de los residentes</p>
@@ -5267,11 +5292,11 @@ const Diapositiva12 = () => {
       )
     },
     {
-      id: 2, 
-      title: "¿Se puede mejorar esto? Intentémoslo:", 
+      id: 2,
+      title: "¿Se puede mejorar esto? Intentémoslo:",
       content: (
-        <div className="h-full flex flex-col p-4 sm:p-6">
-          <div className="mb-6 p-4 bg-gray-100 rounded-lg border-l-4 border-purple-600">
+        <div className="h-full flex flex-col p-4 sm:p-6 bg-gray-50 rounded-lg">
+          <div className="mb-6 p-4 bg-white rounded-lg border-l-4 border-purple-600 shadow-sm">
             <p className="text-sm text-gray-700 mb-2">Intentemos con un prompt más detallado y exigente:</p>
             <p className="text-base text-gray-800 leading-relaxed whitespace-pre-line">
               Crea siete preguntas tipo test sobre el texto <span className="font-bold text-purple-800">para estudiantes con un nivel C1 de español.</span> Cada pregunta debe tener una respuesta correcta y tres incorrectas.
@@ -5282,23 +5307,23 @@ const Diapositiva12 = () => {
 - <span className="font-bold text-purple-800">MUY IMPORTANTE: NO CREES RESPUESTAS INCORRECTAS INVENTADAS Y NO BASADAS EN EL TEXTO.</span>
             </p>
           </div>
-          <div className="flex-grow flex flex-col items-center justify-center bg-gray-50 rounded-lg border border-gray-200 p-4 mt-4 sm:mt-6">
+          <div className="flex-grow flex flex-col items-center justify-center bg-white rounded-lg border border-gray-200 p-4 mt-4 sm:mt-6 shadow-sm">
             <div className="rounded-xl p-4 sm:p-6 flex flex-col sm:flex-row items-center gap-4 sm:gap-6 w-full max-w-xl mx-auto">
-              <div className="w-48 h-48 sm:w-64 sm:h-64 rounded-lg flex items-center justify-center flex-shrink-0 border-2 border-gray-300 p-1">
+              <div className="w-40 h-40 sm:w-56 sm:h-56 rounded-lg flex items-center justify-center flex-shrink-0 border-2 border-gray-200 p-1 bg-gray-50">
                 <img
-                  src="/qr.png" 
+                  src="/qr.png"
                   alt="QR Code Presentación EVALIA"
                   className="w-full h-full object-contain"
                 />
               </div>
               <div className="flex-1 text-center sm:text-left mt-4 sm:mt-0">
-                <h3 className="text-xl sm:text-3xl font-semibold mb-2 sm:mb-3" style={{
-                  color: colors.azulOscuro || '#12055F', 
+                <h4 className="text-lg sm:text-2xl font-semibold mb-2" style={{
+                  color: colors.azulOscuro,
                   fontFamily: "'Raleway', sans-serif"
                 }}>
                   Materiales de Presentación
-                </h3>
-                <p className="text-lg sm:text-xl text-gray-700" style={{ fontFamily: "'Raleway', sans-serif" }}>
+                </h4>
+                <p className="text-base sm:text-lg text-gray-700" style={{ fontFamily: "'Raleway', sans-serif" }}>
                   Escanea para acceder a recursos y documentación adicional del proyecto EVALIA.
                 </p>
               </div>
@@ -5318,71 +5343,43 @@ const Diapositiva12 = () => {
   };
 
   return (
-    <div 
-      className="w-full h-full flex flex-col relative"
+    <div
+      className="w-full h-screen min-h-screen flex flex-col relative overflow-hidden"
       style={{
-        background: `linear-gradient(135deg, ${colors.verdeClaro ? colors.verdeClaro + 'AA' : '#C4D4A4AA'} 0%, ${colors.lila ? colors.lila + 'AA' : '#B9ABE4AA'} 100%)`,
+        background: `linear-gradient(135deg, ${colors.verdeClaro + 'DD'} 0%, ${colors.lila + 'CC'} 100%)`
       }}
     >
-      {/* === INICIO LOGO MODIFICADO === */}
-      <div className="absolute top-6 right-6 z-20 md:top-8 md:right-8"> {/* Ajustado padding/márgen */}
-        {typeof LogoHablandis === 'function' ? (
-          // Pasamos una clase para el nuevo tamaño. Tailwind tiene h-20, h-24, h-28, h-32, h-36.
-          // h-32 es aprox. 3x de h-10. h-36 es aprox. 3x de h-12.
-          <LogoHablandis className="h-28 md:h-32 lg:h-36" /> // Ajusta según los tamaños que acepte tu componente y cómo se vea mejor
-        ) : (
-          // Fallback si LogoHablandis no está definido globalmente
-          (() => {
-            const [logoErrorState, setLogoErrorState] = useState(false);
-            if (logoErrorState) {
-              // Ajustar tamaño del texto de fallback si el logo es más grande
-              return (
-                <div>
-                  <div style={{ fontFamily: "'Aglet Mono Light', monospace", color: colors.azulOscuro || "#12055F", fontSize: '48px', fontWeight: 700, lineHeight: '1' }}>Hablandis</div> {/* Aprox 3x de 20px */}
-                  <div style={{ fontFamily: "'Raleway', sans-serif", color: colors.verdeTurquesa || "#007567", fontSize: '20px', marginTop: '4px' }}>Centro de Idiomas</div> {/* Aprox 3x de 10px */}
-                </div>
-              );
-            }
-            return (
-              <img 
-                src="/hablandis.png" 
-                alt="Hablandis" 
-                // Aplicando las clases de tamaño directamente aquí para el fallback
-                className="h-28 md:h-32 lg:h-36" // Ajusta estos valores según necesites
-                style={{ filter: 'drop-shadow(0 2px 6px rgba(0,0,0,0.15))' }} // Sombra un poco más pronunciada para logo grande
-                onError={() => setLogoErrorState(true)}
-              />
-            );
-          })()
-        )}
-      </div>
-      {/* === FIN LOGO MODIFICADO === */}
+      {/* Logo Unificado */}
+      <LogoHablandisUnificado />
 
-      <motion.h1
-        className="text-2xl sm:text-3xl font-bold text-center pt-10 sm:pt-12 pb-3 sm:pb-4"
-        style={{ fontFamily: "'Aglet Mono Light', monospace", color: colors.azulOscuro || "#12055F" }}
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-      >
+      {/* Título Unificado */}
+      <MainTitleUnificado>
         Creación de Tareas de IA: Prompts
-      </motion.h1>
+      </MainTitleUnificado>
 
-      <div className="flex-grow flex items-center justify-center px-4 sm:px-8 pb-10 sm:pb-12">
-        <div className="w-full flex items-center gap-2 sm:gap-4" style={{ maxWidth: '1356px' }}>
+      {/* Navegación y contenido */}
+      <div className="flex-grow flex items-center justify-center px-3 sm:px-6 pb-12">
+        <div className="w-full flex items-center gap-2 sm:gap-4 max-w-6xl mx-auto">
+          {/* Botón anterior */}
           <button
             onClick={prevSlide}
             className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/80 hover:bg-white shadow-lg flex items-center justify-center transition-all transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
             aria-label="Slide anterior"
+            tabIndex={0}
           >
-            <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke={colors.azulOscuro || "#12055F"} strokeWidth="2.5" viewBox="0 0 24 24">
+            <svg className="w-6 h-6" fill="none" stroke={colors.azulOscuro} strokeWidth="2.5" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
             </svg>
           </button>
 
-          <div className="flex-grow bg-white rounded-lg shadow-xl overflow-hidden" style={{ height: 'calc(100vh - 190px)', minHeight: '480px', maxHeight: '752px' }}>
-            <div className="bg-gray-50 px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-200 flex justify-between items-center">
-              <h2 className="text-lg sm:text-xl font-semibold truncate pr-2" style={{ fontFamily: "'Raleway', sans-serif", color: colors.azulOscuro || "#12055F" }}>
+          {/* Contenedor principal */}
+          <div
+            className="flex-grow bg-white rounded-xl shadow-xl overflow-hidden border border-gray-100"
+            style={{ minHeight: '480px', maxHeight: '752px', height: 'calc(100vh - 200px)' }}
+          >
+            {/* Header del slide */}
+            <div className="bg-gray-50 px-4 sm:px-6 py-3 border-b border-gray-200 flex justify-between items-center">
+              <h2 className="text-base sm:text-lg font-semibold truncate pr-2" style={{ fontFamily: "'Raleway', sans-serif", color: colors.azulOscuro }}>
                 {slides[currentSlide].title}
               </h2>
               <div className="flex gap-1 sm:gap-2">
@@ -5390,44 +5387,43 @@ const Diapositiva12 = () => {
                   <button
                     key={index}
                     onClick={() => setCurrentSlide(index)}
-                    className={`h-2 sm:h-2.5 rounded-full transition-all duration-300 ease-in-out ${
-                      index === currentSlide ? 'w-6 sm:w-8' : 'w-2 sm:w-2.5'
-                    }`}
-                    style={{backgroundColor: index === currentSlide ? (colors.azulOscuro || '#12055F') : (colors.grisMedio || '#D1D5DB') }}
+                    className={`h-2 sm:h-2.5 rounded-full transition-all duration-300 ease-in-out ${index === currentSlide ? 'w-6 sm:w-8' : 'w-2 sm:w-2.5'}`}
+                    style={{ backgroundColor: index === currentSlide ? colors.azulOscuro : colors.grisMedio }}
                     aria-label={`Ir al slide ${index + 1}`}
                   />
                 ))}
               </div>
             </div>
-
+            {/* Contenido del slide */}
             <motion.div
               key={currentSlide}
-              className="h-[calc(100%-58px)]" 
-              style={{ overflowY: 'auto'}} 
-              initial={{ opacity: 0.8, x: currentSlide === slides.findIndex(s => s.id === 0) ? 0 : (currentSlide > slides.findIndex(s => s.id === 0) && currentSlide < slides.length -1 ? 30 : (currentSlide === slides.length -1 ? 30: -30) ) }}
+              className="h-[calc(100%-58px)]"
+              style={{ overflowY: 'auto' }}
+              initial={{ opacity: 0.8, x: 30 }}
               animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0.8, x: currentSlide === slides.findIndex(s => s.id === 0) ? 0 : -30}}
+              exit={{ opacity: 0.8, x: -30 }}
               transition={{ type: "tween", duration: 0.3, ease: "easeInOut" }}
             >
               {slides[currentSlide].content}
             </motion.div>
           </div>
 
+          {/* Botón siguiente */}
           <button
             onClick={nextSlide}
             className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/80 hover:bg-white shadow-lg flex items-center justify-center transition-all transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
             aria-label="Siguiente slide"
+            tabIndex={0}
           >
-            <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke={colors.azulOscuro || "#12055F"} strokeWidth="2.5" viewBox="0 0 24 24">
+            <svg className="w-6 h-6" fill="none" stroke={colors.azulOscuro} strokeWidth="2.5" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
             </svg>
           </button>
         </div>
       </div>
 
-      <div className="absolute bottom-3 sm:bottom-4 left-0 right-0 text-center text-xs" style={{color: colors.azulOscuro || '#12055F', fontFamily: "'Raleway', sans-serif" }}>
-        {typeof Footer === 'function' ? <Footer /> : `© ${new Date().getFullYear()} Hablandis. Todos los derechos reservados.`}
-      </div>
+      {/* Footer Unificado */}
+      <FooterUnificado />
     </div>
   );
 };
@@ -5438,9 +5434,88 @@ const Diapositiva12 = () => {
 // =======================================================================
 // DIAPOSITIVA 13: CREACIÓN DE TAREAS DE MATCHING (DISEÑO POR FASES)
 // =======================================================================
+
+// CONFIGURACIÓN GLOBAL DE DISEÑO UNIFICADO (ACTUALIZADA)
+const LogoConfig = {
+  size: 'h-24 md:h-32',
+  position: 'absolute top-6 left-6 z-30',
+  fallbackFontSize: '36px md:48px',
+  shadow: 'drop-shadow(0 4px 8px rgba(0,0,0,0.1))'
+};
+const TitleConfig = {
+  fontFamily: 'Aglet Mono, monospace',
+  mainSize: 'text-3xl md:text-4xl lg:text-5xl',
+  weight: 'font-semibold',
+  color: '#12055F',
+  spacing: 'mb-4 md:mb-6'
+};
+const FooterConfig = {
+  position: 'absolute bottom-4 left-0 right-0',
+  padding: 'py-3',
+  background: '#FFFFFF70',
+  backdropFilter: 'backdrop-blur(10px)',
+  text: {
+    fontFamily: 'Raleway, sans-serif',
+    size: '13px',
+    color: '#12055F',
+    opacity: '0.8',
+    weight: '500'
+  }
+};
+
+const LogoHablandis = ({ className = "" }: { className?: string }) => (
+  <img 
+    src="/hablandis.png" 
+    alt="Hablandis" 
+    className={`${LogoConfig.size} ${className}`}
+    style={{ filter: LogoConfig.shadow }}
+    onError={(e) => {
+      const img = e.target as HTMLImageElement;
+      img.style.display = 'none';
+      const parent = img.parentElement;
+      if (parent) {
+        parent.innerHTML = `
+          <div style="font-family: 'Aglet Mono', monospace; color: #12055F; font-size: ${LogoConfig.fallbackFontSize}; font-weight: 700; line-height: 1;">
+            Hablandis
+          </div>
+          <div style="font-family: 'Raleway', sans-serif; color: #007567; font-size: 14px; margin-top: 2px;">
+            Centro Internacional de Idiomas
+          </div>
+        `;
+      }
+    }}
+  />
+);
+
+const FooterMinimal = () => (
+  <div className="absolute bottom-2 left-0 right-0 text-center">
+    <p className="text-xs" style={{
+      fontFamily: 'Raleway, sans-serif',
+      color: '#12055F',
+      opacity: 0.6
+    }}>
+      © {new Date().getFullYear()} Hablandis. Todos los derechos reservados.
+    </p>
+  </div>
+);
+
+const MainTitle = ({ children, className = "" }: { children: React.ReactNode, className?: string }) => (
+  <h1
+    className={`${TitleConfig.mainSize} ${TitleConfig.weight} ${TitleConfig.spacing} ${className}`}
+    style={{
+      fontFamily: TitleConfig.fontFamily,
+      color: TitleConfig.color
+    }}
+  >
+    {children}
+  </h1>
+);
+
+// =======================================================================
+
 const Diapositiva13 = () => {
   const [faseActiva, setFaseActiva] = useState(1);
-  
+
   // Paleta de colores corporativa Hablandis
   const colors = {
     verdeClaro: '#C4D4A4',
@@ -5516,38 +5591,17 @@ const Diapositiva13 = () => {
   ];
 
   return (
-    <div className="w-full h-full flex flex-col" style={{ backgroundColor: '#F8F9FA' }}>
-      {/* Header */}
-      <header className="flex justify-between items-center px-6 py-3" style={{ 
-        backgroundColor: colors.blanco,
-        borderBottom: `2px solid ${colors.verdeClaro}`
-      }}>
-        <h1 className="text-xl md:text-2xl" style={{ 
-          fontFamily: 'Aglet Mono Light, monospace', 
-          color: colors.azulOscuro 
-        }}>
+    <div className="w-full h-full flex flex-col relative" style={{ backgroundColor: '#F8F9FA' }}>
+      {/* Logo Unificado */}
+      <div className={LogoConfig.position}>
+        <LogoHablandis />
+      </div>
+      {/* Título Unificado */}
+      <div className="pt-8 pb-2 flex flex-col items-center">
+        <MainTitle>
           Creación de tareas de matching
-        </h1>
-        <img 
-          src="/hablandis.png" 
-          alt="Hablandis" 
-          style={{ 
-            width: 'auto',
-            height: '60px',
-            objectFit: 'contain',
-            filter: 'drop-shadow(0 2px 6px rgba(0,0,0,0.1))' 
-          }}
-          onError={(e) => {
-            const img = e.target as HTMLImageElement;
-            img.style.display = 'none';
-            img.parentElement!.innerHTML = `
-              <div style="font-family: 'Aglet Mono', monospace; color: ${colors.azulOscuro}; font-size: 36px; font-weight: 700;">
-                Hablandis
-              </div>
-            `;
-          }}
-        />
-      </header>
+        </MainTitle>
+      </div>
 
       {/* Indicadores de fase */}
       <div className="flex justify-center gap-2 py-3" style={{ backgroundColor: colors.verdeClaro + '20' }}>
@@ -5572,32 +5626,29 @@ const Diapositiva13 = () => {
 
       {/* Contenido de las fases */}
       <div className="flex-grow flex overflow-hidden">
-        
-        {/* Fase 1: Punto de partida */}
+        {/* Fase 1 */}
         <div className={`${faseActiva === 1 ? 'w-full' : 'w-0'} transition-all duration-300 overflow-hidden`}>
           <div className="h-full p-6 overflow-y-auto">
-            <h2 className="text-lg mb-4" style={{ 
-              fontFamily: 'Raleway, sans-serif', 
-              fontWeight: 'bold', 
-              color: colors.azulOscuro 
+            <h2 className="text-lg mb-4" style={{
+              fontFamily: 'Raleway, sans-serif',
+              fontWeight: 'bold',
+              color: colors.azulOscuro
             }}>
               Fase 1: Punto de partida
             </h2>
-            
-            {/* Prompt inicial */}
-            <div className="mb-6 p-4 rounded-lg" style={{ 
+            <div className="mb-6 p-4 rounded-lg" style={{
               backgroundColor: colors.verdeTurquesa + '15',
               border: `1px solid ${colors.verdeTurquesa}`
             }}>
-              <h3 className="text-base mb-2" style={{ 
-                fontFamily: 'Raleway, sans-serif', 
+              <h3 className="text-base mb-2" style={{
+                fontFamily: 'Raleway, sans-serif',
                 color: colors.verdeTurquesa,
                 fontWeight: '600'
               }}>
                 Prompt para crear la primera parte de la tarea:
               </h3>
-              <p style={{ 
-                fontFamily: 'Raleway, sans-serif', 
+              <p style={{
+                fontFamily: 'Raleway, sans-serif',
                 fontSize: '0.85rem',
                 color: colors.negro,
                 lineHeight: '1.5',
@@ -5606,10 +5657,9 @@ const Diapositiva13 = () => {
                 "{promptInicial}"
               </p>
             </div>
-            
             <div className="mb-6">
-              <h3 className="text-base mb-3" style={{ 
-                fontFamily: 'Raleway, sans-serif', 
+              <h3 className="text-base mb-3" style={{
+                fontFamily: 'Raleway, sans-serif',
                 color: colors.verdeTurquesa,
                 fontWeight: '600'
               }}>
@@ -5621,10 +5671,10 @@ const Diapositiva13 = () => {
                     <span className="mr-2 text-sm" style={{ color: colors.verdeTurquesa }}>
                       {index + 1}.
                     </span>
-                    <p style={{ 
-                      fontFamily: 'Raleway, sans-serif', 
+                    <p style={{
+                      fontFamily: 'Raleway, sans-serif',
                       fontSize: '0.85rem',
-                      color: colors.negro 
+                      color: colors.negro
                     }}>
                       {situacion}
                     </p>
@@ -5632,20 +5682,19 @@ const Diapositiva13 = () => {
                 ))}
               </div>
             </div>
-
-            <div className="mt-8 p-4 rounded-lg text-center" style={{ 
+            <div className="mt-8 p-4 rounded-lg text-center" style={{
               backgroundColor: colors.lila + '25',
               border: `2px dashed ${colors.lila}`
             }}>
-              <p className="text-base mb-2" style={{ 
-                fontFamily: 'Raleway, sans-serif', 
-                fontWeight: 'bold', 
-                color: colors.azulOscuro 
+              <p className="text-base mb-2" style={{
+                fontFamily: 'Raleway, sans-serif',
+                fontWeight: 'bold',
+                color: colors.azulOscuro
               }}>
                 ¿Nos llama algo la atención?
               </p>
-              <p style={{ 
-                fontFamily: 'Raleway, sans-serif', 
+              <p style={{
+                fontFamily: 'Raleway, sans-serif',
                 fontSize: '0.9rem',
                 color: colors.negro,
                 fontStyle: 'italic'
@@ -5655,52 +5704,47 @@ const Diapositiva13 = () => {
             </div>
           </div>
         </div>
-
-        {/* Fase 2: Refinamiento */}
+        {/* Fase 2 */}
         <div className={`${faseActiva === 2 ? 'w-full' : 'w-0'} transition-all duration-300 overflow-hidden`}>
           <div className="h-full p-6 overflow-y-auto">
-            <h2 className="text-lg mb-4" style={{ 
-              fontFamily: 'Raleway, sans-serif', 
-              fontWeight: 'bold', 
-              color: colors.azulOscuro 
+            <h2 className="text-lg mb-4" style={{
+              fontFamily: 'Raleway, sans-serif',
+              fontWeight: 'bold',
+              color: colors.azulOscuro
             }}>
               Fase 2: Refinamiento
             </h2>
-
             <div className="mb-6 p-4 rounded-lg" style={{ backgroundColor: colors.lila + '20' }}>
-              <h3 className="text-base mb-2" style={{ 
-                fontFamily: 'Raleway, sans-serif', 
-                fontWeight: '600', 
-                color: colors.azulOscuro 
+              <h3 className="text-base mb-2" style={{
+                fontFamily: 'Raleway, sans-serif',
+                fontWeight: '600',
+                color: colors.azulOscuro
               }}>
                 Enmendémonos:
               </h3>
-              <p style={{ 
-                fontFamily: 'Raleway, sans-serif', 
+              <p style={{
+                fontFamily: 'Raleway, sans-serif',
                 fontSize: '0.9rem',
-                color: colors.negro 
+                color: colors.negro
               }}>
                 Modifica las situaciones para que sean <strong style={{ color: colors.verdeTurquesa }}>más variadas y originales</strong>, 
                 e incluyan <strong style={{ color: colors.verdeTurquesa }}>detalles más específicos</strong>, de forma que la empresa o el 
                 profesional tenga <strong style={{ color: colors.verdeTurquesa }}>características muy determinadas</strong>.
               </p>
             </div>
-
-            <h3 className="text-base mb-3" style={{ 
-              fontFamily: 'Raleway, sans-serif', 
+            <h3 className="text-base mb-3" style={{
+              fontFamily: 'Raleway, sans-serif',
               color: colors.verdeTurquesa,
               fontWeight: '600'
             }}>
               Resultado mejorado:
             </h3>
-            
-            {/* Nota explicativa sobre situación 5 */}
-            <div className="mb-3 p-3 rounded-lg" style={{ 
+            <div className="mb-3 p-3 rounded-lg" style={{
               backgroundColor: colors.verdeTurquesa + '10',
               border: `1px solid ${colors.verdeTurquesa}`
             }}>
-              <p style={{ 
-                fontFamily: 'Raleway, sans-serif', 
+              <p style={{
+                fontFamily: 'Raleway, sans-serif',
                 fontSize: '0.8rem',
                 color: colors.negro,
                 fontStyle: 'italic'
@@ -5708,23 +5752,21 @@ const Diapositiva13 = () => {
                 💡 La situación 5 está destacada porque será nuestro ejemplo práctico en las siguientes fases.
               </p>
             </div>
-
             <div className="space-y-2">
               {situacionesEspecificas.map((situacion, index) => (
-                <div key={index} className={`flex items-start p-2 rounded ${index === 4 ? 'ring-2' : ''}`} 
-                     style={{ 
-                       backgroundColor: index === 4 ? colors.verdeTurquesa + '15' : 'transparent',
-                       ringColor: index === 4 ? colors.verdeTurquesa : 'transparent'
-                     }}>
+                <div key={index} className={`flex items-start p-2 rounded ${index === 4 ? 'ring-2' : ''}`}
+                  style={{
+                    backgroundColor: index === 4 ? colors.verdeTurquesa + '15' : 'transparent'
+                  }}>
                   <span className="mr-2 text-sm" style={{ color: colors.verdeTurquesa }}>
                     {index + 1}.
                   </span>
-                  <p style={{ 
-                    fontFamily: 'Raleway, sans-serif', 
+                  <p style={{
+                    fontFamily: 'Raleway, sans-serif',
                     fontSize: '0.85rem',
-                    color: colors.negro 
+                    color: colors.negro
                   }}>
-                    Necesito encontrar un {situacion.base} <span style={{ 
+                    Necesito encontrar un {situacion.base} <span style={{
                       backgroundColor: colors.lila + '30',
                       padding: '0 4px',
                       borderRadius: '2px'
@@ -5735,34 +5777,31 @@ const Diapositiva13 = () => {
             </div>
           </div>
         </div>
-
-        {/* Fase 3: Metodología */}
+        {/* Fase 3 */}
         <div className={`${faseActiva === 3 ? 'w-full' : 'w-0'} transition-all duration-300 overflow-hidden`}>
           <div className="h-full p-6 overflow-y-auto">
-            <h2 className="text-lg mb-4" style={{ 
-              fontFamily: 'Raleway, sans-serif', 
-              fontWeight: 'bold', 
-              color: colors.azulOscuro 
+            <h2 className="text-lg mb-4" style={{
+              fontFamily: 'Raleway, sans-serif',
+              fontWeight: 'bold',
+              color: colors.azulOscuro
             }}>
               Fase 3: Metodología
             </h2>
-
             <div className="mb-4">
-              <h3 className="text-base mb-3" style={{ 
-                fontFamily: 'Raleway, sans-serif', 
-                fontWeight: '600', 
-                color: colors.verdeTurquesa 
+              <h3 className="text-base mb-3" style={{
+                fontFamily: 'Raleway, sans-serif',
+                fontWeight: '600',
+                color: colors.verdeTurquesa
               }}>
                 Ahora creemos la otra parte de la tarea:
               </h3>
             </div>
-
-            <div className="p-4 rounded-lg" style={{ 
+            <div className="p-4 rounded-lg" style={{
               backgroundColor: colors.verdeClaro + '30',
               border: `1px solid ${colors.verdeClaro}`
             }}>
               <div className="mb-3">
-                <span className="px-3 py-1 rounded-full text-sm" style={{ 
+                <span className="px-3 py-1 rounded-full text-sm" style={{
                   backgroundColor: colors.azulOscuro,
                   color: colors.blanco,
                   fontFamily: 'Raleway, sans-serif'
@@ -5770,33 +5809,32 @@ const Diapositiva13 = () => {
                   Prompt del profesor experto
                 </span>
               </div>
-              <p style={{ 
-                fontFamily: 'Raleway, sans-serif', 
+              <p style={{
+                fontFamily: 'Raleway, sans-serif',
                 fontSize: '0.85rem',
                 color: colors.negro,
                 lineHeight: '1.6'
               }}>
                 {promptProfesor}
               </p>
-              <p className="mt-3 font-semibold" style={{ 
-                fontFamily: 'Raleway, sans-serif', 
+              <p className="mt-3 font-semibold" style={{
+                fontFamily: 'Raleway, sans-serif',
                 fontSize: '0.9rem',
                 color: colors.azulOscuro
               }}>
                 Ahora crea tres textos para la situación 5
               </p>
             </div>
-
             <div className="mt-6 p-4 rounded-lg" style={{ backgroundColor: colors.lila + '15' }}>
-              <h4 className="text-sm mb-2" style={{ 
-                fontFamily: 'Raleway, sans-serif', 
-                fontWeight: '600', 
-                color: colors.azulOscuro 
+              <h4 className="text-sm mb-2" style={{
+                fontFamily: 'Raleway, sans-serif',
+                fontWeight: '600',
+                color: colors.azulOscuro
               }}>
                 Situación seleccionada:
               </h4>
-              <p style={{ 
-                fontFamily: 'Raleway, sans-serif', 
+              <p style={{
+                fontFamily: 'Raleway, sans-serif',
                 fontSize: '0.9rem',
                 color: colors.negro,
                 fontWeight: '500'
@@ -5807,26 +5845,24 @@ const Diapositiva13 = () => {
             </div>
           </div>
         </div>
-
-        {/* Fase 4: Resultado final */}
+        {/* Fase 4 */}
         <div className={`${faseActiva === 4 ? 'w-full' : 'w-0'} transition-all duration-300 overflow-hidden`}>
           <div className="h-full p-6 overflow-y-auto">
-            <h2 className="text-lg mb-4" style={{ 
-              fontFamily: 'Raleway, sans-serif', 
-              fontWeight: 'bold', 
-              color: colors.azulOscuro 
+            <h2 className="text-lg mb-4" style={{
+              fontFamily: 'Raleway, sans-serif',
+              fontWeight: 'bold',
+              color: colors.azulOscuro
             }}>
               Fase 4: Resultado final
             </h2>
-
             <div className="grid md:grid-cols-3 gap-4 mb-6">
               {anuncios.map((anuncio, index) => (
-                <div key={index} className="relative p-4 rounded-lg" style={{ 
+                <div key={index} className="relative p-4 rounded-lg" style={{
                   backgroundColor: colors.blanco,
                   border: `2px solid ${anuncio.valido ? colors.verdeTurquesa : colors.lila}`,
                   boxShadow: '0 4px 12px rgba(0,0,0,0.08)'
                 }}>
-                  <div className="absolute top-2 right-2" style={{ 
+                  <div className="absolute top-2 right-2" style={{
                     backgroundColor: anuncio.valido ? colors.verdeTurquesa : colors.lila,
                     color: colors.blanco,
                     width: '30px',
@@ -5840,28 +5876,25 @@ const Diapositiva13 = () => {
                   }}>
                     {anuncio.valido ? '✓' : '✗'}
                   </div>
-                  
-                  <h4 className="mb-2 pr-8" style={{ 
-                    fontFamily: 'Raleway, sans-serif', 
+                  <h4 className="mb-2 pr-8" style={{
+                    fontFamily: 'Raleway, sans-serif',
                     fontWeight: 'bold',
                     fontSize: '0.95rem',
-                    color: colors.azulOscuro 
+                    color: colors.azulOscuro
                   }}>
                     Anuncio {index + 1}: {anuncio.titulo}
                   </h4>
-                  
-                  <p className="mb-3" style={{ 
-                    fontFamily: 'Raleway, sans-serif', 
+                  <p className="mb-3" style={{
+                    fontFamily: 'Raleway, sans-serif',
                     fontSize: '0.75rem',
                     color: colors.negro,
                     lineHeight: '1.4'
                   }}>
                     {anuncio.texto}
                   </p>
-                  
                   <div className="pt-3 border-t" style={{ borderColor: colors.verdeClaro }}>
-                    <p style={{ 
-                      fontFamily: 'Raleway, sans-serif', 
+                    <p style={{
+                      fontFamily: 'Raleway, sans-serif',
                       fontSize: '0.7rem',
                       color: anuncio.valido ? colors.verdeTurquesa : colors.azulOscuro,
                       fontWeight: '500'
@@ -5872,12 +5905,11 @@ const Diapositiva13 = () => {
                 </div>
               ))}
             </div>
-
             <div className="p-4 rounded-lg mb-4" style={{ backgroundColor: colors.verdeClaro + '20' }}>
-              <h3 className="text-base mb-2" style={{ 
-                fontFamily: 'Raleway, sans-serif', 
-                fontWeight: '600', 
-                color: colors.azulOscuro 
+              <h3 className="text-base mb-2" style={{
+                fontFamily: 'Raleway, sans-serif',
+                fontWeight: '600',
+                color: colors.azulOscuro
               }}>
                 Resumen de validación:
               </h3>
@@ -5893,7 +5925,6 @@ const Diapositiva13 = () => {
                 </li>
               </ul>
             </div>
-
             {/* Código QR */}
             <div className="rounded-xl p-4 shadow-lg flex items-center gap-4" style={{
               backgroundColor: colors.verdeTurquesa + '15',
@@ -5915,9 +5946,9 @@ const Diapositiva13 = () => {
                 }}>
                   Materiales de Formación
                 </h3>
-                <p className="text-sm" style={{ 
+                <p className="text-sm" style={{
                   fontFamily: 'Raleway, sans-serif',
-                  color: colors.negro 
+                  color: colors.negro
                 }}>
                   Escanea para acceder a recursos adicionales y plantillas para crear tus propias tareas de matching
                 </p>
@@ -5926,20 +5957,8 @@ const Diapositiva13 = () => {
           </div>
         </div>
       </div>
-
-      {/* Footer */}
-      <footer className="text-center py-2" style={{ 
-        backgroundColor: colors.blanco,
-        borderTop: `1px solid ${colors.verdeClaro}`
-      }}>
-        <p style={{ 
-          fontFamily: 'Raleway, sans-serif', 
-          fontSize: '0.7rem',
-          color: colors.negro 
-        }}>
-          © {new Date().getFullYear()} Hablandis. Todos los derechos reservados.
-        </p>
-      </footer>
+      {/* Footer Unificado Minimalista */}
+      <FooterMinimal />
     </div>
   );
 };
@@ -5948,8 +5967,9 @@ const Diapositiva13 = () => {
 // =======================================================================
 
 // =======================================================================
-// DIAPOSITIVA 14: IA PARA CORRECCIÓN - DOS ENFOQUES (VISUAL MEJORADO V3 - LOGO GRANDE)
+// DIAPOSITIVA 14: IA PARA CORRECCIÓN - DOS ENFOQUES (DISEÑO UNIFICADO)
 // =======================================================================
+
 const Diapositiva14 = () => {
   const [showFullText, setShowFullText] = useState(false);
   const ejemploTexto = "Hola me llamo Sara y quiero contar mi experiencia porque creo que esta iniziadiva es muy interesante. Para mi comer significa comer untos a la gente que quiero. y condivider nuestras experiencias del dia. Hace tres años había una comida que me acuerdo bien. Era un ordenario dia de Enero. Y estaba con mi madre, mi padre y mi hermana como quasi todos los días; porque en mi familia es normal comer untos. Ese dia comimos una comida preparida por mi madre, que es una bravissima cocinera. Se trataba de una pasta tipica del mi pais . «pasta a la nona» también pollo con patatas. Y al fin una tarta muy rica. Ese momentos lo acuordo con mucho gusto porque estábamos untos y feliz A lo mejor una de las ultimas veces.";
@@ -5967,16 +5987,6 @@ const Diapositiva14 = () => {
     cardBackground: colors.blanco + 'E6', 
     accent1: colors.amarillo,
     accent2: colors.verdeTurquesa,
-  };
-
-  const titleStyle = {
-    fontFamily: 'Aglet Mono Light, monospace',
-    fontSize: '3rem', 
-    color: colors.azulOscuro, 
-    marginBottom: '2.5rem', 
-    textAlign: 'center' as const,
-    textShadow: '0 1px 3px rgba(0,0,0,0.1)', 
-    marginTop: '2rem', // Añadido margen superior para dar espacio al logo más grande
   };
 
   const enfoqueTitleStyle = {
@@ -6007,34 +6017,6 @@ const Diapositiva14 = () => {
     textAlign: 'center' as const, 
   };
 
-  const hablandisLogo = (
-    <div className="absolute top-12 left-12 z-20"> {/* Ajustado top y left para logo grande */}
-      <img 
-        src="/hablandis.png" 
-        alt="Hablandis Logo" 
-        className="h-56"  // LOGO AL DOBLE: h-28 a h-56
-        style={{ filter: 'drop-shadow(0 8px 16px rgba(0,0,0,0.2))' }} // Sombra más pronunciada
-        onError={(e) => {
-          const img = e.target as HTMLImageElement;
-          img.style.display = 'none';
-          const parent = img.parentElement;
-          if (parent) {
-            parent.innerHTML = `
-              <div style="font-family: 'Aglet Mono', monospace; color: ${colors.azulOscuro}; font-size: 60px; line-height: 1; text-shadow: 0 2px 4px rgba(255,255,255,0.5);">
-                Hablandis
-              </div>`; // Tamaño de fuente alternativo también aumentado
-          }
-        }}
-      />
-    </div>
-  );
-
-  const footer = (
-    <p className="absolute bottom-6 left-1/2 transform -translate-x-1/2 text-sm z-20" style={{ fontFamily: 'Raleway, sans-serif', color: colors.azulOscuro, opacity: 0.8, textShadow: '0 1px 2px rgba(255,255,255,0.3)' }}>
-      © {new Date().getFullYear()} Hablandis. Todos los derechos reservados.
-    </p>
-  );
-
   return (
     <div 
       className="min-h-screen flex flex-col items-center justify-center p-8 md:p-12 relative overflow-hidden" 
@@ -6042,18 +6024,19 @@ const Diapositiva14 = () => {
         background: `linear-gradient(145deg, ${slideSpecificColors.lilaSuave} 0%, ${slideSpecificColors.verdeClaroSuave} 100%)`
       }}
     >
-      {hablandisLogo}
+      {/* Logo Unificado */}
+      <div className={LogoConfig.position}>
+        <LogoHablandis />
+      </div>
 
-      <motion.h1 
-        style={titleStyle}
-        {...animations.fadeIn} 
-        transition={{duration: 0.6, delay: 0.2}}
-      >
-        Las IA para la corrección didáctica: Dos Enfoques
-      </motion.h1>
+      {/* Título Unificado */}
+      <div className="pt-12 pb-2 flex flex-col items-center w-full">
+        <MainTitle>
+          Las IA para la corrección didáctica: Dos Enfoques
+        </MainTitle>
+      </div>
 
       <div className="grid md:grid-cols-2 gap-10 w-full max-w-7xl z-10">
-        
         <motion.div 
           className="p-8 flex flex-col rounded-2xl" 
           style={{ 
@@ -6084,7 +6067,7 @@ const Diapositiva14 = () => {
             style={{
                 ...bodyTextStyle,
                 backgroundColor: colors.grisClaro + 'A6', 
-                maxHeight: showFullText ? '220px' : '80px', // Reducido maxHeight para compensar espacio
+                maxHeight: showFullText ? '220px' : '80px',
                 transition: 'max-height 0.6s ease-in-out',
                 fontSize: '0.9rem',
                 border: `1px solid ${colors.grisMedio}90`, 
@@ -6172,8 +6155,8 @@ const Diapositiva14 = () => {
           </div>
         </motion.div>
       </div>
-      
-      <style jsx global>{`
+
+      <style>{`
         .pretty-scrollbar::-webkit-scrollbar {
           width: 8px;
         }
@@ -6192,7 +6175,8 @@ const Diapositiva14 = () => {
         }
       `}</style>
 
-      {footer}
+      {/* Footer Unificado Minimalista */}
+      <FooterMinimal />
     </div>
   );
 };
@@ -6970,14 +6954,336 @@ const Diapositiva15 = () => {
 // FIN DIAPOSITIVA 15
 // =======================================================================
 
-// ... (resto del código de Presentacion.tsx) ...
+// =======================================================================
+// DIAPOSITIVA 16: AGRADECIMIENTO CON Dziękuję INTERACTIVO Y ANIMADO
+// =======================================================================
+
+const Diapositiva16 = ({
+  colors = {
+    azulOscuro: '#2C3E50',
+    verdeTurquesa: '#16A085',
+    blanco: '#FFFFFF',
+    grisClaro: '#ECEFF1',
+    lila: '#D2CDEB',
+    verdeClaro: '#D9E4C8',
+    grisOscuro: '#555555'
+  }
+}) => {
+  const [mousePos, setMousePos] = useState({ x: 50, y: 50 });
+  const [flyingWords, setFlyingWords] = useState<Array<{
+    id: number,
+    x: number,
+    y: number,
+    dx: number,
+    dy: number,
+    size: number,
+    opacity: number,
+    rotation: number,
+    rotationSpeed: number
+  }>>([]);
+  const [showElements, setShowElements] = useState({
+    logo: false,
+    title: false,
+    subtitle: false,
+    info: false
+  });
+
+  // Añadir una "Dziękuję" voladora al hacer click o cada pocos segundos
+  useEffect(() => {
+    // Creador automático cada 600ms
+    const interval = setInterval(() => {
+      createFlyingWord();
+    }, 600);
+
+    // Crear volando onClick
+    const handleClick = (e: MouseEvent) => {
+      createFlyingWord(e.clientX, e.clientY);
+    };
+    window.addEventListener('click', handleClick);
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('click', handleClick);
+    };
+    // eslint-disable-next-line
+  }, []);
+
+  // Animación de vuelo (posición, opacidad, rotación)
+  useEffect(() => {
+    let animationFrame: number;
+    const animate = () => {
+      setFlyingWords(words =>
+        words
+          .map(word => ({
+            ...word,
+            x: word.x + word.dx,
+            y: word.y + word.dy,
+            opacity: word.opacity - 0.008,
+            rotation: word.rotation + word.rotationSpeed
+          }))
+          .filter(word => word.opacity > 0 && word.y > -60 && word.x > -200 && word.x < window.innerWidth + 200)
+      );
+      animationFrame = requestAnimationFrame(animate);
+    };
+    animationFrame = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(animationFrame);
+  }, []);
+
+  function createFlyingWord(x?: number, y?: number) {
+    // Aparece en zona inferior si no hay mouse
+    const startX = x ?? Math.random() * window.innerWidth;
+    const startY = y ?? window.innerHeight * 0.6 + Math.random() * window.innerHeight * 0.3;
+
+    // Trayectoria y tamaño aleatorios
+    const dx = (Math.random() - 0.5) * 1.2; // -0.6 a 0.6 px/frame
+    const dy = - (1.3 + Math.random() * 1.2); // -1.3 a -2.5 px/frame (sube)
+    const size = 20 + Math.random() * 25; // px
+    const rotation = Math.random() * 360;
+    const rotationSpeed = (Math.random() - 0.5) * 0.4; // -0.2 a 0.2 deg/frame
+
+    setFlyingWords(words => [
+      ...words,
+      {
+        id: Date.now() + Math.random(),
+        x: startX,
+        y: startY,
+        dx,
+        dy,
+        size,
+        opacity: 0.25 + Math.random() * 0.17, // 0.25 - 0.42
+        rotation,
+        rotationSpeed
+      }
+    ]);
+  }
+
+  useEffect(() => {
+    const timers = [
+      setTimeout(() => setShowElements(prev => ({ ...prev, logo: true })), 300),
+      setTimeout(() => setShowElements(prev => ({ ...prev, title: true })), 600),
+      setTimeout(() => setShowElements(prev => ({ ...prev, subtitle: true })), 900),
+      setTimeout(() => setShowElements(prev => ({ ...prev, info: true })), 1200)
+    ];
+    return () => timers.forEach(clearTimeout);
+  }, []);
+
+  const uniformColor = colors.azulOscuro;
+
+  return (
+    <div
+      className="min-h-screen relative overflow-hidden"
+      style={{
+        background: `linear-gradient(145deg, ${colors.lila} 0%, ${colors.verdeClaro} 100%)`
+      }}
+    >
+      {/* Gradiente interactivo */}
+      <div
+        className="absolute inset-0 opacity-20 pointer-events-none"
+        style={{
+          background: `radial-gradient(circle at ${mousePos.x}% ${mousePos.y}%, ${colors.verdeTurquesa}25 0%, transparent 60%)`,
+          transition: 'background 0.5s ease'
+        }}
+      />
+
+      {/* Dziękuję voladoras */}
+      <div className="pointer-events-none absolute inset-0 z-10">
+        {flyingWords.map(word => (
+          <span
+            key={word.id}
+            style={{
+              position: 'absolute',
+              left: word.x,
+              top: word.y,
+              fontFamily: 'Aglet Mono, monospace',
+              fontWeight: 700,
+              fontSize: `${word.size}px`,
+              color: uniformColor,
+              opacity: word.opacity,
+              userSelect: 'none',
+              pointerEvents: 'none',
+              letterSpacing: '2.2px',
+              textShadow: '0 2px 8px rgba(0,0,0,0.07)',
+              transform: `rotate(${word.rotation}deg)`
+            }}
+          >
+            Dziękuję
+          </span>
+        ))}
+      </div>
+
+      <div className="relative z-20 h-screen flex flex-col p-8">
+        {/* Logo GRANDE */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.5 }}
+          animate={{
+            opacity: showElements.logo ? 1 : 0,
+            scale: showElements.logo ? 1 : 0.5
+          }}
+          transition={{ duration: 1, type: "spring" }}
+          className="absolute top-0 left-0"
+        >
+          <img
+            src="/hablandis.png"
+            alt="Hablandis"
+            className="h-80"
+            style={{
+              filter: 'drop-shadow(0 10px 20px rgba(0,0,0,0.1))',
+              maxWidth: '400px'
+            }}
+            onError={(e) => {
+              const img = e.target as HTMLImageElement;
+              img.style.display = 'none';
+              img.parentElement!.innerHTML = `
+                <div style="padding: 30px;">
+                  <div style="font-family: 'Aglet Mono', monospace; color: ${uniformColor}; font-size: 72px; font-weight: 900;">
+                    Hablandis
+                  </div>
+                  <div style="font-family: 'Raleway', sans-serif; color: ${colors.verdeTurquesa}; font-size: 20px; margin-top: 10px;">
+                    Centro Internacional de Idiomas
+                  </div>
+                </div>
+              `;
+            }}
+          />
+        </motion.div>
+
+        {/* Contenido central */}
+        <div className="flex-1 flex items-center justify-center">
+          <div className="text-center max-w-6xl">
+
+            {/* ¡MUCHAS GRACIAS! */}
+            <motion.div
+              initial={{ opacity: 0, y: 50 }}
+              animate={{
+                opacity: showElements.title ? 1 : 0,
+                y: showElements.title ? 0 : 50
+              }}
+              transition={{ duration: 1, type: "spring", stiffness: 100 }}
+              className="mb-12"
+            >
+              <h1
+                style={{
+                  fontFamily: 'Aglet Mono, monospace',
+                  fontSize: '70px',
+                  fontWeight: 900,
+                  letterSpacing: '4px',
+                  color: uniformColor,
+                  textShadow: '0 8px 40px rgba(0,0,0,0.07)',
+                }}
+              >
+                ¡MUCHAS GRACIAS!
+              </h1>
+            </motion.div>
+
+            {/* Información de contacto */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{
+                opacity: showElements.subtitle ? 1 : 0
+              }}
+              transition={{ delay: 0.3, duration: 0.8 }}
+            >
+              <h2
+                className="mb-4"
+                style={{
+                  fontFamily: 'Raleway, sans-serif',
+                  fontSize: '36px',
+                  fontWeight: 600,
+                  color: uniformColor,
+                  letterSpacing: '1px'
+                }}
+              >
+                Armando Cruz Crespillo
+              </h2>
+              <p
+                style={{
+                  fontFamily: 'Raleway, sans-serif',
+                  fontSize: '28px',
+                  fontWeight: 500,
+                  color: colors.verdeTurquesa,
+                  textShadow: '0 4px 20px rgba(0,0,0,0.1)',
+                  letterSpacing: '1px'
+                }}
+              >
+                hablamos@hablandis.com
+              </p>
+            </motion.div>
+
+            {/* Código QR */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{
+                opacity: showElements.info ? 1 : 0,
+                scale: showElements.info ? 1 : 0.9
+              }}
+              transition={{ delay: 0.6, type: "spring" }}
+              className="mt-16"
+            >
+              <div
+                className="inline-block rounded-3xl px-12 py-8"
+                style={{
+                  backgroundColor: colors.blanco + '80',
+                  backdropFilter: 'blur(30px)',
+                  boxShadow: '0 20px 60px rgba(0,0,0,0.1)'
+                }}
+              >
+                <div className="flex items-center gap-8">
+                  <div className="w-40 h-40 bg-gray-50 rounded-2xl flex items-center justify-center shadow-inner">
+                    <img
+                      src="/qr.png"
+                      alt="QR Code Presentación EVALIA"
+                      className="w-full h-full object-contain p-3"
+                    />
+                  </div>
+                  <div className="text-left">
+                    <h3 style={{
+                      fontFamily: 'Aglet Mono, monospace',
+                      fontSize: '28px',
+                      fontWeight: 800,
+                      color: uniformColor,
+                      marginBottom: '8px'
+                    }}>
+                      Materiales de Presentación
+                    </h3>
+                    <p style={{
+                      fontFamily: 'Raleway, sans-serif',
+                      fontSize: '18px',
+                      color: colors.grisOscuro
+                    }}>
+                      Escanea para acceder a recursos y documentación
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        </div>
+
+        {/* Footer Minimalista */}
+        <div className="absolute bottom-2 left-0 right-0 text-center">
+          <p className="text-xs" style={{
+            fontFamily: 'Raleway, sans-serif',
+            color: uniformColor,
+            opacity: 0.6
+          }}>
+            © {new Date().getFullYear()} Hablandis. Todos los derechos reservados.
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// =======================================================================
+// FIN DIAPOSITIVA 16
+// =======================================================================
 
 // =======================================================================
 // COMPONENTE PRINCIPAL DE PRESENTACIÓN - CORREGIDO
 // =======================================================================
 const Presentacion = () => {
   const [diapositivaActual, setDiapositivaActual] = useState(1);
-  const totalDiapositivas = 20; // Corregido de 25 a 20 diapositivas
+  const totalDiapositivas = 16; // Corregido de 20 a 16 diapositivas
 
   const cambiarDiapositiva = (direccion: 'prev' | 'next') => {
     setDiapositivaActual(actual => {
@@ -7020,10 +7326,6 @@ const Presentacion = () => {
   else if (diapositivaActual === 14) SlideComponent = Diapositiva14;
   else if (diapositivaActual === 15) SlideComponent = Diapositiva15;
   else if (diapositivaActual === 16) SlideComponent = Diapositiva16;
-  else if (diapositivaActual === 17) SlideComponent = Diapositiva17;
-  else if (diapositivaActual === 18) SlideComponent = Diapositiva18;
-  else if (diapositivaActual === 19) SlideComponent = Diapositiva19;
-  else if (diapositivaActual === 20) SlideComponent = Diapositiva20;
   else {
     // Fallback por si acaso
     SlideComponent = () => <div className="flex items-center justify-center h-screen text-2xl">Diapositiva {diapositivaActual} no encontrada</div>;
