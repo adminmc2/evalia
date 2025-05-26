@@ -2217,14 +2217,14 @@ const Diapositiva5 = () => {
 // =======================================================================
 
 // =======================================================================
-// DIAPOSITIVA 6: BÚSQUEDA DE CONTENIDO CON IA (SIN FOOTER)
+// DIAPOSITIVA 6: BÚSQUEDA DE CONTENIDO CON IA (SIN FOOTER) - CORREGIDA
 // =======================================================================
+
 const Diapositiva6 = () => {
   const [activeGoogleOperatorId, setActiveGoogleOperatorId] = useState<string | null>(null);
-  const [activeChatGPTExampleId, setActiveChatGPTExampleId] = useState<string | null>(null);
   const [isTyping, setIsTyping] = useState(false);
   const [currentSearchText, setCurrentSearchText] = useState("");
-  
+
   // Colores base del diseño unificado
   const colors = {
     azulOscuro: '#12055F',
@@ -2298,7 +2298,7 @@ const Diapositiva6 = () => {
     googleGreen: '#34A853',
   };
 
-  const baseFontSize = '18px'; // Aumentado de 16px
+  const baseFontSize = '18px';
 
   // Iconos
   const LineIconsD6 = {
@@ -2345,7 +2345,49 @@ const Diapositiva6 = () => {
     ),
   };
 
-  // Datos actualizados con los nuevos prompts
+  // Datos actualizados con los prompts correctos
+  const chatGPTSections = [
+    {
+      id: 'content',
+      title: 'Crear Contenido',
+      icon: LineIconsD6.document,
+      examples: [
+        {
+          id: 'b1-content',
+          level: 'B1',
+          tutorial: 'Soy un redactor de tareas de comprensión escrita para pruebas de certificación en español. Necesito que actúes como mi asistente en la búsqueda de textos auténticos en internet. Para ello, sugiéreme en primer lugar diez temáticas concretas, interesantes y atractivas que se ajusten al nivel B1 del MCERL.',
+          link: 'https://claude.ai/public/artifacts/6b8d697b-b486-486e-9027-640730e85a10'
+        },
+        {
+          id: 'b2-content',
+          level: 'B2',
+          tutorial: 'Soy un redactor de tareas de comprensión escrita para pruebas de certificación en español. Necesito que actúes como mi asistente en la búsqueda de textos auténticos en internet. Para ello, sugiéreme en primer lugar diez temáticas concretas, interesantes y atractivas que se ajusten al nivel B2 del MCERL.',
+          link: 'https://claude.ai/public/artifacts/1e74caca-2e62-4105-a088-b390e0c3c675'
+        }
+      ]
+    },
+    {
+      id: 'media',
+      title: 'Buscar Vídeos/Audio',
+      icon: LineIconsD6.video,
+      examples: [
+        {
+          id: 'nivel-google-a2',
+          level: 'A2',
+          tutorial: 'Soy un redactor de tareas de comprensión auditiva para pruebas de certificación en español. Necesito que actúes como mi asistente en la búsqueda de audios/vídeos auténticos en internet. Para ello, sugiéreme en primer lugar diez temáticas concretas, interesantes y atractivas que se ajusten al nivel A2 del MCERL',
+          link: 'https://docs.google.com/document/d/1ekqIkGdq-Y0gnralSDOB1M-HsQqw_hlGg-EWEpr5SOk/edit?usp=sharing'
+        },
+        {
+          id: 'nivel-chatgpt-b1',
+          level: 'B1',
+          tutorial: 'Soy un redactor de tareas de comprensión auditiva para pruebas de certificación en español. Necesito que actúes como mi asistente en la búsqueda de vídeos auténticos en youtube. Para ello, sugiéreme en primer lugar diez temáticas concretas, interesantes y atractivas que se ajusten al nivel B1 del MCERL',
+          link: 'https://chatgpt.com/share/68344a9a-843c-800d-b007-951cca3ec455'
+        }
+      ]
+    }
+  ];
+
+  // Google operators se mantienen igual
   const googleOperators = [
     {
       id: 'site',
@@ -2391,47 +2433,6 @@ const Diapositiva6 = () => {
       example: 'español para extranjeros -niños',
       queryHighlight: 'español para extranjeros -niños',
       icon: '🚫'
-    }
-  ];
-
-  const chatGPTSections = [
-    {
-      id: 'content',
-      title: 'Crear Contenido',
-      icon: LineIconsD6.document,
-      examples: [
-        {
-          id: 'b1-content',
-          level: 'B1',
-          tutorial: 'Soy un redactor de tareas de comprensión escrita para pruebas de certificación en español. Necesito que actúes como mi asistente en la búsqueda de textos auténticos en internet. Para ello, sugiéreme en primer lugar diez temáticas concretas, interesantes y atractivas que se ajusten al nivel B1 del MCERL',
-          link: 'https://chatgpt.com/share/fc7c7b9f-2a78-4d66-906f-1523513b1890'
-        },
-        {
-          id: 'b2-content',
-          level: 'B2',
-          tutorial: 'Soy un redactor de tareas de comprensión escrita para pruebas de certificación en español. Necesito que actúes como mi asistente en la búsqueda de textos auténticos en internet. Para ello, sugiéreme en primer lugar diez temáticas concretas, interesantes y atractivas que se ajusten al nivel B2 del MCERL',
-          link: 'https://chatgpt.com/share/6daea876-133a-456b-9198-4206eda8403b'
-        }
-      ]
-    },
-    {
-      id: 'media',
-      title: 'Buscar Vídeos/Audio',
-      icon: LineIconsD6.video,
-      examples: [
-        {
-          id: 'b1-media',
-          level: 'B1',
-          tutorial: 'Soy un redactor de tareas de comprensión auditiva para pruebas de certificación en español. Necesito que actúes como mi asistente en la búsqueda de audios/vídeos auténticos en internet. Para ello, sugiéreme en primer lugar diez temáticas concretas, interesantes y atractivas que se ajusten al nivel B1 del MCERL',
-          link: 'https://chatgpt.com/share/6e3c2ad5-0db1-476a-bcb1-2ecf6ced1c14'
-        },
-        {
-          id: 'b2-media',
-          level: 'B2',
-          tutorial: 'Soy un redactor de tareas de comprensión auditiva para pruebas de certificación en español. Necesito que actúes como mi asistente en la búsqueda de vídeos auténticos en youtube. Para ello, sugiéreme en primer lugar diez temáticas concretas, interesantes y atractivas que se ajusten al nivel B2 del MCERL',
-          link: 'https://chatgpt.com/share/20878b7c-9c3f-4a3e-b6ea-e650d47a82ae'
-        }
-      ]
     }
   ];
 
@@ -2523,7 +2524,7 @@ const Diapositiva6 = () => {
           ¿Cómo se construye una propuesta evaluativa con IA?
         </MainTitle>
         <Subtitle>
-          La búsqueda de contenido y el uso de ChatGPT
+          La búsqueda de contenido y el uso de ChatGPT/Claude/Gemini: tus asistentes creativos
         </Subtitle>
       </motion.div>
 
@@ -2631,7 +2632,7 @@ const Diapositiva6 = () => {
           </div>
         </div>
 
-        {/* Columna Derecha: ChatGPT y QR (50%) */}
+        {/* Columna Derecha: ChatGPT/Claude/Gemini y QR (50%) */}
         <div className="flex flex-col gap-6">
           <div 
             className="flex-grow p-5 rounded-lg"
@@ -2653,7 +2654,7 @@ const Diapositiva6 = () => {
                   color: d6Colors.textTitle, 
                   fontWeight: 700 
                 }}>
-                  ChatGPT: Tu Asistente Creativo
+                  ChatGPT/Claude/Gemini: tus asistentes creativos
                 </h2>
                 <p style={{ 
                   fontFamily: 'Raleway', 
@@ -2688,48 +2689,76 @@ const Diapositiva6 = () => {
                 
                 <div className="space-y-2 pl-2">
                   {section.examples.map((ex) => (
-                    <motion.div
+                    <div
                       key={ex.id}
-                      className={`relative p-3 rounded-lg transition-all duration-200 cursor-pointer
-                        ${activeChatGPTExampleId === ex.id 
-                          ? 'bg-purple-50 shadow-sm scale-[1.01]' 
-                          : 'bg-gray-50 hover:bg-gray-100'}`}
+                      className="relative flex items-start p-6 bg-[#fafaff] rounded-2xl shadow-sm group transition-all min-h-[110px] border border-[#ece9fb]"
                       style={{
-                        border: `1px solid ${activeChatGPTExampleId === ex.id ? d6Colors.accentTertiary + '30' : 'transparent'}`
+                        boxShadow: "0 3px 13px 0 rgba(120, 120, 140, 0.03)",
                       }}
-                      onMouseEnter={() => setActiveChatGPTExampleId(ex.id)}
-                      onMouseLeave={() => setActiveChatGPTExampleId(null)}
-                      onClick={() => window.open(ex.link, '_blank')}
                     >
-                      <div className="flex items-center justify-between">
-                        <span 
-                          className="px-3 py-1 text-white text-sm rounded-full font-semibold"
+                      {/* Círculo de nivel */}
+                      <div className="flex-shrink-0 w-16 h-10 flex items-center justify-center">
+                        <div
+                          className="rounded-full w-14 h-10 flex items-center justify-center"
                           style={{
-                            backgroundColor: ex.level === 'B1' ? d6Colors.accentPrimary : d6Colors.textSubtitle
+                            background: "#fff",
                           }}
                         >
-                          Nivel {ex.level}
-                        </span>
-                        <span className="opacity-50 text-gray-500">
-                          {LineIconsD6.linkExternal}
-                        </span>
-                      </div>
-                      <AnimatePresence>
-                        {activeChatGPTExampleId === ex.id && (
-                          <motion.div 
-                            initial={{ opacity: 0, height: 0 }}
-                            animate={{ opacity: 1, height: 'auto' }}
-                            exit={{ opacity: 0, height: 0 }}
-                            className="mt-2"
+                          <span
+                            className="font-bold"
+                            style={{
+                              fontFamily: "Raleway,sans-serif",
+                              color:
+                                ex.level === "B1"
+                                  ? d6Colors.accentPrimary
+                                  : ex.level === "B2"
+                                    ? d6Colors.accentSecondary
+                                    : ex.level === "A2"
+                                      ? d6Colors.accentPrimary
+                                      : d6Colors.accentSecondary,
+                              fontSize: "19px",
+                              letterSpacing: "1px",
+                            }}
                           >
-                            <p className="text-sm font-medium text-gray-700">Prompt sugerido:</p>
-                            <p className="text-sm text-gray-600 italic mt-1 line-clamp-3">
-                              {ex.tutorial}
-                            </p>
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
-                    </motion.div>
+                            {ex.level}
+                          </span>
+                        </div>
+                      </div>
+                      {/* Prompt y enlace */}
+                      <div className="flex-1 pl-2">
+                        <div
+                          className="font-semibold text-gray-700"
+                          style={{
+                            fontFamily: "Raleway, sans-serif",
+                            fontSize: "19px",
+                            marginBottom: "6px",
+                          }}
+                        >
+                          Prompt sugerido:
+                        </div>
+                        <div
+                          className="italic text-gray-600"
+                          style={{
+                            fontFamily: "Raleway, sans-serif",
+                            fontSize: "17px",
+                            lineHeight: "1.5",
+                          }}
+                        >
+                          {ex.tutorial}
+                        </div>
+                      </div>
+                      {/* Icono de enlace externo */}
+                      <a
+                        href={ex.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="absolute top-5 right-6 text-gray-350 hover:text-gray-600 opacity-70"
+                        style={{ fontSize: 22 }}
+                        aria-label={`Abrir prompt nivel ${ex.level}`}
+                      >
+                        {LineIconsD6.linkExternal}
+                      </a>
+                    </div>
                   ))}
                 </div>
               </motion.div>
@@ -3475,9 +3504,6 @@ const currentToolData = toolsData.find(t => t.id === selectedToolId);
 // FIN DIAPOSITIVA 7 (CON DISEÑO UNIFICADO)
 // =======================================================================
 
-// =======================================================================
-// DIAPOSITIVA 8: CÓDIGO COMPLETO CON DISEÑO UNIFICADO
-// =======================================================================
 const Diapositiva8 = () => {
   const year = new Date().getFullYear();
 
@@ -3486,21 +3512,19 @@ const Diapositiva8 = () => {
     verdeTurquesa: '#007567', negro: '#111827', lila: '#B9ABE4',
     white: '#FFFFFF', fondoBase: '#F8FAFC', panelBg: '#FFFFFF',
     panelBorder: '#E5E7EB',
-    lineaRojaPrincipal: '#FF0000', // Rojo brillante para la textura de línea
-    puntoConexionAzul: '#0075FF', // Un azul para los puntos
-    puntoConexionVerde: '#00C853', // Un verde para el punto especial
+    lineaRojaPrincipal: '#FF0000',
+    puntoConexionAzul: '#0075FF',
+    puntoConexionVerde: '#00C853',
     textSecondaryOnPanel: '#374151',
     connectionActive: '#FF0000',
   };
 
-  // Colores base del diseño unificado
   const unifiedColors = {
     azulOscuro: '#12055F',
     verdeTurquesa: '#007567',
     blanco: '#FFFFFF'
   };
 
-  // Configuración de Logo
   const LogoConfig = {
     size: 'h-24 md:h-32',
     position: 'absolute top-6 left-6 z-30',
@@ -3508,16 +3532,14 @@ const Diapositiva8 = () => {
     shadow: 'drop-shadow(0 4px 8px rgba(0,0,0,0.1))'
   };
 
-  // Configuración de Títulos
   const TitleConfig = {
-    fontFamily: 'Aglet Mono, monospace', // Sin "Light"
+    fontFamily: 'Aglet Mono, monospace',
     mainSize: 'text-3xl md:text-4xl lg:text-5xl',
     weight: 'font-semibold',
     color: unifiedColors.azulOscuro,
     spacing: 'mb-4 md:mb-6'
   };
 
-  // Configuración de Subtítulos
   const SubtitleConfig = {
     fontFamily: 'Raleway, sans-serif',
     size: 'text-lg md:text-xl lg:text-2xl',
@@ -3526,7 +3548,6 @@ const Diapositiva8 = () => {
     spacing: 'mb-2'
   };
 
-  // Configuración de Footer (SIN LÍNEA)
   const FooterConfig = {
     position: 'absolute bottom-4 left-0 right-0',
     padding: 'py-3',
@@ -3541,7 +3562,6 @@ const Diapositiva8 = () => {
     }
   };
 
-  // Componente Logo Unificado
   const LogoHablandisUnified = ({ className = "" }: { className?: string }) => (
     <img 
       src="/hablandis.png" 
@@ -3566,7 +3586,6 @@ const Diapositiva8 = () => {
     />
   );
 
-  // Componente Título Principal Unificado
   const MainTitle = ({ children, className = "" }: { children: React.ReactNode, className?: string }) => (
     <h1 
       className={`${TitleConfig.mainSize} ${TitleConfig.weight} ${TitleConfig.spacing} ${className}`}
@@ -3579,7 +3598,6 @@ const Diapositiva8 = () => {
     </h1>
   );
 
-  // Componente Subtítulo Unificado
   const Subtitle = ({ children, className = "" }: { children: React.ReactNode, className?: string }) => (
     <p 
       className={`${SubtitleConfig.size} ${SubtitleConfig.weight} ${SubtitleConfig.spacing} ${className}`}
@@ -3626,42 +3644,62 @@ const Diapositiva8 = () => {
   }
 
   interface ProcessingNode { id: string; title: string; shortTitle: string; icon: React.ReactElement; position: { x: number; y: number }; connections: string[]; dataKey: keyof TextDataMap; baseColor: string; }
-  const nodes: ProcessingNode[] = [ { id: 'original', title: "Texto Original: Reglamento B1", shortTitle: "ORIGEN B1", icon: <IconLinearDocument />, position: { x: 20, y: 50 }, connections: ['colloquial'], dataKey: 'originalB1', baseColor: colors.verdeTurquesa }, { id: 'colloquial', title: "Transformación: Diálogo Informal", shortTitle: "DIÁLOGO", icon: <IconLinearChat />, position: { x: 45, y: 35 }, connections: ['extraction'], dataKey: 'transformColloquial', baseColor: colors.lila }, { id: 'extraction', title: "Análisis: Vocabulario A2", shortTitle: "VOCAB. A2", icon: <IconLinearSearchPlus />, position: { x: 55, y: 65 }, connections: ['refinement'], dataKey: 'extractVocab', baseColor: colors.verdeClaro }, { id: 'refinement', title: "Refinamiento: Texto Nivel B2", shortTitle: "NIVEL B2", icon: <IconLinearTuneSliders />, position: { x: 80, y: 50 }, connections: [], dataKey: 'refineB2', baseColor: colors.azulOscuro }, ];
+  const nodes: ProcessingNode[] = [ { id: 'original', title: "Texto original: Normas para Asistentes a Conciertos en España", shortTitle: "ORIGEN B1", icon: <IconLinearDocument />, position: { x: 20, y: 50 }, connections: ['colloquial'], dataKey: 'originalB1', baseColor: colors.verdeTurquesa }, { id: 'colloquial', title: "Transformación: Diálogo Informal", shortTitle: "DIÁLOGO", icon: <IconLinearChat />, position: { x: 45, y: 35 }, connections: ['extraction'], dataKey: 'transformColloquial', baseColor: colors.lila }, { id: 'extraction', title: "Análisis: Vocabulario A2", shortTitle: "VOCAB. A2", icon: <IconLinearSearchPlus />, position: { x: 55, y: 65 }, connections: ['refinement'], dataKey: 'extractVocab', baseColor: colors.verdeClaro }, { id: 'refinement', title: "Refinamiento: Texto Nivel B2", shortTitle: "NIVEL B2", icon: <IconLinearTuneSliders />, position: { x: 80, y: 50 }, connections: [], dataKey: 'refineB2', baseColor: colors.azulOscuro }, ];
 
-  // TEXTDATA COMPLETO Y RESTAURADO
+  // TEXTDATA
   const textData: TextDataMap = {
     originalB1: {
-      title: "Texto Original: Reglamento B1",
+      title: "Texto original: Normas para Asistentes a Conciertos en España",
       content: () => (
         <>
-          <h3 className="text-xl font-semibold mb-4" style={{color: colors.azulOscuro, fontFamily: 'Aglet Mono Light'}}>Reglamento de la residencia de estudiantes en Barcelona</h3>
-          <ol className="list-decimal list-inside space-y-3 text-lg leading-relaxed" style={{fontFamily:'Raleway'}}>
-            <li><strong>Horarios:</strong> Los estudiantes deberán respetar los horarios establecidos para el descanso de los demás residentes. Se prohíbe hacer ruido en las habitaciones y zonas comunes después de las 22:00 horas.</li>
-            <li><strong>Limpieza:</strong> Cada estudiante es responsable de mantener su habitación y zonas comunes limpias y ordenadas. Se llevará a cabo una limpieza general de las zonas comunes una vez a la semana.</li>
-            <li><strong>Uso de lugares comunes:</strong> Los lugares comunes están destinados al uso de todos los residentes. Se deberá respetar el mobiliario y los elementos comunes y no se permitirá su uso inadecuado o indebido.</li>
-            <li><strong>WiFi:</strong> La residencia cuenta con una conexión a internet a través de WiFi. Se prohíbe el acceso a contenido manifiestamente inapropiado o ilegal.</li>
-            <li><strong>Ruidos:</strong> Se prohíbe hacer ruido en la residencia que pueda molestar a los demás residentes. No se permitirá la realización de fiestas o reuniones que generen molestias o incomodidades a los demás residentes.</li>
-            <li><strong>Desperfectos:</strong> Cada residente será responsable de los desperfectos que ocasione en las instalaciones de la residencia. Se deberá notificar al personal de mantenimiento de la residencia cualquier desperfecto que se detecte en las instalaciones comunes.</li>
+          <h3 className="text-xl font-semibold mb-4" style={{color: colors.azulOscuro, fontFamily: 'Aglet Mono Light'}}>Normas para Asistentes a Conciertos en España</h3>
+          <p className="mb-4" style={{fontFamily:'Raleway', fontSize:'1rem', color: colors.textSecondaryOnPanel}}>
+            <strong>Introducción</strong><br />
+            Este documento presenta 15 obligaciones y prohibiciones básicas para los asistentes a conciertos en pabellones y zonas afines en España. Las normas están adaptadas para ser claras y comprensibles, y se basan en regulaciones oficiales y buenas prácticas.
+          </p>
+          <h4 className="font-semibold mb-2" style={{fontFamily:'Raleway', color: colors.verdeTurquesa}}>Obligaciones y Prohibiciones</h4>
+          <ol className="list-decimal list-inside space-y-2 text-lg leading-relaxed" style={{fontFamily:'Raleway'}}>
+            <li><Highlight color={colors.amarillo}>No puedes llevar comida o bebida externa si el recinto lo prohíbe.</Highlight></li>
+            <li><Highlight color={colors.amarillo}>Debes seguir las indicaciones de seguridad (evacuación, rutas marcadas).</Highlight></li>
+            <li><Highlight color={colors.amarillo}>No está permitido gritar o hacer ruido excesivo que moleste a otros.</Highlight></li>
+            <li><Highlight color={colors.amarillo}>Es obligatorio respetar los horarios de entrada y salida del evento.</Highlight></li>
+            <li><Highlight color={colors.amarillo}>No puedes portar objetos peligrosos (armas, sustancias prohibidas).</Highlight></li>
+            <li><Highlight color={colors.amarillo}>Debes mantener los espacios limpios (no tirar basura).</Highlight></li>
+            <li><Highlight color={colors.amarillo}>No está permitido grabar videos o fotos sin autorización.</Highlight></li>
+            <li>Es obligatorio usar equipo de seguridad (cascos) en zonas de montaje.</li>
+            <li>No puedes fumar en zonas no autorizadas (dentro del recinto, salidas de emergencia).</li>
+            <li>Debes pagar la entrada antes de acceder al recinto.</li>
+            <li>No está permitido correr o empujar para evitar accidentes.</li>
+            <li>Es obligatorio colaborar con el personal de seguridad (inspecciones de mochilas).</li>
+            <li>No puedes usar ropa o símbolos que promuevan el odio o la violencia.</li>
+            <li>Debes devolver el dinero si el concierto se cancela sin justificación.</li>
+            <li>No está permitido abandonar el recinto sin permiso durante una evacuación.</li>
           </ol>
-          <p className="mt-6 italic text-base" style={{fontFamily:'Raleway', color: colors.textSecondaryOnPanel}}>La residencia se reserva el derecho de aplicar sanciones a aquellos estudiantes que incumplan este reglamento.</p>
+          <p className="mt-5" style={{fontFamily:'Raleway', color: colors.textSecondaryOnPanel, fontSize:'1rem'}}>
+            <strong>Nota:</strong> Este documento es un resumen simplificado. Para información detallada, consulta las normativas oficiales como el Real Decreto 44/2014 y normativas locales.
+          </p>
+          <p className="mt-4 italic text-base" style={{fontFamily:'Raleway', color: colors.textSecondaryOnPanel}}>
+            © 2025 - Documento informativo. Basado en regulaciones vigentes en España.
+          </p>
         </>
       ),
     },
     transformColloquial: {
       promptTitle: "Prompt para Diálogo Informal",
-      promptContent: () => <p className="text-lg leading-relaxed" style={{fontFamily:'Raleway'}}>Reescribe la información básica del texto anterior con el estilo de un diálogo informal entre estudiantes, con vocabulario coloquial.</p>,
+      promptContent: () => <p className="text-lg leading-relaxed" style={{fontFamily:'Raleway'}}>Reescribe la información básica del texto anterior con el estilo de un diálogo informal entre estudiantes, con vocabulario coloquial al estilo de La Pija y La Quinqui.</p>,
       responseTitle: "Respuesta IA: Diálogo Coloquial",
       responseContent: () => (
         <div className="text-lg leading-relaxed space-y-3" style={{fontFamily:'Raleway'}}>
-          <p><Highlight color={colors.amarillo}><strong>Estudiante 1:</strong> ¡Oye, tío! ¿Has leído las normas de la residencia?</Highlight></p>
-          <p><Highlight color={colors.amarillo}><strong>Estudiante 2:</strong> No, aún no he tenido tiempo. ¿De qué van?</Highlight></p>
-          <p><strong>Estudiante 1:</strong> Pues nada, lo típico. <Highlight color={colors.amarillo}>Hay que mantener la habitación limpia, respetar los horarios de silencio, usar bien las zonas comunes y no hacer mucho ruido después de las diez de la noche.</Highlight></p>
-          <p><strong>Estudiante 2:</strong> Ah, ¿y hay internet?</p>
-          <p><strong>Estudiante 1:</strong> Sí, <Highlight color={colors.amarillo}>hay WiFi en toda la residencia. Pero ojo, que hay que usarlo bien, nada de descargar cosas ilegales.</Highlight></p>
-          <p><strong>Estudiante 2:</strong> Tranqui, tranqui. ¿Y qué pasa si rompemos algo?</p>
-          <p><strong>Estudiante 1:</strong> Pues que <Highlight color={colors.amarillo}>lo tenemos que decir al personal de mantenimiento para que lo arreglen. Y si lo rompemos a propósito, nos pueden sancionar.</Highlight></p>
-          <p><strong>Estudiante 2:</strong> Vale, vale. Gracias por la info, colega.</p>
-          <p><strong>Estudiante 1:</strong> De nada, hombre. ¡A ver si nos portamos bien y no nos echan!</p>
+          <p><strong>La Pija:</strong> O sea, tía, ¿has visto la lista de normas de los conciertos? <Highlight color={colors.amarillo}>Es que me muero, qué control, de verdad.</Highlight></p>
+          <p><strong>La Quinqui:</strong> ¡Buah, flipas! <Highlight color={colors.amarillo}>Si es que no nos dejan ni traer unas birras de casa, ¿pa’ qué tanto rollo?</Highlight></p>
+          <p><strong>La Pija:</strong> Literal, <Highlight color={colors.amarillo}>si llevas algo de fuera te lo requisan en la puerta. Y como grites un poco, ya está el segurata mirándote mal.</Highlight></p>
+          <p><strong>La Quinqui:</strong> <Highlight color={colors.amarillo}>Pues que les den, yo grito si me da la gana, ¿o qué? Pero bueno… tampoco mola que te echen, que la entrada cuesta pasta.</Highlight></p>
+          <p><strong>La Pija:</strong> Y si suena la alarma, todos en fila, monísimas, <Highlight color={colors.amarillo}>que hay que salir por donde te digan. Nada de buscar el atajo, que luego te sueltan la chapa.</Highlight></p>
+          <p><strong>La Quinqui:</strong> <Highlight color={colors.amarillo}>Y lo de grabar, ¿qué? Saca el móvil y verás, te lo quitan. Ni stories ni ná, vaya bajón.</Highlight></p>
+          <p><strong>La Pija:</strong> Tía, <Highlight color={colors.amarillo}>si fumas dentro, te montan el pollo. Hay zonas fuera, pero dentro ni lo sueñes.</Highlight></p>
+          <p><strong>La Quinqui:</strong> Yo con la peña de seguridad no discuto, <Highlight color={colors.amarillo}>que se ponen chungos. Mejor portarse bien y ya.</Highlight></p>
+          <p><strong>La Pija:</strong> Eso sí, <Highlight color={colors.amarillo}>si cancelan el concierto sin motivo, devuelven la pasta. Pero como sea por el artista, te fastidias y a llorar a casa.</Highlight></p>
+          <p><strong>La Quinqui:</strong> Pues nada, tía, <Highlight color={colors.amarillo}>a seguir las normas y a disfrutar. Pero qué rabia, con lo bien que se liaba antes en los conciertos…</Highlight></p>
         </div>
       ),
     },
@@ -3671,18 +3709,66 @@ const Diapositiva8 = () => {
       responseTitle: "Respuesta IA: Vocabulario Clave A2",
       responseContent: () => (
         <ul className="space-y-4 text-lg leading-relaxed" style={{fontFamily:'Raleway'}}>
-          <li><Highlight color={colors.amarillo}><strong>Reglamento</strong> (Rules and regulations):</Highlight> El reglamento de la residencia debe ser respetado por todos los residentes. <ul className="list-disc list-inside ml-6 text-base opacity-90 mt-1.5" style={{color: colors.textSecondaryOnPanel}}><li>Términos relacionados: Normativa, Ley</li><li>Colocaciones habituales: Cumplir con el reglamento, Infringir el reglamento</li></ul> </li>
-          <li><Highlight color={colors.amarillo}><strong>Horarios</strong> (Schedules):</Highlight> Los horarios de silencio deben ser respetados en la residencia.<ul className="list-disc list-inside ml-6 text-base opacity-90 mt-1.5" style={{color: colors.textSecondaryOnPanel}}><li>Rel.: Tiempo, Calendario</li><li>Col.: Establecer horarios, Respetar horarios</li></ul></li>
-          <li><Highlight color={colors.amarillo}><strong>Limpieza</strong> (Cleaning):</Highlight> Es responsabilidad de cada estudiante mantener su habitación limpia.<ul className="list-disc list-inside ml-6 text-base opacity-90 mt-1.5" style={{color: colors.textSecondaryOnPanel}}><li>Rel.: Higiene, Orden</li><li>Col.: Realizar la limpieza, Mantener la limpieza</li></ul></li>
-          <li><Highlight color={colors.amarillo}><strong>Habitaciones</strong> (Rooms):</Highlight> Cada estudiante tiene asignada una habitación en la residencia.<ul className="list-disc list-inside ml-6 text-base opacity-90 mt-1.5" style={{color: colors.textSecondaryOnPanel}}><li>Rel.: Alojamiento, Estancia</li><li>Col.: Compartir habitación, Decorar la habitación</li></ul></li>
-          <li><Highlight color={colors.amarillo}><strong>Zonas comunes</strong> (Common areas):</Highlight> Las zonas comunes están destinadas para el uso de todos los residentes.<ul className="list-disc list-inside ml-6 text-base opacity-90 mt-1.5" style={{color: colors.textSecondaryOnPanel}}><li>Rel.: Espacio público, Área compartida</li><li>Col.: Utilizar las zonas comunes, Mantener las zonas comunes limpias</li></ul></li>
-          <li><Highlight color={colors.amarillo}><strong>Ruido</strong> (Noise):</Highlight> Se prohíbe hacer ruido en las habitaciones y zonas comunes después de las 22:00 horas.<ul className="list-disc list-inside ml-6 text-base opacity-90 mt-1.5" style={{color: colors.textSecondaryOnPanel}}><li>Rel.: Sonido, Volumen</li><li>Col.: Reducir el ruido, Hacer ruido</li></ul></li>
-          <li><Highlight color={colors.amarillo}><strong>WiFi</strong> (WiFi):</Highlight> La residencia cuenta con una conexión a internet a través de WiFi.<ul className="list-disc list-inside ml-6 text-base opacity-90 mt-1.5" style={{color: colors.textSecondaryOnPanel}}><li>Rel.: Internet, Conexión inalámbrica</li><li>Col.: Conectar al WiFi, Código del WiFi</li></ul></li>
-          <li><Highlight color={colors.amarillo}><strong>Conexión a internet</strong> (Internet connection):</Highlight> Es importante no utilizar la conexión a internet de manera inadecuada.<ul className="list-disc list-inside ml-6 text-base opacity-90 mt-1.5" style={{color: colors.textSecondaryOnPanel}}><li>Rel.: Navegación web, Descarga de archivos</li><li>Col.: Utilizar la conexión a internet, Velocidad de la conexión</li></ul></li>
-          <li><Highlight color={colors.amarillo}><strong>Mobiliario</strong> (Furniture):</Highlight> El mobiliario de las zonas comunes debe ser respetado y cuidado.<ul className="list-disc list-inside ml-6 text-base opacity-90 mt-1.5" style={{color: colors.textSecondaryOnPanel}}><li>Rel.: Decoración, Utensilios</li><li>Col.: Cambiar el mobiliario, Cuidar el mobiliario</li></ul></li>
-          <li><Highlight color={colors.amarillo}><strong>Uso adecuado</strong> (Appropriate use):</Highlight> Las zonas comunes están destinadas para el uso adecuado de todos los residentes.<ul className="list-disc list-inside ml-6 text-base opacity-90 mt-1.5" style={{color: colors.textSecondaryOnPanel}}><li>Rel.: Comportamiento, Normas</li><li>Col.: Uso adecuado de las instalaciones, Normas de uso</li></ul></li>
-          <li><Highlight color={colors.amarillo}><strong>Comportamiento</strong> (Behavior):</Highlight> Es importante mantener un comportamiento adecuado dentro de la residencia.<ul className="list-disc list-inside ml-6 text-base opacity-90 mt-1.5" style={{color: colors.textSecondaryOnPanel}}><li>Rel.: Conducta, Actitud</li><li>Col.: Comportamiento adecuado, Comportamiento inapropiado</li></ul></li>
-          <li><Highlight color={colors.amarillo}><strong>Residentes</strong> (Residents):</Highlight> Todos los residentes deben cumplir con el reglamento de la residencia.<ul className="list-disc list-inside ml-6 text-base opacity-90 mt-1.5" style={{color: colors.textSecondaryOnPanel}}><li>Rel.: Estudiantes, Inquilinos</li><li>Col.: Convivencia entre residentes, Relación con los residentes</li></ul></li>
+          <li><Highlight color={colors.amarillo}><strong>1. Prohibir</strong></Highlight><br/>
+            <b>Traducción</b>: To prohibit<br/>
+            <b>Ejemplo</b>: No se permite llevar comida si el recinto lo prohíbe.<br/>
+            <b>Términos relacionados</b>: Prohibido, norma<br/>
+            <b>Colocaciones</b>: Prohibir comida, prohibir el acceso
+          </li>
+          <li><Highlight color={colors.amarillo}><strong>2. Regla</strong></Highlight><br/>
+            <b>Traducción</b>: Rule<br/>
+            <b>Ejemplo</b>: Hay reglas claras para los asistentes a conciertos.<br/>
+            <b>Términos relacionados</b>: Norma, instrucción<br/>
+            <b>Colocaciones</b>: Seguir las reglas, romper una regla
+          </li>
+          <li><Highlight color={colors.amarillo}><strong>3. Comida</strong></Highlight><br/>
+            <b>Traducción</b>: Food<br/>
+            <b>Ejemplo</b>: No se puede traer comida externa a algunos recintos.<br/>
+            <b>Términos relacionados</b>: Alimento, bebida<br/>
+            <b>Colocaciones</b>: Traer comida, comida permitida
+          </li>
+          <li><Highlight color={colors.amarillo}><strong>4. Seguridad</strong></Highlight><br/>
+            <b>Traducción</b>: Safety<br/>
+            <b>Ejemplo</b>: Debes seguir las indicaciones de seguridad.<br/>
+            <b>Términos relacionados</b>: Emergencia, riesgo<br/>
+            <b>Colocaciones</b>: Medidas de seguridad, salir por seguridad
+          </li>
+          <li><Highlight color={colors.amarillo}><strong>5. Ruido</strong></Highlight><br/>
+            <b>Traducción</b>: Noise<br/>
+            <b>Ejemplo</b>: No está permitido hacer ruido excesivo.<br/>
+            <b>Términos relacionados</b>: Sonido, grito<br/>
+            <b>Colocaciones</b>: Hacer ruido, reducir el ruido
+          </li>
+          <li><Highlight color={colors.amarillo}><strong>6. Fumar</strong></Highlight><br/>
+            <b>Traducción</b>: To smoke<br/>
+            <b>Ejemplo</b>: No puedes fumar en zonas no autorizadas.<br/>
+            <b>Términos relacionados</b>: Cigarrillo, prohibido<br/>
+            <b>Colocaciones</b>: Fumar en público, prohibir fumar
+          </li>
+          <li><Highlight color={colors.amarillo}><strong>7. Grabar</strong></Highlight><br/>
+            <b>Traducción</b>: To record<br/>
+            <b>Ejemplo</b>: No está permitido grabar sin autorización.<br/>
+            <b>Términos relacionados</b>: Video, foto<br/>
+            <b>Colocaciones</b>: Grabar un video, grabar en secreto
+          </li>
+          <li><Highlight color={colors.amarillo}><strong>8. Dinero</strong></Highlight><br/>
+            <b>Traducción</b>: Money<br/>
+            <b>Ejemplo</b>: Devuelven el dinero si el concierto se cancela.<br/>
+            <b>Términos relacionados</b>: Pago, billete<br/>
+            <b>Colocaciones</b>: Devolver el dinero, costo del dinero
+          </li>
+          <li><Highlight color={colors.amarillo}><strong>9. Emergencia</strong></Highlight><br/>
+            <b>Traducción</b>: Emergency<br/>
+            <b>Ejemplo</b>: Sigue las rutas marcadas en caso de emergencia.<br/>
+            <b>Términos relacionados</b>: Alarma, evacuación<br/>
+            <b>Colocaciones</b>: Evacuación de emergencia, llamada de emergencia
+          </li>
+          <li><Highlight color={colors.amarillo}><strong>10. Personal de seguridad</strong></Highlight><br/>
+            <b>Traducción</b>: Security staff<br/>
+            <b>Ejemplo</b>: Colabora con el personal de seguridad.<br/>
+            <b>Términos relacionados</b>: Guardia, policía<br/>
+            <b>Colocaciones</b>: Trabajar con el personal de seguridad, inspección del personal
+          </li>
         </ul>
       ),
     },
@@ -3692,14 +3778,33 @@ const Diapositiva8 = () => {
       responseTitle: "Respuesta IA: Texto Refinado Nivel B2",
       responseContent: () => (
         <div className="text-lg leading-relaxed space-y-4" style={{fontFamily:'Raleway'}}>
-          <h3 className="text-xl font-semibold" style={{color: colors.azulOscuro, fontFamily: 'Aglet Mono Light'}}>Normativa de convivencia para la residencia estudiantil en Zaragoza</h3>
-          <p><Highlight color={colors.lila}><strong>Horarios de tranquilidad:</strong> Es imperativo que los estudiantes acaten los horarios establecidos</Highlight> para garantizar el descanso de todos los residentes. Se debe evitar cualquier tipo de ruido en las habitaciones y espacios comunes <Highlight color={colors.lila}>a partir de las 22:00 horas</Highlight>, para no perturbar la paz de los demás.</p>
-          <p><Highlight color={colors.lila}><strong>Mantenimiento de la limpieza:</strong> Se asigna a cada estudiante la responsabilidad de mantener su habitación, así como las áreas compartidas, limpias y en orden.</Highlight> Con el fin de asegurar un entorno agradable para todos, se realizará una limpieza general de los espacios comunes de manera semanal.</p>
-          <p><strong>Uso adecuado de las áreas comunes:</strong> Las áreas comunes están diseñadas para el disfrute y uso colectivo de todos los residentes. <Highlight color={colors.lila}>Se espera que los estudiantes respeten el mobiliario y los diferentes elementos disponibles en estas áreas, evitando cualquier uso que se considere inapropiado o perjudicial.</Highlight></p>
-          <p><strong>Conexión a internet:</strong> La residencia proporciona acceso a internet a través de una red WiFi, <Highlight color={colors.lila}>bajo la condición de que no se utilice para acceder a contenido considerado inadecuado o ilegal.</Highlight> Se busca promover un uso responsable y ético de los recursos digitales.</p>
-          <p><strong>Política sobre ruidos:</strong> Con el objetivo de mantener un ambiente armonioso dentro de la residencia, <Highlight color={colors.lila}>se prohíbe estrictamente la generación de ruidos que puedan resultar molestos para otros residentes.</Highlight> Esto incluye la prohibición de organizar fiestas o reuniones que puedan causar incomodidades o disturbios.</p>
-          <p><strong>Responsabilidad ante daños:</strong> Los residentes deben asumir la responsabilidad por cualquier daño que ocasionen dentro de las instalaciones de la residencia. <Highlight color={colors.lila}>Es obligatorio reportar al personal de mantenimiento cualquier desperfecto observado en las áreas comunes,</Highlight> para su pronta reparación.</p>
-          <p><strong>Aplicación de sanciones:</strong> <Highlight color={colors.lila}>La administración de la residencia se reserva el derecho de imponer sanciones</Highlight> a aquellos estudiantes que no respeten la presente normativa. Se busca fomentar un entorno de respeto y convivencia pacífica entre todos los miembros de la comunidad estudiantil.</p>
+          <h3 className="text-xl font-semibold" style={{color: colors.azulOscuro, fontFamily: 'Aglet Mono Light'}}>🎤 Normas para Asistentes a Conciertos en España (Nivel B2.2)</h3>
+          <p><strong>Introducción</strong><br/>
+          Este documento recoge 15 normas básicas que todo asistente debe conocer antes de acudir a un concierto en España, ya sea en pabellones, salas cubiertas o espacios similares. Las reglas están basadas en la legislación vigente y en prácticas habituales de seguridad y convivencia.</p>
+          <h4 className="font-semibold" style={{fontFamily:'Raleway', color: colors.verdeTurquesa}}>Obligaciones y Prohibiciones</h4>
+          <ul className="list-disc list-inside space-y-2">
+            <li><Highlight color={colors.amarillo}>No está permitido entrar con comida ni bebida del exterior si el recinto lo indica expresamente.</Highlight></li>
+            <li><Highlight color={colors.amarillo}>Es obligatorio seguir todas las indicaciones de seguridad, como las rutas de evacuación o las instrucciones del personal.</Highlight></li>
+            <li><Highlight color={colors.amarillo}>Evita gritar o hacer ruidos excesivos que puedan molestar al resto del público.</Highlight></li>
+            <li><Highlight color={colors.amarillo}>Respeta los horarios oficiales de entrada y salida. No se garantiza el acceso fuera del horario establecido.</Highlight></li>
+            <li><Highlight color={colors.amarillo}>Queda totalmente prohibido acceder con objetos peligrosos, como armas o sustancias ilegales.</Highlight></li>
+            <li><Highlight color={colors.amarillo}>Contribuye a mantener limpio el lugar: no dejes basura fuera de los contenedores.</Highlight></li>
+            <li><Highlight color={colors.amarillo}>No se pueden hacer fotos ni vídeos profesionales sin autorización de la organización.</Highlight></li>
+            <li>En las zonas de montaje o acceso restringido, es obligatorio usar el equipo de protección necesario, como cascos.</li>
+            <li>No fumes en zonas no habilitadas, como pasillos, salidas de emergencia o zonas interiores.</li>
+            <li>Para entrar al concierto, debes haber pagado la entrada correspondiente y tenerla disponible.</li>
+            <li>Está prohibido correr o empujar, ya que puede generar accidentes y poner en peligro a otras personas.</li>
+            <li>Colabora con el personal de seguridad si te piden mostrar tu bolso o realizar una inspección.</li>
+            <li>No se permite el uso de ropa o símbolos que inciten al odio, la discriminación o la violencia.</li>
+            <li>Si el concierto se cancela sin una razón justificada, tienes derecho a que te devuelvan el dinero.</li>
+            <li>En caso de evacuación, no abandones el recinto por tu cuenta: sigue las instrucciones de los responsables del evento.</li>
+          </ul>
+          <p className="mt-3"><b>📌 Nota importante:</b><br/>
+          Este texto es un resumen con fines informativos. Para conocer todos los detalles legales, consulta el Real Decreto 44/2014 y las normativas locales aplicables en tu comunidad autónoma.
+          </p>
+          <p className="italic text-base" style={{color: colors.textSecondaryOnPanel}}>
+            © 2025 – Documento informativo basado en regulaciones oficiales del territorio español.
+          </p>
         </div>
       ),
     }
@@ -4019,36 +4124,34 @@ const Diapositiva9 = () => {
       content: (
         <>
           <div className="p-3 rounded text-base whitespace-pre-line leading-relaxed" style={{backgroundColor: `${slide9Colors.accent1}10`, fontFamily: 'Spline Sans Mono Light, monospace'}}>
-            {"Escribe un (correo, receta,entrada de blog...) de (número) palabras sobre el tema (tema) y con el título (título). Describe (descripción detallada). Asegúrate de incluir datos concretos sobre (datos concretos). Tu texto debe ser atractivo y accesible para un público general, pero también debe incluir vocabulario y estructuras gramaticales apropiados para un nivel (nivel MCER)1 de aprendizaje de idiomas. Utiliza la siguiente lista de palabras (lista) y haz que suene (amistoso, informativo, persuasivo, coloquial, neutral...). La finalidad del texto es (informar, persuadir, entretener o instruir)"}
+            {"Escribe un (correo, receta,entrada de blog...) de (número) palabras sobre el tema (tema) y con el título (título). Describe (descripción detallada). Asegúrate de incluir datos concretos sobre (datos concretos). Tu texto debe ser atractivo y accesible para un público general, pero también debe incluir vocabulario y estructuras gramaticales apropiados para un nivel (nivel MCER) de aprendizaje de idiomas. Utiliza la siguiente lista de palabras (lista) y haz que suene (amistoso, informativo, persuasivo, coloquial, neutral...). La finalidad del texto es (informar, persuadir, entretener o instruir)"}
           </div>
         </>
       )
     },
-    {
-      id: 'vagancia',
-      title: 'El Colmo de la Vagancia',
-      icon: <IconPanelMagic />,
-      content: (
-         <>
-          <div className="p-3 mb-3 rounded" style={{backgroundColor: `${slide9Colors.accent2}20`}}>
-            <strong className="block mb-1" style={{color: slide9Colors.titleColor}}>Prompt:</strong>
-            <p>Crea ejemplos de prompt a partir de la siguiente estructura:<br/>
-            Modifiquemos ligeramente el prompt para darle "vidilla"<br/>
-            Crea 5 ejemplos de prompt originales y atractivos a partir de la siguiente estructura: Escribe un (correo, receta,entrada de blog, artículo de periódico, etc.)de (número) palabras sobre el tema (tema) y con el título (título). Describe (descripción detallada). Asegúrate de incluir datos concretos sobre (datos concretos). Tu texto debe ser atractivo y accesible para un público general, pero también debe incluir vocabulario y estructuras gramaticales apropiados para un nivel B1 de aprendizaje de idiomas. Utiliza la siguiente lista de palabras (lista) y haz que suene (amistoso, informativo, persuasivo, coloquial, neutral...). La finalidad del texto es (informar, persuadir, entretener o instruir). Los ejemplos de prompts deben abordar los temas desde una perspectiva poco habitual, sorprendente y atractiva para el lector.</p>
-          </div>
-          <div className="p-3 rounded" style={{backgroundColor: `${slide9Colors.accent1}15`}}>
-            <strong className="block mb-1" style={{color: slide9Colors.titleColor}}>Respuesta:</strong>
-            <p>
-              <a href="https://chatgpt.com/share/94daefd0-aaff-4a1e-8fb9-f2380fb362fc" target="_blank" rel="noopener noreferrer"
-                 className="inline-flex items-center gap-2 font-semibold py-2 px-4 rounded-lg text-lg transition-transform hover:scale-105"
-                 style={{backgroundColor: slide9Colors.accent2, color: slide9Colors.titleColor}}>
-                Ver en ChatGPT <IconLinkSimple className="w-4 h-4"/>
-              </a>
-            </p>
-          </div>
-        </>
-      )
-    },
+{
+  id: 'vagancia',
+  title: 'El Colmo de la Vagancia',
+  icon: <IconPanelMagic />,
+  content: (
+     <>
+      <div className="p-3 mb-3 rounded" style={{backgroundColor: `${slide9Colors.accent2}20`}}>
+        <strong className="block mb-1" style={{color: slide9Colors.titleColor}}>Prompt:</strong>
+        <p>Crea 5 ejemplos de prompt originales y atractivos a partir de la siguiente estructura: Escribe un (correo, receta,entrada de blog, artículo de periódico, etc.) de (número) palabras sobre el tema (tema) y con el título (título). Describe (descripción detallada). Asegúrate de incluir datos concretos sobre (datos concretos). Tu texto debe ser atractivo y accesible para un público general, pero también debe incluir vocabulario y estructuras gramaticales apropiados para un nivel B2 de aprendizaje de idiomas. Utiliza la siguiente lista de palabras (lista) y haz que suene (amistoso, informativo, persuasivo, coloquial, neutral...). La finalidad del texto es (informar, persuadir, entretener o instruir). Los ejemplos de prompts deben abordar los temas desde una perspectiva poco habitual, sorprendente y atractiva para el lector.</p>
+      </div>
+      <div className="p-3 rounded" style={{backgroundColor: `${slide9Colors.accent1}15`}}>
+        <strong className="block mb-1" style={{color: slide9Colors.titleColor}}>Respuesta:</strong>
+        <p>
+          <a href="https://chatgpt.com/share/68345e2b-fee0-800d-a42a-aa68ccc80a82" target="_blank" rel="noopener noreferrer"
+             className="inline-flex items-center gap-2 font-semibold py-2 px-4 rounded-lg text-lg transition-transform hover:scale-105"
+             style={{backgroundColor: slide9Colors.accent2, color: slide9Colors.titleColor}}>
+            Ver en ChatGPT <IconLinkSimple className="w-4 h-4"/>
+          </a>
+        </p>
+      </div>
+    </>
+  )
+},
     {
       id: 'construccion',
       title: '¿Cómo se construye un buen prompt?',
@@ -4458,7 +4561,7 @@ const Diapositiva10 = () => {
                   ...Y esto es lo que hace:
                 </h3>
                 <a 
-                  href="https://chatgpt.com/share/d8ef604b-e5b8-4e42-a915-ea5f6cb9a835 " 
+                  href="https://chatgpt.com/share/68346207-f50c-800d-81be-db8e27815a98" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 px-4 py-2 rounded-lg transition-all hover:scale-105"
@@ -4518,7 +4621,7 @@ const Diapositiva10 = () => {
                   Y si no sabemos lo que queremos... preguntemos.
                 </h3>
                 <a 
-                  href="https://chatgpt.com/share/9b7900ea-1195-4eae-ba32-836a7bc680b3 " 
+                  href="https://chatgpt.com/share/683467b4-db30-800d-8db3-e10a2397341d" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 px-4 py-2 rounded-lg transition-all hover:scale-105"
@@ -4820,15 +4923,15 @@ const Diapositiva11 = () => {
             <InfoCard
               icon={IconDocumentText}
               title="Texto:"
-              link="https://www.profedeele.es/actividad/b1-comprension-lectura/"
-              linkText="ProfedeELE: Comprensión Lectura B1"
+              link="https://hablacultura.com/cultura-textos-aprender-espanol/cultura/titirimundi/"
+              linkText="Titirimundi"
               accentColor={slideColors.accent1}
               delay={instanteBaseDelay}
             />
             <InfoCard
               icon={IconChatBubbleLeftRight}
               title="Evaluación del nivel y adaptación del texto:"
-              link2="https://chatgpt.com/share/5fd4267d-e033-462c-af50-bd85a4193885" 
+              link2="https://chatgpt.com/share/68346ccf-98f0-800d-851c-8e0426dfd621" 
               linkText2="Transcripción de la conversación con ChatGPT" 
               accentColor={slideColors.accent2}
               delay={instanteBaseDelay + 0.15}
@@ -4845,23 +4948,11 @@ const Diapositiva11 = () => {
             <div className="space-y-6">
               <InfoCard
                 icon={IconDocumentText}
-                title="Texto original (El País):"
-                link="https://elpais.com/salud-y-bienestar/2024-06-12/bruce-hood-psicologo-la-felicidad-focalizada-en-uno-mismo-tiene-poco-recorrido.html"
-                linkText="'La felicidad focalizada en uno mismo...'"
-                link2="https://chatgpt.com/share/d7605781-ff4c-4938-b98e-5c1f417d06a8" 
-                linkText2="Transcripción del chat" 
+                title="Texto original (BBC):"
+                link="https://www.bbc.com/mundo/articles/cnvqrz6yzzmo"
+                linkText="La felicidad"
                 accentColor={slideColors.accent1}
                 delay={instanteBaseDelay}
-              />
-              <InfoCard
-                icon={IconDocumentText}
-                title="Texto original (Xataka):"
-                link="https://www.xataka.com/medicina-y-salud/te-has-preguntado-cuanto-tiempo-libre-necesitas-para-ser-feliz-ciencia-tiene-respuesta"
-                linkText="'¿Cuánto tiempo libre necesitas para ser feliz...?'"
-                link2="https://chatgpt.com/share/5889e9f4-fae5-49ad-b136-12ad84a123f9" 
-                linkText2="Transcripción del chat" 
-                accentColor={slideColors.accent2}
-                delay={instanteBaseDelay + 0.15}
               />
             </div>
           </motion.div>
@@ -5435,63 +5526,65 @@ const Diapositiva13 = () => {
   // Prompt inicial
   const promptInicial = "Actúa como un experto en creación de tareas para exámenes de certificación de ELE. Crea quince frases de nivel B1 que expresen la necesidad de encontrar un profesional o una empresa que les resuelvan quince situaciones cotidiana relacionada con vivienda, salud, mascotas, profesión, tiempo libre, celebraciones, etc.";
 
-  // Datos estructurados
+  // Datos estructurados FASE 1 - NUEVOS
   const situacionesGenericas = [
-    "Necesito encontrar un electricista para arreglar las luces del salón.",
-    "Busco un fontanero que pueda reparar la fuga de agua en la cocina.",
-    "Requiero un pintor para redecorar las paredes de mi casa.",
-    "Necesito un veterinario que revise a mi perro porque no se siente bien.",
-    "Me gustaría contratar a una empresa de limpieza para hacer una limpieza profunda en mi apartamento.",
-    "Necesito encontrar un jardinero que cuide el jardín de mi casa.",
-    "Estoy buscando un fisioterapeuta que me ayude con mis dolores de espalda.",
-    "Requiero un profesor de inglés para mejorar mi nivel de conversación.",
-    "Busco una empresa de mudanzas que me ayude a trasladar mis cosas a mi nuevo hogar.",
-    "Necesito un organizador de eventos para planificar la fiesta de cumpleaños de mi hijo.",
-    "Me gustaría encontrar un entrenador personal que me ayude a ponerme en forma.",
-    "Estoy buscando un contador que me asesore con mis impuestos.",
-    "Necesito un abogado que me ayude con unos trámites legales.",
-    "Requiero un mecánico que revise y repare mi coche.",
-    "Busco una niñera que cuide de mis hijos durante el fin de semana."
+    "Necesito encontrar un fontanero urgente porque la tubería del baño está rota y se está saliendo el agua.",
+    "Busco una empresa de mudanzas porque me cambio de piso la semana que viene.",
+    "Me gustaría contratar a alguien para que pinte el salón antes de que lleguen mis padres de visita.",
+    "Tengo que pedir cita con un fisioterapeuta porque me duele la espalda desde hace días.",
+    "Quiero buscar una clínica dental para hacerme una limpieza bucal.",
+    "Estoy buscando una peluquería canina para mi perro, porque tiene el pelo muy largo.",
+    "Necesito un veterinario que atienda urgencias, mi gato no quiere comer nada.",
+    "Quiero contratar a un profesor particular de inglés para preparar una entrevista de trabajo.",
+    "Busco una academia que ofrezca cursos de informática para mejorar mi currículum.",
+    "Me gustaría encontrar un grupo de teatro amateur para participar los fines de semana.",
+    "Estoy buscando un taller de cerámica cerca de casa, quiero aprender algo nuevo.",
+    "Necesitamos una empresa de catering para organizar la fiesta de cumpleaños de mi hijo.",
+    "Estoy buscando un fotógrafo para hacer un reportaje de nuestra boda.",
+    "Quiero encontrar un mecánico de confianza para revisar mi coche antes del viaje.",
+    "Busco una agencia de viajes que organice escapadas de fin de semana por Andalucía."
   ];
 
+  // FASE 2 - NUEVAS situaciones con palabras marcadas
   const situacionesEspecificas = [
-    { base: "electricista", mejora: "especializado en sistemas de iluminación LED", extra: "para modernizar todas las luces del salón" },
-    { base: "fontanero", mejora: "con experiencia en instalación de sistemas de riego por goteo", extra: "para mi jardín" },
-    { base: "pintor", mejora: "que trabaje con técnicas de estuco veneciano", extra: "para redecorar las paredes de mi salón" },
-    { base: "veterinario", mejora: "especializado en enfermedades dermatológicas caninas", extra: "porque mi perro tiene problemas de piel" },
-    { base: "empresa de limpieza", mejora: "que utilice productos ecológicos", extra: "para hacer una limpieza profunda en mi apartamento" },
-    { base: "jardinero", mejora: "con conocimientos en plantas tropicales", extra: "para cuidar mi jardín" },
-    { base: "fisioterapeuta", mejora: "especializado en rehabilitación deportiva", extra: "para tratar una lesión de rodilla" },
-    { base: "profesor de inglés", mejora: "nativo con experiencia en preparación de exámenes IELTS", extra: "para mejorar mi nivel de conversación" },
-    { base: "empresa de mudanzas", mejora: "que ofrezca servicio de embalaje especializado", extra: "para obras de arte y antigüedades" },
-    { base: "organizador de eventos", mejora: "que tenga experiencia en bodas temáticas", extra: "para planificar mi boda medieval" },
-    { base: "entrenador personal", mejora: "con conocimientos en nutrición deportiva", extra: "para ayudarme a mejorar mi rendimiento" },
-    { base: "contador", mejora: "que se especialice en impuestos internacionales", extra: "para asesorarme con mis declaraciones fiscales" },
-    { base: "abogado", mejora: "experto en derecho inmobiliario", extra: "para ayudarme con la compra de una propiedad en el extranjero" },
-    { base: "mecánico", mejora: "con experiencia en coches eléctricos", extra: "para revisar y reparar mi vehículo" },
-    { base: "niñera", mejora: "bilingüe en español e inglés con formación en primeros auxilios", extra: "para cuidar de mis hijos durante el fin de semana" }
+    { base: "Necesito un fontanero", mejora: "que trabaje los fines de semana y que sepa instalar grifos inteligentes", extra: ", porque quiero modernizar la cocina." },
+    { base: "Busco una empresa de mudanzas", mejora: "que ofrezca servicio de embalaje y transporte internacional", extra: ": en un mes me voy a vivir a Lisboa." },
+    { base: "Me gustaría contratar a un pintor", mejora: "que trabaje con pinturas ecológicas", extra: ", porque quiero renovar el dormitorio sin dañar el medio ambiente." },
+    { base: "Tengo que pedir cita con un fisioterapeuta", mejora: "especializado en lesiones deportivas", extra: ", porque me hice daño corriendo una media maratón." },
+    { base: "Estoy buscando una clínica dental", mejora: "que tenga servicio en inglés", extra: ", porque mi pareja extranjera necesita una revisión y no habla español." },
+    { base: "Necesito una peluquería canina", mejora: "que venga a domicilio", extra: ", porque mi perro es muy nervioso y se estresa al salir de casa." },
+    { base: "Quiero encontrar un veterinario", mejora: "con experiencia en animales exóticos", extra: ", porque mi iguana tiene un comportamiento raro desde ayer." },
+    { base: "Busco un profesor particular", mejora: "que prepare entrevistas de trabajo para el sector turístico", extra: ", ya que me presento a una oferta en un hotel de lujo." },
+    { base: "Quiero apuntarme a una academia", mejora: "que enseñe Excel y Google Sheets para autónomos", extra: ", porque necesito mejorar mi gestión administrativa." },
+    { base: "Me gustaría encontrar un grupo de teatro", mejora: "que monte obras en espacios no convencionales, como bares o parques", extra: ", para vivir una experiencia distinta." },
+    { base: "Estoy buscando un taller de cerámica", mejora: "que también tenga clases para niños", extra: ", porque quiero compartir esta actividad con mi hija los sábados." },
+    { base: "Necesitamos una empresa de catering", mejora: "especializada en comida vegetariana y sin gluten", extra: ", para la comunión de mi sobrino." },
+    { base: "Busco un fotógrafo", mejora: "que haga sesiones espontáneas al aire libre", extra: ", porque quiero un álbum natural con mi familia sin poses artificiales." },
+    { base: "Quiero un mecánico", mejora: "que haga revisiones a domicilio", extra: ", ya que tengo un coche híbrido y no quiero moverlo hasta estar seguro de que todo va bien." },
+    { base: "Estoy buscando una agencia de viajes", mejora: "que organice rutas en bici por pueblos de interior y que incluya alojamiento rural con desayuno casero", extra: "." }
   ];
 
   const promptProfesor = `Actúa como un profesor de español como lengua extranjera experto en la creación de tareas para exámenes oficiales de acreditación de conocimientos de español. Escribe tres anuncios de entre 90 y 110 palabras en los que profesionales o empresas ofrezcan productos o servicios que parezcan ser apropiados a la situación que describiré a continuación. Los anuncios deben incluir nombres y datos muy concretos de forma que parezcan anuncios de periódico reales. Sin embargo, de los tres anuncios solo uno debe ser válido para la necesidad descrita. El anuncio válido no debe ser evidente, evitando repetir expresiones literales de la tarea, utilizando para ello sinónimos y parafraseo. Los otros dos anuncios deben ser verosímiles y parecer adecuados pero no serlo, de forma que exijan una lectura atenta por parte del estudiante para descubrir el motivo por el cual deben ser descartados como válidos.`;
 
+  // FASE 4 - NUEVOS anuncios sobre teatro
   const anuncios = [
     {
-      titulo: "Limpieza Total",
-      texto: "Ofrecemos servicios de limpieza profunda para hogares y oficinas en la ciudad. Utilizamos productos de alta calidad y contamos con un equipo profesional capacitado para realizar limpiezas exhaustivas. Además, brindamos servicios de desinfección y mantenimiento regular. Contrate nuestro servicio y disfrute de un hogar impecable. Contáctenos al 123-456-7890 o visite www.limpiezatotal.com para más información.",
-      valido: false,
-      explicacion: "No menciona el uso de productos ecológicos, requisito esencial."
-    },
-    {
-      titulo: "EcoLimpio Hogares",
-      texto: "¿Quieres una limpieza profunda y respetuosa con el medio ambiente? En EcoLimpio Hogares, usamos productos ecológicos certificados que no dañan el planeta ni tu salud. Nuestro equipo se encarga de cada rincón de tu apartamento, garantizando frescura y limpieza sin químicos agresivos. Contáctanos al 987-654-3210 o visita www.ecolimpiohogares.com para más detalles. ¡Transforma tu hogar hoy mismo!",
+      titulo: "Teatro nómada",
+      texto: '"Teatro nómada" busca actores y actrices no profesionales para sus nuevas producciones itinerantes. Representamos obras modernas y adaptaciones clásicas en lugares poco habituales: cafeterías, terrazas, estaciones de tren y espacios abiertos. No es necesaria experiencia previa, solo compromiso y ganas de actuar. Ensayos: martes y jueves, 19:00–21:00, en la Biblioteca Pública de la calle Zamora. Estrenos en mayo y junio. Contacto: grupo.nomada@gmail.com o WhatsApp 611 924 713. ¡Ven a transformar la ciudad en un escenario!',
       valido: true,
-      explicacion: "Cumple todos los requisitos: limpieza profunda con productos ecológicos."
+      explicacion: "Cumple todos los requisitos: obras en espacios no convencionales como cafeterías, terrazas, estaciones y espacios abiertos."
     },
     {
-      titulo: "Brillo Hogareño",
-      texto: "Especializados en la limpieza de apartamentos y locales comerciales, en Brillo Hogareño utilizamos los mejores productos del mercado. Ofrecemos servicios de limpieza semanal, mensual y por evento. Aunque no utilizamos productos ecológicos, garantizamos un servicio de primera calidad. Llámanos al 456-789-0123 o consulta www.brillohogareño.com. ¡La limpieza que tu espacio merece!",
+      titulo: "Ficción a escena",
+      texto: 'Grupo teatral "Ficción a escena" selecciona nuevos miembros para sus montajes en el Teatro Municipal del Centro Cultural Pilar Miró. Se busca gente entre 18 y 35 años con algo de experiencia o formación. Las obras se representarán entre septiembre y diciembre en el auditorio del distrito. Se valorarán conocimientos de expresión corporal. Ensayos los lunes y miércoles de 18:00 a 20:30. Interesados, escribid a ficcionaescena@correo.es con breve presentación. No se ofrece remuneración, pero sí certificado de participación.',
       valido: false,
-      explicacion: "Explícitamente indica que NO usan productos ecológicos."
+      explicacion: "Las representaciones son en el Teatro Municipal, un espacio convencional. No ofrece la experiencia alternativa buscada."
+    },
+    {
+      titulo: "Voces del cuerpo",
+      texto: 'Taller de teatro "Voces del cuerpo" ofrece clases de interpretación centradas en el trabajo emocional, la improvisación y el análisis de texto. Dirigido a personas que buscan desarrollar su creatividad y expresividad. Las sesiones se realizan en el estudio "Artes en calma", junto al metro Guzmán el Bueno. Cursos trimestrales (160 €), con opción a participar en una muestra final en sala cerrada. Para más información: www.vocesdelcuerpo.com o Instagram @vocesdelcuerpo. Profesora: Clara Iturri, formada en la RESAD y especializada en pedagogía teatral.',
+      valido: false,
+      explicacion: "Es un taller de formación, no un grupo teatral. Las presentaciones son en sala cerrada, no en espacios no convencionales."
     }
   ];
 
@@ -5654,14 +5747,15 @@ const Diapositiva13 = () => {
                 color: colors.negro,
                 fontStyle: 'italic'
               }}>
-                💡 La situación 5 está destacada porque será nuestro ejemplo práctico en las siguientes fases.
+                💡 La situación 10 está destacada porque será nuestro ejemplo práctico en las siguientes fases.
               </p>
             </div>
             <div className="space-y-2">
               {situacionesEspecificas.map((situacion, index) => (
-                <div key={index} className={`flex items-start p-2 rounded ${index === 4 ? 'ring-2' : ''}`}
+                <div key={index} className={`flex items-start p-2 rounded ${index === 9 ? 'ring-2' : ''}`}
                   style={{
-                    backgroundColor: index === 4 ? colors.verdeTurquesa + '15' : 'transparent'
+                    backgroundColor: index === 9 ? colors.verdeTurquesa + '15' : 'transparent',
+                    borderColor: index === 9 ? colors.verdeTurquesa : 'transparent'
                   }}>
                   <span className="mr-2 text-sm" style={{ color: colors.verdeTurquesa }}>
                     {index + 1}.
@@ -5671,11 +5765,11 @@ const Diapositiva13 = () => {
                     fontSize: '0.85rem',
                     color: colors.negro
                   }}>
-                    Necesito encontrar un {situacion.base} <span style={{
-                      backgroundColor: colors.lila + '30',
+                    {situacion.base} <span style={{
+                      backgroundColor: colors.amarillo + '50',
                       padding: '0 4px',
                       borderRadius: '2px'
-                    }}>{situacion.mejora}</span> {situacion.extra}.
+                    }}>{situacion.mejora}</span>{situacion.extra}
                   </p>
                 </div>
               ))}
@@ -5727,7 +5821,7 @@ const Diapositiva13 = () => {
                 fontSize: '0.9rem',
                 color: colors.azulOscuro
               }}>
-                Ahora crea tres textos para la situación 5
+                Ahora crea tres textos para la situación 10
               </p>
             </div>
             <div className="mt-6 p-4 rounded-lg" style={{ backgroundColor: colors.lila + '15' }}>
@@ -5744,8 +5838,7 @@ const Diapositiva13 = () => {
                 color: colors.negro,
                 fontWeight: '500'
               }}>
-                5. Me gustaría contratar a una empresa de limpieza que utilice productos ecológicos 
-                para hacer una limpieza profunda en mi apartamento.
+                10. Me gustaría encontrar un grupo de teatro que monte obras en espacios no convencionales, como bares o parques, para vivir una experiencia distinta.
               </p>
             </div>
           </div>
@@ -5787,7 +5880,7 @@ const Diapositiva13 = () => {
                     fontSize: '0.95rem',
                     color: colors.azulOscuro
                   }}>
-                    Anuncio {index + 1}: {anuncio.titulo}
+                    Anuncio {String.fromCharCode(65 + index)}: {anuncio.titulo}
                   </h4>
                   <p className="mb-3" style={{
                     fontFamily: 'Raleway, sans-serif',
@@ -5820,13 +5913,13 @@ const Diapositiva13 = () => {
               </h3>
               <ul className="space-y-1">
                 <li style={{ fontFamily: 'Raleway, sans-serif', fontSize: '0.85rem', color: colors.negro }}>
-                  <span style={{ color: colors.lila, fontWeight: 'bold' }}>✗</span> Anuncio 1: Falta mención de productos ecológicos
+                  <span style={{ color: colors.verdeTurquesa, fontWeight: 'bold' }}>✓</span> Anuncio A: Cumple todos los requisitos (espacios no convencionales)
                 </li>
                 <li style={{ fontFamily: 'Raleway, sans-serif', fontSize: '0.85rem', color: colors.negro }}>
-                  <span style={{ color: colors.verdeTurquesa, fontWeight: 'bold' }}>✓</span> Anuncio 2: Cumple todos los requisitos
+                  <span style={{ color: colors.lila, fontWeight: 'bold' }}>✗</span> Anuncio B: Teatro convencional, no espacios alternativos
                 </li>
                 <li style={{ fontFamily: 'Raleway, sans-serif', fontSize: '0.85rem', color: colors.negro }}>
-                  <span style={{ color: colors.lila, fontWeight: 'bold' }}>✗</span> Anuncio 3: Explícitamente NO ecológico
+                  <span style={{ color: colors.lila, fontWeight: 'bold' }}>✗</span> Anuncio C: Es un taller de formación, no un grupo teatral
                 </li>
               </ul>
             </div>
@@ -5867,9 +5960,6 @@ const Diapositiva13 = () => {
     </div>
   );
 };
-// =======================================================================
-// FIN DIAPOSITIVA 13
-// =======================================================================
 
 // =======================================================================
 // DIAPOSITIVA 14: IA PARA CORRECCIÓN - DOS ENFOQUES (DISEÑO UNIFICADO)
@@ -6027,7 +6117,7 @@ const Diapositiva14 = () => {
 
             <div className="mt-auto space-y-4">
               <a 
-                href="https://chatgpt.com/share/f6b71aaf-3461-4fb3-85c9-a77707f86a32" 
+                href="https://chatgpt.com/share/683470a7-b6b0-800d-bc7d-1d8335ca3ffc" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 style={{
@@ -6098,12 +6188,22 @@ const Diapositiva14 = () => {
 // =======================================================================
 const Diapositiva15 = () => {
   const [currentSubSlide, setCurrentSubSlide] = useState(0);
+  const [mousePos, setMousePos] = useState({ x: 50, y: 50 }); // Para el gradiente radial interactivo
   const currentYear = new Date().getFullYear();
 
-  // Componentes de las sub-diapositivas (DetectiveModalidades, BatallaModalidades, etc.)
-  // ... (definiciones de DetectiveModalidades, BatallaModalidades, OracionEnunciado, TripleImperativo, ImperativosEspeciales) ...
-  // Estas definiciones se mantienen exactamente igual que en la respuesta anterior.
-  // Por brevedad, no las repetiré aquí, pero están presentes en el código completo.
+  // Efecto para seguir la posición del mouse para el gradiente radial
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      const x = (e.clientX / window.innerWidth) * 100;
+      const y = (e.clientY / window.innerHeight) * 100;
+      setMousePos({ x, y });
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+    };
+  }, []);
 
   // SUB-DIAPOSITIVA 1: DETECTIVE DE MODALIDADES
   const DetectiveModalidades = () => {
@@ -6234,6 +6334,7 @@ const Diapositiva15 = () => {
       { sentence: "¡Qué hermoso día!", type: "extraproposicional", explanation: "Expresión dirigida hacia el interlocutor para compartir evaluación" }
     ];
 
+    // Corregido: Añadido tipo string para el parámetro type
     const checkAnswer = (type: string) => {
       setSelectedType(type);
       setShowResult(true);
@@ -6346,7 +6447,7 @@ const Diapositiva15 = () => {
   // SUB-DIAPOSITIVA 3: ORACIÓN VS ENUNCIADO
   const OracionEnunciado = () => {
     const [currentExample, setCurrentExample] = useState(0);
-    const [selectedContextIdx, setSelectedContextIdx] = useState<number | null>(null); // Tipado explícito
+    const [selectedContextIdx, setSelectedContextIdx] = useState<number | null>(null);
     const [showTransformation, setShowTransformation] = useState(false);
 
     const examples = [
@@ -6367,6 +6468,7 @@ const Diapositiva15 = () => {
       }
     ];
 
+    // Corregido: Añadido tipo number para el parámetro index
     const selectContext = (index: number) => {
       setSelectedContextIdx(index);
       setShowTransformation(true);
@@ -6429,14 +6531,14 @@ const Diapositiva15 = () => {
             ))}
           </div>
           
-          {showTransformation && selectedContextIdx !== null && ( // Check for null
+          {showTransformation && selectedContextIdx !== null && (
             <motion.div {...animations.fadeIn} className="p-3 md:p-4 rounded-lg" style={{ backgroundColor: colors.amarillo+'50' }}>
               <h5 className="font-bold mb-2" style={{ color: colors.azulOscuro, fontFamily: 'Raleway Bold, sans-serif' }}>✨ TRANSFORMACIÓN:</h5>
               <p className="text-md md:text-lg font-medium">
-                Enunciado: <span style={{ color: colors.verdeTurquesa }}>"{getCurrentExample().transformations[selectedContextIdx!].enunciado}"</span>
+                Enunciado: <span style={{ color: colors.verdeTurquesa }}>"{getCurrentExample().transformations[selectedContextIdx].enunciado}"</span>
               </p>
               <p className="text-xs md:text-sm mt-2">
-                Función: <strong>{getCurrentExample().transformations[selectedContextIdx!].funcion}</strong>
+                Función: <strong>{getCurrentExample().transformations[selectedContextIdx].funcion}</strong>
               </p>
             </motion.div>
           )}
@@ -6478,7 +6580,7 @@ const Diapositiva15 = () => {
       { ejemplo: "Debes estudiar", modoVerbal: false, tipoOracion: false, actoHabla: true, analisis: { modoVerbal: "Indicativo (debes)", tipoOracion: "Oración enunciativa", actoHabla: "Funciona como mandato indirecto" }},
       { ejemplo: "¿Podrías estudiar?", modoVerbal: false, tipoOracion: false, actoHabla: true, analisis: { modoVerbal: "Condicional (podrías)", tipoOracion: "Oración interrogativa", actoHabla: "Funciona como solicitud cortés" }},
       { ejemplo: "A estudiar", modoVerbal: false, tipoOracion: false, actoHabla: true, analisis: { modoVerbal: "Sin verbo conjugado", tipoOracion: "Enunciado no oracional", actoHabla: "Funciona como mandato" }},
-      { ejemplo: "Si estudias, aprobarás", modoVerbal: false, /* Corrección: 'estudias' es indicativo, no imperativo en este contexto condicional. Si fuera "Estudia y aprobarás" sí. */ tipoOracion: false, actoHabla: false, analisis: { modoVerbal: "Indicativo en prótasis condicional", tipoOracion: "Oración condicional", actoHabla: "Expresa condición, no mandato directo" }}
+      { ejemplo: "Si estudias, aprobarás", modoVerbal: false, tipoOracion: false, actoHabla: false, analisis: { modoVerbal: "Indicativo en prótasis condicional", tipoOracion: "Oración condicional", actoHabla: "Expresa condición, no mandato directo" }}
     ];
     
     const toggleAnalysis = () => setShowAnalysis(!showAnalysis);
@@ -6589,6 +6691,7 @@ const Diapositiva15 = () => {
       { imperativo: "Prepárense las patatas", tipo: "pasivo", funcionReal: "Instrucción de receta", parafrasis: "Alguien debe preparar las patatas", explicacion: "Instrucción general sin destinatario específico presente" }
     ];
 
+    // Corregido: Añadido tipo string para el parámetro tipo
     const checkType = (tipo: string) => {
       setSelectedType(tipo);
       setShowInterpretation(true);
@@ -6724,6 +6827,7 @@ const Diapositiva15 = () => {
     setCurrentSubSlide(prev => (prev > 0 ? prev - 1 : prev));
   };
   
+  // Corregido: Añadido tipo number para el parámetro index
   const goToSubSlide = (index: number) => {
     setCurrentSubSlide(index);
   };
@@ -6732,36 +6836,11 @@ const Diapositiva15 = () => {
 
   return (
     <div 
-      className="h-screen flex flex-col p-4 md:p-8 relative" 
+      className="h-screen flex flex-col p-4 md:p-8 relative overflow-hidden" 
       style={{ 
-        background: `linear-gradient(135deg, ${colors.amarillo}40 0%, ${colors.verdeClaro}40 100%)` // <-- CAMBIO AQUÍ
+        background: `radial-gradient(circle at ${mousePos.x}% ${mousePos.y}%, ${colors.verdeTurquesa}25 0%, transparent 60%)`,
       }}
     >
-      {/* Logo Hablandis */}
-      <motion.div 
-        className="absolute top-4 left-4 md:top-6 md:left-6 z-20"
-        initial={{ opacity: 0, x: -50 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ delay: 0.5, duration: 0.5 }}
-      >
-        <img 
-          src="/hablandis.png" 
-          alt="Hablandis Logo" 
-          className="h-12 md:h-16 w-auto"
-          onError={(e) => {
-            const img = e.target as HTMLImageElement;
-            img.style.display = 'none';
-            const parent = img.parentElement;
-            if (parent) {
-              parent.innerHTML = `
-                <div style="font-family: 'Aglet Mono', monospace; color: ${colors.azulOscuro}; font-size: 24px; font-weight: 700;">
-                  Hablandis
-                </div>`;
-            }
-          }}
-        />
-      </motion.div>
-
       <motion.div {...animations.fadeIn} className="mb-4 text-center">
         <h1 className="text-2xl md:text-4xl font-bold" style={{ fontFamily: 'Aglet Mono, monospace', color: colors.azulOscuro }}>
           Complejidad en la Interpretación Oral
@@ -6775,11 +6854,11 @@ const Diapositiva15 = () => {
         <AnimatePresence mode="wait">
           <motion.div
             key={currentSubSlide}
-            initial={{ opacity: 0, x: currentSubSlide > (subSlideComponents.indexOf(CurrentSubSlideComponent) || 0) ? -30 : 30 }}
+            initial={{ opacity: 0, x: 30 }}
             animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: currentSubSlide > (subSlideComponents.indexOf(CurrentSubSlideComponent) || 0) ? 30 : -30 }}
+            exit={{ opacity: 0, x: -30 }}
             transition={{ duration: 0.4, ease: "easeInOut" }}
-            className="h-full" // Asegura que el motion.div tome la altura
+            className="h-full"
           >
             <CurrentSubSlideComponent />
           </motion.div>
@@ -6791,9 +6870,9 @@ const Diapositiva15 = () => {
         transition={{delay:0.3}} 
         className="p-3 md:p-4 rounded-lg mt-auto" 
         style={{ 
-            backgroundColor: colors.blanco + 'A6', // Opacidad ~65% para mejor contraste sobre fondo claro
-            backdropFilter: 'blur(8px)', // Aumentar blur
-            border: `1px solid ${colors.amarillo}66` // Borde un poco más visible
+            backgroundColor: colors.blanco + 'A6',
+            backdropFilter: 'blur(8px)',
+            border: `1px solid ${colors.amarillo}66`
         }}
       >
         <div className="flex flex-col sm:flex-row justify-between items-center">
@@ -6858,7 +6937,6 @@ const Diapositiva15 = () => {
 // =======================================================================
 // FIN DIAPOSITIVA 15
 // =======================================================================
-
 // =======================================================================
 // DIAPOSITIVA 16: AGRADECIMIENTO CON Dziękuję INTERACTIVO Y ANIMADO
 // =======================================================================
